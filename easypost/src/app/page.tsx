@@ -4,16 +4,20 @@ import { useState } from 'react';
 import { Loader2, Sparkles } from 'lucide-react';
 import TopicList from '../components/TopicList';
 import CarouselPreview from '../components/CarouselPreview';
-import { CarouselData } from '../types';
+import ImageConfigPanel from '../components/ImageConfig';
+import { CarouselData, ImageConfig } from '../types';
 
 export default function Home() {
   const [niche, setNiche] = useState('');
   const [topics, setTopics] = useState<string[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [carouselData, setCarouselData] = useState<CarouselData | null>(null);
+  const [images, setImages] = useState<string[] | null>(null);
+  const [showConfig, setShowConfig] = useState(false);
 
   const [isGeneratingTopics, setIsGeneratingTopics] = useState(false);
-  const [isGeneratingCarousel, setIsGeneratingCarousel] = useState(false);
+  const [isGeneratingText, setIsGeneratingText] = useState(false);
+  const [isGeneratingImages, setIsGeneratingImages] = useState(false);
 
   const handleGenerateTopics = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,6 +27,8 @@ export default function Home() {
     setTopics([]);
     setSelectedTopic(null);
     setCarouselData(null);
+    setImages(null);
+    setShowConfig(false);
 
     try {
       const res = await fetch('/api/generate-topics', {
@@ -43,13 +49,12 @@ export default function Home() {
     setIsGeneratingTopics(false);
   };
 
-  const [images, setImages] = useState<string[] | null>(null);
-
-  const handleGenerateCarousel = async (topic: string) => {
+  const handleSelectTopic = async (topic: string) => {
     setSelectedTopic(topic);
-    setIsGeneratingCarousel(true);
+    setIsGeneratingText(true);
     setCarouselData(null);
     setImages(null);
+    setShowConfig(false);
 
     try {
       // Step 1: Generate the Text (Caption + Slides Outline)
@@ -64,12 +69,32 @@ export default function Home() {
         throw new Error(dataText.error || 'Failed to generate carousel text');
       }
       setCarouselData(dataText);
+      setShowConfig(true); // Show the config panel
+    } catch (e: any) {
+      console.error(e);
+      alert(e.message || 'Network error while generating carousel text');
+    }
+    setIsGeneratingText(false);
+  };
 
-      // Step 2: Generate the Images with Gemini Nano Banana
+  const handleGenerateImages = async (config: ImageConfig) => {
+    if (!carouselData) return;
+
+    setIsGeneratingImages(true);
+    setImages(null);
+    setShowConfig(false);
+
+    try {
       const resImages = await fetch('/api/generate-images', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slides: dataText.slides }),
+        body: JSON.stringify({
+          slides: carouselData.slides,
+          visualStyle: config.visualStyle,
+          colorPalette: config.colorPalette,
+          audience: config.audience,
+          customPrompt: config.customPrompt,
+        }),
       });
       const dataImages = await resImages.json();
 
@@ -78,14 +103,13 @@ export default function Home() {
       }
 
       setImages(dataImages.images);
-
     } catch (e: any) {
       console.error(e);
-      alert(e.message || 'Network error while generating carousel');
+      alert(e.message || 'Network error while generating images');
+      setShowConfig(true); // Show config again so user can retry
     }
-    setIsGeneratingCarousel(false);
+    setIsGeneratingImages(false);
   };
-
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-200 py-12 px-4 sm:px-6 lg:px-8">
@@ -119,22 +143,42 @@ export default function Home() {
           </div>
         </form>
 
-        {isGeneratingCarousel && (
+        {/* Loading: generating text */}
+        {isGeneratingText && (
           <div className="flex flex-col items-center justify-center py-12 bg-slate-800/50 rounded-2xl border border-slate-800 mb-8 border-dashed">
             <Loader2 className="animate-spin text-blue-500 mb-4" size={40} />
-            <p className="text-slate-300 font-medium">Generating your 5 slides, images, and caption. Give us a few seconds...</p>
+            <p className="text-slate-300 font-medium">Gerando texto dos slides e caption...</p>
           </div>
         )}
 
-        {!isGeneratingCarousel && carouselData && selectedTopic && images && (
+        {/* Config Panel: shown after text is generated, before images */}
+        {showConfig && carouselData && selectedTopic && (
+          <ImageConfigPanel
+            topic={selectedTopic}
+            onGenerate={handleGenerateImages}
+            isLoading={isGeneratingImages}
+          />
+        )}
+
+        {/* Loading: generating images */}
+        {isGeneratingImages && (
+          <div className="flex flex-col items-center justify-center py-12 bg-slate-800/50 rounded-2xl border border-slate-800 mb-8 border-dashed">
+            <Loader2 className="animate-spin text-blue-500 mb-4" size={40} />
+            <p className="text-slate-300 font-medium">Gerando suas 5 imagens com IA. Isso pode levar alguns segundos...</p>
+          </div>
+        )}
+
+        {/* Carousel Preview: shown after images are generated */}
+        {!isGeneratingImages && carouselData && selectedTopic && images && (
           <CarouselPreview data={carouselData} topic={selectedTopic} images={images} />
         )}
 
-        {!carouselData && !isGeneratingCarousel && (
+        {/* Topic List: shown when no topic is selected yet */}
+        {!carouselData && !isGeneratingText && (
           <TopicList
             topics={topics}
-            onSelect={handleGenerateCarousel}
-            isLoadingCarousel={isGeneratingCarousel}
+            onSelect={handleSelectTopic}
+            isLoadingCarousel={isGeneratingText}
           />
         )}
       </div>

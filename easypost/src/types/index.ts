@@ -1,9 +1,19 @@
-export interface CarouselSlide {
+export interface SlideData {
     title: string;
     content: string;
 }
 
 export interface CarouselData {
-    slides: CarouselSlide[];
+    slides: SlideData[];
     caption: string;
+}
+
+export interface ImageConfig {
+    visualStyle: string;
+    colorPalette: string;
+    audience: {
+        age: string;
+        interests: string;
+    };
+    customPrompt: string;
 }

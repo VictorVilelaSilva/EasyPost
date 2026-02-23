@@ -1,11 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from "@google/genai";
 
-export const maxDuration = 60; // Allow more time for image generation
+export const maxDuration = 60;
+
+const STYLE_MAP: Record<string, string> = {
+    minimalist: "Ultra-clean minimalist design. White space, thin lines, simple geometric shapes. Flat colors, no textures.",
+    luxury: "Luxurious, premium aesthetic. Rich deep colors, gold or silver accents, elegant sophisticated feel. Subtle leather or marble textures.",
+    corporate: "Professional corporate design. Clean structured layout, trustworthy blue tones, sharp edges. Business-oriented, polished.",
+    'clean-tech': "Modern tech aesthetic. Sleek gradients, subtle glassmorphism, futuristic feel. Neon accents on dark background.",
+    creative: "Bold creative design. Vibrant colors, artistic flair, dynamic compositions. Hand-drawn elements or paint strokes mixed with typography.",
+    neon: "Neon glow aesthetic. Dark black background with vivid neon lights (pink, cyan, purple). Cyberpunk-inspired glow effects around text.",
+};
+
+const PALETTE_MAP: Record<string, string> = {
+    dark: "Dark gradient background (deep navy #0f172a to black #000). White and light gray text for contrast.",
+    light: "Clean light/white background (#f8fafc). Dark text (#1e293b). Subtle soft shadows.",
+    blue: "Rich blue palette. Deep navy background (#1e3a5f) with electric blue accents (#2563eb, #60a5fa). White text.",
+    green: "Nature-inspired green palette. Dark emerald (#064e3b) background, mint and teal accents (#059669, #34d399). White text.",
+    warm: "Warm sunset palette. Deep orange-brown (#7c2d12) background, vibrant orange accents (#ea580c, #fb923c). Cream text.",
+    purple: "Royal purple palette. Deep violet (#3b0764) background, lavender accents (#7c3aed, #a78bfa). White text.",
+};
 
 export async function POST(req: NextRequest) {
     try {
-        const { slides } = await req.json();
+        const { slides, visualStyle, colorPalette, audience, customPrompt } = await req.json();
 
         if (!slides || !Array.isArray(slides) || slides.length === 0) {
             return NextResponse.json({ error: "Slides array is required" }, { status: 400 });
@@ -18,19 +36,43 @@ export async function POST(req: NextRequest) {
 
         const ai = new GoogleGenAI({ apiKey });
 
-        // Process all slides in parallel to save time
+        // Build dynamic prompt sections from config
+        const styleDesc = STYLE_MAP[visualStyle] || STYLE_MAP['minimalist'];
+        const paletteDesc = PALETTE_MAP[colorPalette] || PALETTE_MAP['dark'];
+        const audienceDesc = (audience?.age || audience?.interests)
+            ? `Target Audience: ${audience.age ? `Age ${audience.age}` : ''}${audience.age && audience.interests ? ', ' : ''}${audience.interests ? `interested in ${audience.interests}` : ''}. Design should resonate with this demographic.`
+            : '';
+        const customDesc = customPrompt ? `Additional Instructions: ${customPrompt}` : '';
+
         const imagePromises = slides.map(async (slide: { title: string, content: string }, index: number) => {
-            const prompt = `A highly engaging, minimalist, and aesthetic Instagram carousel slide graphic. 
-The background should be a sleek dark gradient (like dark navy to black).
-The text on the image MUST prominently feature the following headline: "${slide.title}".
-Below the headline, include exactly this text: "${slide.content}".
-At the very bottom, include small text that says: "${index + 1} / ${slides.length}".
-The typography should be modern, clean, sans-serif, and highly legible with high contrast against the dark background. 
-This is an educational social media graphic. Do not add any irrelevant objects.`;
+            const prompt = `Generate a beautiful, ultra-high-quality Instagram carousel slide graphic (strictly 1:1 square aspect ratio, 1080x1080px).
+
+VISUAL STYLE: ${styleDesc}
+COLOR PALETTE: ${paletteDesc}
+${audienceDesc}
+${customDesc}
+
+LAYOUT:
+- Perfectly centered, balanced composition for a 1:1 square format.
+- Typography: Bold, impactful, large modern sans-serif fonts. Highly legible.
+
+TEXT TO RENDER (EXACTLY as shown, no extra text):
+- HEADLINE: "${slide.title}"
+- BODY: "${slide.content}"
+- FOOTER: "${index + 1} / ${slides.length}"
+
+CRITICAL RULES:
+- The text MUST be the focal point. 
+- Perfect contrast between text and background.
+- Do NOT add any hallucinated, random, or gibberish text. ONLY render the provided text above.
+- This is a professional social media graphic, not a photo.`;
 
             const response = await ai.models.generateContent({
                 model: "gemini-3-pro-image-preview",
                 contents: prompt,
+                config: {
+                    aspectRatio: "1:1"
+                } as any
             });
 
             let base64Image = null;
