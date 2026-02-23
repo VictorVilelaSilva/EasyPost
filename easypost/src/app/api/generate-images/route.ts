@@ -27,6 +27,7 @@ function buildPrompt(
     totalSlides: number,
     styleDesc: string,
     paletteDesc: string,
+    brandDesc: string,
     audienceDesc: string,
     customDesc: string
 ): string {
@@ -37,7 +38,7 @@ function buildPrompt(
 
 ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
 ${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
-${paletteDesc ? `PALETA: ${paletteDesc}` : ''}
+${brandDesc || (paletteDesc ? `PALETA: ${paletteDesc}` : '')}
 ${audienceDesc}
 ${customDesc}
 
@@ -65,7 +66,7 @@ REGRAS:
 
 ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
 ${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
-${paletteDesc ? `PALETA: ${paletteDesc}` : ''}
+${brandDesc || (paletteDesc ? `PALETA: ${paletteDesc}` : '')}
 ${audienceDesc}
 ${customDesc}
 
@@ -91,7 +92,7 @@ REGRAS:
 
 ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
 ${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
-${paletteDesc ? `PALETA: ${paletteDesc}` : ''}
+${brandDesc || (paletteDesc ? `PALETA: ${paletteDesc}` : '')}
 ${audienceDesc}
 ${customDesc}
 
@@ -116,7 +117,7 @@ REGRAS:
 
 export async function POST(req: NextRequest) {
     try {
-        const { slides, visualStyle, colorPalette, audience, customPrompt } = await req.json();
+        const { slides, visualStyle, colorPalette, brandColors, audience, customPrompt } = await req.json();
 
         if (!slides || !Array.isArray(slides) || slides.length === 0) {
             return NextResponse.json({ error: "Array de slides é obrigatório" }, { status: 400 });
@@ -131,13 +132,20 @@ export async function POST(req: NextRequest) {
 
         const styleDesc = STYLE_MAP[visualStyle] || '';
         const paletteDesc = PALETTE_MAP[colorPalette] || '';
+
+        // Build brand colors description
+        const brandColorsArray: string[] = brandColors?.colors || [];
+        const brandDesc = brandColorsArray.length > 0
+            ? `CORES DA MARCA (USE OBRIGATORIAMENTE): As cores da identidade visual da marca são: ${brandColorsArray.join(', ')}. Use a primeira cor como cor principal (backgrounds e badges), a segunda como cor de texto/contraste, e as demais como acentos. Toda a identidade visual do slide deve seguir essa paleta.`
+            : '';
+
         const audienceDesc = (audience?.age || audience?.interests)
             ? `Público-Alvo: ${audience.age ? `Idade ${audience.age}` : ''}${audience.age && audience.interests ? ', ' : ''}${audience.interests ? `interessado em ${audience.interests}` : ''}. O design deve ressoar com esse público.`
             : '';
         const customDesc = customPrompt ? `Instruções Adicionais: ${customPrompt}` : '';
 
         const imagePromises = slides.map(async (slide: { slideType: string; title: string; content: string }, index: number) => {
-            const prompt = buildPrompt(slide, index, slides.length, styleDesc, paletteDesc, audienceDesc, customDesc);
+            const prompt = buildPrompt(slide, index, slides.length, styleDesc, paletteDesc, brandDesc, audienceDesc, customDesc);
 
             const response = await ai.models.generateContent({
                 model: "gemini-3-pro-image-preview",

@@ -91,6 +91,7 @@ export default function Home() {
           slides: carouselData.slides,
           visualStyle: config.visualStyle,
           colorPalette: config.colorPalette,
+          brandColors: config.brandColors,
           audience: config.audience,
           customPrompt: config.customPrompt,
         }),

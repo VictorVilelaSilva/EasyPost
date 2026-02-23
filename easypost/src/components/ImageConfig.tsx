@@ -1,8 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { Sparkles, Wand2, Palette, Users, Pen, Minimize2, Gem, Building2, Zap, Brush, Sun } from 'lucide-react';
+import { useState, useRef } from 'react';
+import {
+    Sparkles, Wand2, Palette, Users, Pen,
+    Minimize2, Gem, Building2, Zap, Brush, Sun,
+    Upload, Plus, X, Image as ImageIcon, Pipette
+} from 'lucide-react';
 import { ImageConfig as ImageConfigType } from '../types';
+import { extractColorsFromImage } from '../lib/extractColors';
 
 const VISUAL_STYLES = [
     { id: 'minimalist', label: 'Minimalista', icon: Minimize2 },
@@ -35,10 +40,58 @@ export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props
     const [interests, setInterests] = useState('');
     const [customPrompt, setCustomPrompt] = useState('');
 
+    // Brand colors state
+    const [brandColors, setBrandColors] = useState<string[]>([]);
+    const [logoPreview, setLogoPreview] = useState<string | null>(null);
+    const [isExtractingColors, setIsExtractingColors] = useState(false);
+    const [manualColorInput, setManualColorInput] = useState('');
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = () => setLogoPreview(reader.result as string);
+        reader.readAsDataURL(file);
+
+        // Extract colors
+        setIsExtractingColors(true);
+        try {
+            const colors = await extractColorsFromImage(file, 5);
+            setBrandColors(colors);
+        } catch (err) {
+            console.error('Erro ao extrair cores:', err);
+            alert('Não foi possível extrair as cores da imagem');
+        }
+        setIsExtractingColors(false);
+    };
+
+    const addManualColor = () => {
+        let color = manualColorInput.trim();
+        if (!color) return;
+        if (!color.startsWith('#')) color = '#' + color;
+        if (/^#[0-9A-Fa-f]{3,8}$/.test(color)) {
+            if (brandColors.length < 6) {
+                setBrandColors([...brandColors, color]);
+                setManualColorInput('');
+            }
+        }
+    };
+
+    const removeColor = (index: number) => {
+        setBrandColors(brandColors.filter((_, i) => i !== index));
+    };
+
     const handleGenerate = () => {
         onGenerate({
             visualStyle,
             colorPalette,
+            brandColors: {
+                colors: brandColors,
+                logoDataUrl: logoPreview || undefined,
+            },
             audience: { age, interests },
             customPrompt,
         });
@@ -65,6 +118,131 @@ export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props
 
                 {/* Left Column */}
                 <div className="space-y-5">
+
+                    {/* ============ BRAND IDENTITY ============ */}
+                    <div className="glass-card-static p-5">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Pipette size={14} style={{ color: 'var(--color-accent)' }} />
+                            <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-display)' }}>
+                                Identidade da Marca
+                            </h3>
+                        </div>
+
+                        {/* Logo Upload */}
+                        <div className="mb-4">
+                            <p className="text-xs mb-2" style={{ color: 'var(--color-text-subtle)' }}>
+                                Envie sua logo para extrair as cores automaticamente:
+                            </p>
+                            <div className="flex items-center gap-3">
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleLogoUpload}
+                                    className="hidden"
+                                    aria-label="Upload de logo"
+                                />
+                                <button
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="cursor-pointer flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                                    style={{
+                                        background: 'var(--color-card)',
+                                        border: '1px solid var(--color-border)',
+                                        color: 'var(--color-text-muted)',
+                                        minHeight: '44px',
+                                    }}
+                                    aria-label="Selecionar imagem da logo"
+                                >
+                                    <Upload size={16} />
+                                    {isExtractingColors ? 'Extraindo cores...' : 'Enviar Logo'}
+                                </button>
+
+                                {logoPreview && (
+                                    <div className="relative w-11 h-11 rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border)' }}>
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain" style={{ background: '#fff' }} />
+                                        <button
+                                            onClick={() => { setLogoPreview(null); setBrandColors([]); }}
+                                            className="cursor-pointer absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center"
+                                            style={{ background: 'var(--color-primary)', color: '#fff' }}
+                                            aria-label="Remover logo"
+                                        >
+                                            <X size={10} />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Extracted / Manual Colors */}
+                        <div>
+                            <p className="text-xs mb-2" style={{ color: 'var(--color-text-subtle)' }}>
+                                {brandColors.length > 0 ? 'Cores da marca (clique para remover):' : 'Ou adicione cores manualmente:'}
+                            </p>
+
+                            {/* Color Swatches */}
+                            <div className="flex flex-wrap gap-2 mb-3">
+                                {brandColors.map((color, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => removeColor(i)}
+                                        className="cursor-pointer group relative w-10 h-10 rounded-lg transition-transform hover:scale-110"
+                                        style={{ backgroundColor: color, border: '2px solid var(--color-border)' }}
+                                        aria-label={`Remover cor ${color}`}
+                                        title={color}
+                                    >
+                                        <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" style={{ background: 'rgba(0,0,0,0.5)' }}>
+                                            <X size={12} className="text-white" />
+                                        </span>
+                                    </button>
+                                ))}
+
+                                {/* Add Color Button */}
+                                {brandColors.length < 6 && (
+                                    <div className="flex items-center gap-1.5">
+                                        <input
+                                            type="color"
+                                            value={manualColorInput || '#3b82f6'}
+                                            onChange={(e) => {
+                                                setManualColorInput(e.target.value);
+                                            }}
+                                            className="cursor-pointer w-10 h-10 rounded-lg border-0 p-0"
+                                            style={{ background: 'transparent' }}
+                                            title="Escolher cor"
+                                            aria-label="Seletor de cor"
+                                        />
+                                        <input
+                                            type="text"
+                                            value={manualColorInput}
+                                            onChange={(e) => setManualColorInput(e.target.value)}
+                                            onKeyDown={(e) => e.key === 'Enter' && addManualColor()}
+                                            placeholder="#hex"
+                                            className="input-glow w-24 px-3 py-2 rounded-lg text-xs font-mono"
+                                            style={{
+                                                background: 'var(--color-surface)',
+                                                border: '1px solid var(--color-border)',
+                                                color: 'var(--color-text)',
+                                                minHeight: '40px',
+                                            }}
+                                            aria-label="Código hex da cor"
+                                        />
+                                        <button
+                                            onClick={addManualColor}
+                                            className="cursor-pointer w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
+                                            style={{
+                                                background: 'var(--color-card)',
+                                                border: '1px solid var(--color-border)',
+                                                color: 'var(--color-text-muted)',
+                                            }}
+                                            aria-label="Adicionar cor"
+                                        >
+                                            <Plus size={16} />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Visual Style */}
                     <div className="glass-card-static p-5">
@@ -101,46 +279,51 @@ export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props
                         </div>
                     </div>
 
-                    {/* Color Palette */}
-                    <div className="glass-card-static p-5">
-                        <div className="flex items-center gap-2 mb-3">
-                            <Palette size={14} style={{ color: 'var(--color-text-muted)' }} />
-                            <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-display)' }}>
-                                Paleta de Cores
-                            </h3>
+                    {/* Color Palette (fallback when no brand colors) */}
+                    {brandColors.length === 0 && (
+                        <div className="glass-card-static p-5">
+                            <div className="flex items-center gap-2 mb-3">
+                                <Palette size={14} style={{ color: 'var(--color-text-muted)' }} />
+                                <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-display)' }}>
+                                    Paleta de Cores
+                                </h3>
+                            </div>
+                            <div className="grid grid-cols-3 gap-3">
+                                {COLOR_PALETTES.map((palette) => {
+                                    const isActive = colorPalette === palette.id;
+                                    return (
+                                        <button
+                                            key={palette.id}
+                                            onClick={() => setColorPalette(palette.id)}
+                                            aria-label={`Paleta ${palette.label}`}
+                                            className="cursor-pointer flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-200"
+                                            style={{
+                                                minHeight: '44px',
+                                                background: isActive ? 'var(--color-card-hover)' : 'var(--color-card)',
+                                                border: `1px solid ${isActive ? 'var(--color-primary)' : 'var(--color-border)'}`,
+                                                boxShadow: isActive ? '0 0 0 2px var(--color-primary-glow)' : 'none',
+                                                transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                                            }}
+                                        >
+                                            <div className="flex gap-1.5">
+                                                {palette.colors.map((color, i) => (
+                                                    <div
+                                                        key={i}
+                                                        className="w-5 h-5 rounded-full"
+                                                        style={{ backgroundColor: color, border: '1px solid rgba(255,255,255,0.1)' }}
+                                                    />
+                                                ))}
+                                            </div>
+                                            <span className="text-xs font-medium" style={{ color: 'var(--color-text-subtle)' }}>{palette.label}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            <p className="text-xs mt-2" style={{ color: 'var(--color-text-subtle)' }}>
+                                💡 Envie sua logo acima para usar as cores da sua marca automaticamente
+                            </p>
                         </div>
-                        <div className="grid grid-cols-3 gap-3">
-                            {COLOR_PALETTES.map((palette) => {
-                                const isActive = colorPalette === palette.id;
-                                return (
-                                    <button
-                                        key={palette.id}
-                                        onClick={() => setColorPalette(palette.id)}
-                                        aria-label={`Paleta ${palette.label}`}
-                                        className="cursor-pointer flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-200"
-                                        style={{
-                                            minHeight: '44px',
-                                            background: isActive ? 'var(--color-card-hover)' : 'var(--color-card)',
-                                            border: `1px solid ${isActive ? 'var(--color-primary)' : 'var(--color-border)'}`,
-                                            boxShadow: isActive ? '0 0 0 2px var(--color-primary-glow)' : 'none',
-                                            transform: isActive ? 'scale(1.05)' : 'scale(1)',
-                                        }}
-                                    >
-                                        <div className="flex gap-1.5">
-                                            {palette.colors.map((color, i) => (
-                                                <div
-                                                    key={i}
-                                                    className="w-5 h-5 rounded-full"
-                                                    style={{ backgroundColor: color, border: '1px solid rgba(255,255,255,0.1)' }}
-                                                />
-                                            ))}
-                                        </div>
-                                        <span className="text-xs font-medium" style={{ color: 'var(--color-text-subtle)' }}>{palette.label}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* Right Column */}
