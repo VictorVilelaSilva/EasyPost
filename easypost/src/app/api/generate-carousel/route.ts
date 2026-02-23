@@ -5,7 +5,7 @@ export async function POST(req: Request) {
         const { topic, niche } = await req.json();
 
         if (!topic || !niche) {
-            return new Response(JSON.stringify({ error: "Topic and niche are required" }), {
+            return new Response(JSON.stringify({ error: "Tópico e nicho são obrigatórios" }), {
                 status: 400,
                 headers: { "Content-Type": "application/json" },
             });
@@ -13,22 +13,25 @@ export async function POST(req: Request) {
 
         const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
         if (!apiKey) {
-            return new Response(JSON.stringify({ error: "Missing API key" }), { status: 500 });
+            return new Response(JSON.stringify({ error: "Chave da API não encontrada" }), { status: 500 });
         }
 
         const ai = new GoogleGenAI({ apiKey });
 
-        const prompt = `You are an expert Instagram content strategist and copywriter. 
-Topic: "${topic}"
-Niche: "${niche}"
+        const prompt = `Você é um estrategista de conteúdo e copywriter expert em Instagram.
+Tópico: "${topic}"
+Nicho: "${niche}"
 
-Goal: Script a highly engaging 5-slide Instagram carousel.
-Rules:
-1. Slide 1 is the STOP-THE-SCROLL Hook. It needs a big, punchy title. 
-2. Slide 2-4 provide the core value or steps. The text must be extremely concise (max 100 characters per slide content). Point form is great.
-3. Slide 5 is the Call to Action (CTA).
-4. Keep the 'title' short (max 40 chars) and the 'content' short (max 100 chars).
-5. For the 'caption', write an engaging Instagram caption including emojis and exactly 7 relevant hashtags.`;
+Objetivo: Criar o roteiro de um carrossel de 5 slides altamente envolvente para Instagram.
+
+IMPORTANTE: Todo o conteúdo DEVE ser escrito em Português do Brasil.
+
+Regras:
+1. Slide 1 é o GANCHO que para o scroll. Precisa de um título grande e impactante.
+2. Slides 2-4 entregam o valor principal ou os passos. O texto deve ser extremamente conciso (máximo 100 caracteres por conteúdo do slide). Formato de lista é ótimo.
+3. Slide 5 é a Chamada para Ação (CTA) - ex: "Salve para depois", "Comente abaixo", "Link na bio".
+4. Mantenha o 'title' curto (máximo 40 caracteres) e o 'content' curto (máximo 100 caracteres).
+5. Para a 'caption', escreva uma legenda envolvente para Instagram incluindo emojis e exatamente 7 hashtags relevantes em português.`;
 
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
@@ -40,19 +43,19 @@ Rules:
                     properties: {
                         slides: {
                             type: Type.ARRAY,
-                            description: "Exactly 5 slides",
+                            description: "Exatamente 5 slides",
                             items: {
                                 type: Type.OBJECT,
                                 properties: {
-                                    title: { type: Type.STRING, description: "Short, punchy headline (max 40 chars)" },
-                                    content: { type: Type.STRING, description: "Main text for the slide (max 100 chars)" }
+                                    title: { type: Type.STRING, description: "Título curto e impactante (máx 40 chars)" },
+                                    content: { type: Type.STRING, description: "Texto principal do slide (máx 100 chars)" }
                                 },
                                 required: ["title", "content"]
                             }
                         },
                         caption: {
                             type: Type.STRING,
-                            description: "The Instagram caption including hashtags"
+                            description: "Legenda do Instagram com hashtags"
                         }
                     },
                     required: ["slides", "caption"]
@@ -62,7 +65,7 @@ Rules:
 
         const jsonString = response.text;
         if (!jsonString) {
-            throw new Error("Empty response from Gemini");
+            throw new Error("Resposta vazia do Gemini");
         }
 
         const object = JSON.parse(jsonString);
@@ -72,8 +75,8 @@ Rules:
             headers: { "Content-Type": "application/json" },
         });
     } catch (error) {
-        console.error("Error generating carousel:", error);
-        return new Response(JSON.stringify({ error: "Failed to generate carousel" }), {
+        console.error("Erro ao gerar carrossel:", error);
+        return new Response(JSON.stringify({ error: "Falha ao gerar carrossel" }), {
             status: 500,
             headers: { "Content-Type": "application/json" },
         });

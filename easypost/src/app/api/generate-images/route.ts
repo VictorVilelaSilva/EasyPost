@@ -40,32 +40,33 @@ export async function POST(req: NextRequest) {
         const styleDesc = STYLE_MAP[visualStyle] || STYLE_MAP['minimalist'];
         const paletteDesc = PALETTE_MAP[colorPalette] || PALETTE_MAP['dark'];
         const audienceDesc = (audience?.age || audience?.interests)
-            ? `Target Audience: ${audience.age ? `Age ${audience.age}` : ''}${audience.age && audience.interests ? ', ' : ''}${audience.interests ? `interested in ${audience.interests}` : ''}. Design should resonate with this demographic.`
+            ? `Público-Alvo: ${audience.age ? `Idade ${audience.age}` : ''}${audience.age && audience.interests ? ', ' : ''}${audience.interests ? `interessado em ${audience.interests}` : ''}. O design deve ressoar com esse público.`
             : '';
-        const customDesc = customPrompt ? `Additional Instructions: ${customPrompt}` : '';
+        const customDesc = customPrompt ? `Instruções Adicionais: ${customPrompt}` : '';
 
         const imagePromises = slides.map(async (slide: { title: string, content: string }, index: number) => {
-            const prompt = `Generate a beautiful, ultra-high-quality Instagram carousel slide graphic (strictly 1:1 square aspect ratio, 1080x1080px).
+            const prompt = `Gere um gráfico de slide de carrossel Instagram bonito, de altíssima qualidade (proporção estritamente 1:1 quadrado, 1080x1080px).
 
-VISUAL STYLE: ${styleDesc}
-COLOR PALETTE: ${paletteDesc}
+ESTILO VISUAL: ${styleDesc}
+PALETA DE CORES: ${paletteDesc}
 ${audienceDesc}
 ${customDesc}
 
 LAYOUT:
-- Perfectly centered, balanced composition for a 1:1 square format.
-- Typography: Bold, impactful, large modern sans-serif fonts. Highly legible.
+- Composição perfeitamente centralizada e equilibrada para formato 1:1 quadrado.
+- Tipografia: Fontes sans-serif modernas, ousadas, impactantes e grandes. Altamente legíveis.
 
-TEXT TO RENDER (EXACTLY as shown, no extra text):
-- HEADLINE: "${slide.title}"
-- BODY: "${slide.content}"
-- FOOTER: "${index + 1} / ${slides.length}"
+TEXTO PARA RENDERIZAR (EXATAMENTE como mostrado, sem texto extra):
+- TÍTULO: "${slide.title}"
+- CORPO: "${slide.content}"
+- RODAPÉ: "${index + 1} / ${slides.length}"
 
-CRITICAL RULES:
-- The text MUST be the focal point. 
-- Perfect contrast between text and background.
-- Do NOT add any hallucinated, random, or gibberish text. ONLY render the provided text above.
-- This is a professional social media graphic, not a photo.`;
+REGRAS CRÍTICAS:
+- O texto DEVE ser o ponto focal.
+- Contraste perfeito entre texto e fundo.
+- NÃO adicione nenhum texto inventado, aleatório ou sem sentido. APENAS renderize o texto fornecido acima.
+- Este é um gráfico profissional de mídia social, não uma foto.
+- O texto dentro da imagem DEVE estar em Português do Brasil.`;
 
             const response = await ai.models.generateContent({
                 model: "gemini-3-pro-image-preview",

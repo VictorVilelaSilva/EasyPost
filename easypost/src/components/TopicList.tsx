@@ -1,5 +1,7 @@
 'use client';
 
+import { ArrowRight } from 'lucide-react';
+
 interface Props {
     topics: string[];
     onSelect: (topic: string) => void;
@@ -10,17 +12,28 @@ export default function TopicList({ topics, onSelect, isLoadingCarousel }: Props
     if (topics.length === 0) return null;
 
     return (
-        <div className="w-full mt-8">
-            <h2 className="text-xl font-semibold mb-4 text-slate-100">Pick a Topic to Generate</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="w-full mt-8 animate-reveal">
+            <h2 className="text-xl font-semibold mb-5" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-text)' }}>
+                Escolha um Tema para Gerar
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 stagger-children">
                 {topics.map((topic, i) => (
                     <button
                         key={i}
                         onClick={() => onSelect(topic)}
                         disabled={isLoadingCarousel}
-                        className="text-left p-4 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 transition-colors"
+                        aria-label={`Gerar carrossel sobre ${topic}`}
+                        className="glass-card group text-left p-5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-between gap-3"
+                        style={{ minHeight: '48px' }}
                     >
-                        <span className="text-slate-200">{topic}</span>
+                        <span style={{ color: 'var(--color-text)', fontFamily: 'var(--font-body)' }} className="text-sm font-medium leading-snug">
+                            {topic}
+                        </span>
+                        <ArrowRight
+                            size={16}
+                            className="shrink-0 opacity-0 -translate-x-2 group-hover:opacity-70 group-hover:translate-x-0 transition-all duration-300"
+                            style={{ color: 'var(--color-primary)' }}
+                        />
                     </button>
                 ))}
             </div>
