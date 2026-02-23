@@ -14,59 +14,130 @@ const STYLE_MAP: Record<string, string> = {
 
 const PALETTE_MAP: Record<string, string> = {
     dark: "Dark gradient background (deep navy #0f172a to black #000). White and light gray text for contrast.",
-    light: "Clean light/white background (#f8fafc). Dark text (#1e293b). Subtle soft shadows.",
+    light: "Clean light/white background (#f8fafc). Dark navy text (#1e293b). Subtle soft shadows.",
     blue: "Rich blue palette. Deep navy background (#1e3a5f) with electric blue accents (#2563eb, #60a5fa). White text.",
     green: "Nature-inspired green palette. Dark emerald (#064e3b) background, mint and teal accents (#059669, #34d399). White text.",
     warm: "Warm sunset palette. Deep orange-brown (#7c2d12) background, vibrant orange accents (#ea580c, #fb923c). Cream text.",
     purple: "Royal purple palette. Deep violet (#3b0764) background, lavender accents (#7c3aed, #a78bfa). White text.",
 };
 
+function buildPrompt(
+    slide: { slideType: string; title: string; content: string },
+    index: number,
+    totalSlides: number,
+    styleDesc: string,
+    paletteDesc: string,
+    audienceDesc: string,
+    customDesc: string
+): string {
+    const slideType = slide.slideType || 'content';
+
+    if (slideType === 'cover') {
+        return `Gere um gráfico de CAPA de carrossel para Instagram (1:1 quadrado, 1080x1080px).
+
+ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
+${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
+${paletteDesc ? `PALETA: ${paletteDesc}` : ''}
+${audienceDesc}
+${customDesc}
+
+LAYOUT DA CAPA:
+- Fundo claro/branco clean com textura sutil de papel.
+- Um elemento visual decorativo relacionado ao tema no canto inferior direito (ex: produto, ilustração 3D, objeto temático).
+- Uma faixa/badge retangular arredondada em azul marinho escuro (#1a2744) no centro-esquerda da imagem.
+- DENTRO do badge: O título principal em BRANCO, fonte serif bold, CAIXA ALTA.
+- Abaixo do badge: O subtítulo em azul marinho escuro, fonte serif, CAIXA ALTA.
+- Canto inferior esquerdo: um ícone/logo minimalista em azul marinho.
+
+TEXTO A RENDERIZAR (EXATAMENTE, sem inventar):
+- TÍTULO (dentro do badge): "${slide.title}"
+- SUBTÍTULO (abaixo do badge): "${slide.content}"
+
+REGRAS:
+- Tipografia serif elegante (estilo editorial).
+- NÃO adicione texto inventado, gibberish ou nomes de pessoas.
+- O texto DEVE estar em Português do Brasil.
+- Este é um gráfico de mídia social profissional.`;
+    }
+
+    if (slideType === 'cta') {
+        return `Gere um gráfico de CTA (Call to Action) de carrossel para Instagram (1:1 quadrado, 1080x1080px).
+
+ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
+${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
+${paletteDesc ? `PALETA: ${paletteDesc}` : ''}
+${audienceDesc}
+${customDesc}
+
+LAYOUT DO CTA:
+- Fundo claro/branco clean.
+- No centro-esquerda: Uma faixa/badge retangular arredondada em azul marinho escuro (#1a2744).
+- DENTRO do badge: "${slide.title}" em BRANCO, fonte serif bold, CAIXA ALTA.
+- Abaixo do badge, listar verticalmente com ícones:
+  ❤️ CURTA
+  💬 COMENTE
+  ✈️ COMPARTILHE
+- Cada item com o ícone correspondente ao lado, texto em azul marinho, fonte serif, CAIXA ALTA.
+- Canto inferior esquerdo: ícone/logo minimalista.
+
+REGRAS:
+- Tipografia serif elegante.
+- NÃO invente texto ou nomes de pessoas. NÃO coloque foto de pessoa.
+- O texto DEVE estar em Português do Brasil.`;
+    }
+
+    // Content slides (slideType === 'content')
+    return `Gere um gráfico de slide de CONTEÚDO de carrossel para Instagram (1:1 quadrado, 1080x1080px).
+
+ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
+${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
+${paletteDesc ? `PALETA: ${paletteDesc}` : ''}
+${audienceDesc}
+${customDesc}
+
+LAYOUT DO CONTEÚDO:
+- Fundo azul marinho escuro sólido (#1a2744) ou gradiente escuro elegante.
+- Um ícone de "deslizar" (mão apontando para direita) no canto superior direito em branco.
+- O texto principal em BRANCO, fonte serif, CAIXA ALTA, ocupando a maior parte da imagem.
+- O texto deve ser grande, legível, e preencher bem o espaço.
+- Um elemento visual decorativo sutil na parte inferior (relativo ao tema, como splash, forma abstrata).
+- Canto inferior esquerdo: ícone/logo minimalista em branco.
+
+TEXTO A RENDERIZAR (EXATAMENTE, sem inventar):
+- CORPO DO TEXTO: "${slide.content}"
+
+REGRAS:
+- Tipografia serif elegante (tipo editorial/revista).
+- Texto grande, ocupando 60-70% da área da imagem.
+- NÃO adicione texto inventado ou gibberish.
+- NÃO coloque foto de pessoa.
+- O texto DEVE estar em Português do Brasil.`;
+}
+
 export async function POST(req: NextRequest) {
     try {
         const { slides, visualStyle, colorPalette, audience, customPrompt } = await req.json();
 
         if (!slides || !Array.isArray(slides) || slides.length === 0) {
-            return NextResponse.json({ error: "Slides array is required" }, { status: 400 });
+            return NextResponse.json({ error: "Array de slides é obrigatório" }, { status: 400 });
         }
 
         const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
         if (!apiKey) {
-            return NextResponse.json({ error: "Missing API key" }, { status: 500 });
+            return NextResponse.json({ error: "Chave da API não encontrada" }, { status: 500 });
         }
 
         const ai = new GoogleGenAI({ apiKey });
 
-        // Build dynamic prompt sections from config
-        const styleDesc = STYLE_MAP[visualStyle] || STYLE_MAP['minimalist'];
-        const paletteDesc = PALETTE_MAP[colorPalette] || PALETTE_MAP['dark'];
+        const styleDesc = STYLE_MAP[visualStyle] || '';
+        const paletteDesc = PALETTE_MAP[colorPalette] || '';
         const audienceDesc = (audience?.age || audience?.interests)
             ? `Público-Alvo: ${audience.age ? `Idade ${audience.age}` : ''}${audience.age && audience.interests ? ', ' : ''}${audience.interests ? `interessado em ${audience.interests}` : ''}. O design deve ressoar com esse público.`
             : '';
         const customDesc = customPrompt ? `Instruções Adicionais: ${customPrompt}` : '';
 
-        const imagePromises = slides.map(async (slide: { title: string, content: string }, index: number) => {
-            const prompt = `Gere um gráfico de slide de carrossel Instagram bonito, de altíssima qualidade (proporção estritamente 1:1 quadrado, 1080x1080px).
-
-ESTILO VISUAL: ${styleDesc}
-PALETA DE CORES: ${paletteDesc}
-${audienceDesc}
-${customDesc}
-
-LAYOUT:
-- Composição perfeitamente centralizada e equilibrada para formato 1:1 quadrado.
-- Tipografia: Fontes sans-serif modernas, ousadas, impactantes e grandes. Altamente legíveis.
-
-TEXTO PARA RENDERIZAR (EXATAMENTE como mostrado, sem texto extra):
-- TÍTULO: "${slide.title}"
-- CORPO: "${slide.content}"
-- RODAPÉ: "${index + 1} / ${slides.length}"
-
-REGRAS CRÍTICAS:
-- O texto DEVE ser o ponto focal.
-- Contraste perfeito entre texto e fundo.
-- NÃO adicione nenhum texto inventado, aleatório ou sem sentido. APENAS renderize o texto fornecido acima.
-- Este é um gráfico profissional de mídia social, não uma foto.
-- O texto dentro da imagem DEVE estar em Português do Brasil.`;
+        const imagePromises = slides.map(async (slide: { slideType: string; title: string; content: string }, index: number) => {
+            const prompt = buildPrompt(slide, index, slides.length, styleDesc, paletteDesc, audienceDesc, customDesc);
 
             const response = await ai.models.generateContent({
                 model: "gemini-3-pro-image-preview",
@@ -87,7 +158,7 @@ REGRAS CRÍTICAS:
             }
 
             if (!base64Image) {
-                throw new Error("No image data returned from Google API");
+                throw new Error("Nenhuma imagem retornada pela API do Google");
             }
 
             return `data:image/png;base64,${base64Image}`;
@@ -98,7 +169,7 @@ REGRAS CRÍTICAS:
         return NextResponse.json({ images: generatedImages }, { status: 200 });
 
     } catch (error: any) {
-        console.error("Error generating images:", error);
-        return NextResponse.json({ error: error.message || "Failed to generate images" }, { status: 500 });
+        console.error("Erro ao gerar imagens:", error);
+        return NextResponse.json({ error: error.message || "Falha ao gerar imagens" }, { status: 500 });
     }
 }

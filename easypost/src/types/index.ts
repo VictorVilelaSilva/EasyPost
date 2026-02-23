@@ -1,4 +1,5 @@
 export interface SlideData {
+    slideType: 'cover' | 'content' | 'cta';
     title: string;
     content: string;
 }
