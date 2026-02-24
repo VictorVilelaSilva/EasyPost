@@ -34,6 +34,8 @@ export default function HomeClient() {
     const [isGeneratingText, setIsGeneratingText] = useState(false);
     const [isGeneratingImages, setIsGeneratingImages] = useState(false);
 
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
     const handleGenerateTopics = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!niche.trim()) return;
@@ -46,7 +48,7 @@ export default function HomeClient() {
         setShowConfig(false);
 
         try {
-            const res = await fetch('/api/generate-topics', {
+            const res = await fetch(`${API_URL}/api/v1/generate-topics`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ niche }),
@@ -72,7 +74,7 @@ export default function HomeClient() {
         setShowConfig(false);
 
         try {
-            const resText = await fetch('/api/generate-carousel', {
+            const resText = await fetch(`${API_URL}/api/v1/generate-carousel`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ topic, niche }),
@@ -99,7 +101,7 @@ export default function HomeClient() {
         setShowConfig(false);
 
         try {
-            const resImages = await fetch('/api/generate-images', {
+            const resImages = await fetch(`${API_URL}/api/v1/generate-images`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
