@@ -37,7 +37,7 @@ export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props
     const [visualStyle, setVisualStyle] = useState('minimalist');
     const [colorPalette, setColorPalette] = useState('dark');
     const [age, setAge] = useState('');
-    const [interests, setInterests] = useState('');
+
     const [customPrompt, setCustomPrompt] = useState('');
 
     // Brand colors state
@@ -92,7 +92,7 @@ export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props
                 colors: brandColors,
                 logoDataUrl: logoPreview || undefined,
             },
-            audience: { age, interests },
+            audience: { age, interests: '' },
             customPrompt,
         });
     };
@@ -279,51 +279,75 @@ export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props
                         </div>
                     </div>
 
-                    {/* Color Palette (fallback when no brand colors) */}
-                    {brandColors.length === 0 && (
-                        <div className="glass-card-static p-5">
-                            <div className="flex items-center gap-2 mb-3">
-                                <Palette size={14} style={{ color: 'var(--color-text-muted)' }} />
-                                <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-display)' }}>
-                                    Paleta de Cores
-                                </h3>
+                    {/* Color Palette */}
+                    <div className="glass-card-static p-5" style={{ position: 'relative', overflow: 'hidden' }}>
+                        <div className="flex items-center gap-2 mb-3">
+                            <Palette size={14} style={{ color: 'var(--color-text-muted)' }} />
+                            <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-display)' }}>
+                                Paleta de Cores
+                            </h3>
+                        </div>
+
+                        {/* Disabled overlay when brand colors are active */}
+                        {brandColors.length > 0 && (
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    background: 'rgba(0, 0, 0, 0.55)',
+                                    backdropFilter: 'blur(2px)',
+                                    zIndex: 10,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: 'inherit',
+                                    padding: '1rem',
+                                }}
+                            >
+                                <p className="text-xs font-medium text-center" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                                    🎨 Usando as cores da sua logo
+                                </p>
                             </div>
-                            <div className="grid grid-cols-3 gap-3">
-                                {COLOR_PALETTES.map((palette) => {
-                                    const isActive = colorPalette === palette.id;
-                                    return (
-                                        <button
-                                            key={palette.id}
-                                            onClick={() => setColorPalette(palette.id)}
-                                            aria-label={`Paleta ${palette.label}`}
-                                            className="cursor-pointer flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-200"
-                                            style={{
-                                                minHeight: '44px',
-                                                background: isActive ? 'var(--color-card-hover)' : 'var(--color-card)',
-                                                border: `1px solid ${isActive ? 'var(--color-primary)' : 'var(--color-border)'}`,
-                                                boxShadow: isActive ? '0 0 0 2px var(--color-primary-glow)' : 'none',
-                                                transform: isActive ? 'scale(1.05)' : 'scale(1)',
-                                            }}
-                                        >
-                                            <div className="flex gap-1.5">
-                                                {palette.colors.map((color, i) => (
-                                                    <div
-                                                        key={i}
-                                                        className="w-5 h-5 rounded-full"
-                                                        style={{ backgroundColor: color, border: '1px solid rgba(255,255,255,0.1)' }}
-                                                    />
-                                                ))}
-                                            </div>
-                                            <span className="text-xs font-medium" style={{ color: 'var(--color-text-subtle)' }}>{palette.label}</span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
+                        )}
+
+                        <div className="grid grid-cols-3 gap-3">
+                            {COLOR_PALETTES.map((palette) => {
+                                const isActive = colorPalette === palette.id && brandColors.length === 0;
+                                return (
+                                    <button
+                                        key={palette.id}
+                                        onClick={() => brandColors.length === 0 && setColorPalette(palette.id)}
+                                        disabled={brandColors.length > 0}
+                                        aria-label={`Paleta ${palette.label}`}
+                                        className="cursor-pointer flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-200"
+                                        style={{
+                                            minHeight: '44px',
+                                            background: isActive ? 'var(--color-card-hover)' : 'var(--color-card)',
+                                            border: `1px solid ${isActive ? 'var(--color-primary)' : 'var(--color-border)'}`,
+                                            boxShadow: isActive ? '0 0 0 2px var(--color-primary-glow)' : 'none',
+                                            transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                                        }}
+                                    >
+                                        <div className="flex gap-1.5">
+                                            {palette.colors.map((color, i) => (
+                                                <div
+                                                    key={i}
+                                                    className="w-5 h-5 rounded-full"
+                                                    style={{ backgroundColor: color, border: '1px solid rgba(255,255,255,0.1)' }}
+                                                />
+                                            ))}
+                                        </div>
+                                        <span className="text-xs font-medium" style={{ color: 'var(--color-text-subtle)' }}>{palette.label}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        {brandColors.length === 0 && (
                             <p className="text-xs mt-2" style={{ color: 'var(--color-text-subtle)' }}>
                                 💡 Envie sua logo acima para usar as cores da sua marca automaticamente
                             </p>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
 
                 {/* Right Column */}
@@ -337,38 +361,21 @@ export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props
                                 Público-Alvo
                             </h3>
                         </div>
-                        <div className="grid grid-cols-2 gap-3">
-                            <input
-                                type="text"
-                                value={age}
-                                onChange={(e) => setAge(e.target.value)}
-                                placeholder="Idade (ex: 25-35)"
-                                aria-label="Faixa etária do público"
-                                className="input-glow px-4 py-2.5 rounded-xl text-sm"
-                                style={{
-                                    background: 'var(--color-surface)',
-                                    border: '1px solid var(--color-border)',
-                                    color: 'var(--color-text)',
-                                    fontFamily: 'var(--font-body)',
-                                    minHeight: '44px',
-                                }}
-                            />
-                            <input
-                                type="text"
-                                value={interests}
-                                onChange={(e) => setInterests(e.target.value)}
-                                placeholder="Interesses (ex: tech, design)"
-                                aria-label="Interesses do público"
-                                className="input-glow px-4 py-2.5 rounded-xl text-sm"
-                                style={{
-                                    background: 'var(--color-surface)',
-                                    border: '1px solid var(--color-border)',
-                                    color: 'var(--color-text)',
-                                    fontFamily: 'var(--font-body)',
-                                    minHeight: '44px',
-                                }}
-                            />
-                        </div>
+                        <input
+                            type="text"
+                            value={age}
+                            onChange={(e) => setAge(e.target.value)}
+                            placeholder="Idade (ex: 25-35)"
+                            aria-label="Faixa etária do público"
+                            className="input-glow w-full px-4 py-2.5 rounded-xl text-sm"
+                            style={{
+                                background: 'var(--color-surface)',
+                                border: '1px solid var(--color-border)',
+                                color: 'var(--color-text)',
+                                fontFamily: 'var(--font-body)',
+                                minHeight: '44px',
+                            }}
+                        />
                     </div>
 
                     {/* Custom Prompt */}

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from "@google/genai";
+import sharp from 'sharp';
 
 export const maxDuration = 60;
 
@@ -29,7 +30,8 @@ function buildPrompt(
     paletteDesc: string,
     brandDesc: string,
     audienceDesc: string,
-    customDesc: string
+    customDesc: string,
+    hasLogo: boolean
 ): string {
     const slideType = slide.slideType || 'content';
     console.log("Building prompt for slide:", slide, "index:", index, "totalSlides:", totalSlides);
@@ -49,7 +51,7 @@ function buildPrompt(
             - Uma faixa/badge retangular arredondada em azul marinho escuro (#1a2744) no centro-esquerda da imagem.
             - DENTRO do badge: O título principal em BRANCO, fonte serif bold, CAIXA ALTA.
             - Abaixo do badge: O subtítulo em azul marinho escuro, fonte serif, CAIXA ALTA.
-            - Canto inferior esquerdo: um ícone/logo minimalista em azul marinho.
+            ${hasLogo ? '- Canto inferior esquerdo: DEIXE UMA ÁREA LIVRE (sem texto, sem ícone) para inserção posterior de logo.' : ''}
 
             TEXTO A RENDERIZAR (EXATAMENTE, sem inventar):
             - TÍTULO (dentro do badge): "${slide.title}"
@@ -80,7 +82,7 @@ function buildPrompt(
             💬 COMENTE
             ✈️ COMPARTILHE
             - Cada item com o ícone correspondente ao lado, texto em azul marinho, fonte serif, CAIXA ALTA.
-            - Canto inferior esquerdo: ícone/logo minimalista.
+            ${hasLogo ? '- Canto inferior esquerdo: DEIXE UMA ÁREA LIVRE (sem texto, sem ícone) para inserção posterior de logo.' : ''}
 
             REGRAS:
             - Tipografia serif elegante.
@@ -103,7 +105,7 @@ function buildPrompt(
             - O texto principal em BRANCO, fonte serif, CAIXA ALTA, ocupando a maior parte da imagem.
             - O texto deve ser grande, legível, e preencher bem o espaço.
             - Um elemento visual decorativo sutil na parte inferior (relativo ao tema, como splash, forma abstrata).
-            - Canto inferior esquerdo: ícone/logo minimalista em branco.
+            ${hasLogo ? '- Canto inferior esquerdo: DEIXE UMA ÁREA LIVRE (sem texto, sem ícone) para inserção posterior de logo.' : ''}
 
             TEXTO A RENDERIZAR (EXATAMENTE, sem inventar):
             - CORPO DO TEXTO: "${slide.content}"
@@ -116,9 +118,44 @@ function buildPrompt(
             - O texto DEVE estar em Português do Brasil.`;
 }
 
+async function overlayLogo(imageBase64: string, logoDataUrl: string): Promise<string> {
+    // Decode base64 image
+    const imageBuffer = Buffer.from(imageBase64, 'base64');
+
+    // Decode logo data URL (strip "data:image/...;base64," prefix)
+    const logoBase64 = logoDataUrl.split(',')[1];
+    const logoBuffer = Buffer.from(logoBase64, 'base64');
+
+    // Resize logo to fit nicely in bottom-left (~80px)
+    const resizedLogo = await sharp(logoBuffer)
+        .resize({ width: 80, height: 80, fit: 'inside' })
+        .toBuffer();
+
+    // Get logo metadata after resize for positioning
+    const logoMeta = await sharp(resizedLogo).metadata();
+    const logoWidth = logoMeta.width || 80;
+    const logoHeight = logoMeta.height || 80;
+
+    const margin = 30;
+    const imageSize = 1080; // Generated images are 1080x1080
+
+    // Composite logo on bottom-left
+    const result = await sharp(imageBuffer)
+        .composite([{
+            input: resizedLogo,
+            left: margin,
+            top: imageSize - logoHeight - margin,
+        }])
+        .png()
+        .toBuffer();
+
+    return result.toString('base64');
+}
+
 export async function POST(req: NextRequest) {
     try {
         const { slides, visualStyle, colorPalette, brandColors, audience, customPrompt } = await req.json();
+        const logoDataUrl: string | undefined = brandColors?.logoDataUrl;
 
         if (!slides || !Array.isArray(slides) || slides.length === 0) {
             return NextResponse.json({ error: "Array de slides é obrigatório" }, { status: 400 });
@@ -146,7 +183,7 @@ export async function POST(req: NextRequest) {
         const customDesc = customPrompt ? `Instruções Adicionais: ${customPrompt}` : '';
 
         const imagePromises = slides.map(async (slide: { slideType: string; title: string; content: string }, index: number) => {
-            const prompt = buildPrompt(slide, index, slides.length, styleDesc, paletteDesc, brandDesc, audienceDesc, customDesc);
+            const prompt = buildPrompt(slide, index, slides.length, styleDesc, paletteDesc, brandDesc, audienceDesc, customDesc, !!logoDataUrl);
 
             const response = await ai.models.generateContent({
                 model: "gemini-3-pro-image-preview",
@@ -168,6 +205,11 @@ export async function POST(req: NextRequest) {
 
             if (!base64Image) {
                 throw new Error("Nenhuma imagem retornada pela API do Google");
+            }
+
+            // Overlay logo if provided
+            if (logoDataUrl) {
+                base64Image = await overlayLogo(base64Image, logoDataUrl);
             }
 
             return `data:image/png;base64,${base64Image}`;
