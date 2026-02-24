@@ -160,7 +160,7 @@ export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props
                                 {logoPreview && (
                                     <div className="relative w-11 h-11 rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border)' }}>
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain" style={{ background: '#fff' }} />
+                                        <img src={logoPreview} alt="Logo preview" width={44} height={44} className="w-full h-full object-contain" style={{ background: '#fff' }} />
                                         <button
                                             onClick={() => { setLogoPreview(null); setBrandColors([]); }}
                                             className="cursor-pointer absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center"

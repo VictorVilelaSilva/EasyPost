@@ -63,6 +63,9 @@ export default function CarouselPreview({ data, topic, images }: Props) {
                         <img
                             src={base64Image}
                             alt={`Slide ${i + 1} gerado por IA`}
+                            width={1080}
+                            height={1080}
+                            loading="lazy"
                             className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                         />
                     </div>
@@ -74,7 +77,8 @@ export default function CarouselPreview({ data, topic, images }: Props) {
                     onClick={copyToClipboard}
                     className="cursor-pointer absolute top-4 right-4 transition-colors"
                     style={{ color: copied ? '#34d399' : 'var(--color-text-muted)' }}
-                    aria-label="Copiar legenda"
+                    aria-label={copied ? 'Legenda copiada' : 'Copiar legenda'}
+                    aria-live="polite"
                 >
                     {copied ? <CheckCircle2 size={20} /> : <Copy size={20} />}
                 </button>

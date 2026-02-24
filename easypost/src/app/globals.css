@@ -6,6 +6,7 @@
 
 :root {
   /* Colors */
+  color-scheme: dark;
   --color-surface: hsl(225, 30%, 6%);
   --color-surface-elevated: hsl(225, 25%, 10%);
   --color-card: rgba(255, 255, 255, 0.035);
@@ -300,7 +301,7 @@ h6 {
    ============================================ */
 
 .input-glow {
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input-glow:focus {
@@ -316,7 +317,7 @@ h6 {
 .btn-glow {
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn-glow::before {

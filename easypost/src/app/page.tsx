@@ -135,7 +135,9 @@ export default function Home() {
               type="text"
               value={niche}
               onChange={(e) => setNiche(e.target.value)}
-              placeholder="Ex: Dicas de Design, Fitness para iniciantes..."
+              placeholder="Ex: Dicas de Design, Fitness para iniciantes…"
+              name="niche"
+              autoComplete="off"
               aria-label="Seu nicho de conteúdo"
               className="input-glow flex-1 px-5 py-3.5 rounded-xl text-base"
               style={{

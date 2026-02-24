@@ -157,6 +157,11 @@ export async function POST(req: NextRequest) {
         const { slides, visualStyle, colorPalette, brandColors, audience, customPrompt } = await req.json();
         const logoDataUrl: string | undefined = brandColors?.logoDataUrl;
 
+        // Validate logo size (max ~2MB base64)
+        if (logoDataUrl && logoDataUrl.length > 2_800_000) {
+            return NextResponse.json({ error: "Logo muito grande. Use uma imagem menor (máx. 2MB)." }, { status: 400 });
+        }
+
         if (!slides || !Array.isArray(slides) || slides.length === 0) {
             return NextResponse.json({ error: "Array de slides é obrigatório" }, { status: 400 });
         }
