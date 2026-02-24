@@ -17,6 +17,26 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "EasyPost — Gerador de Carrossel para Instagram com IA",
   description: "Gere carrosséis incríveis para Instagram com IA. Digite seu nicho, escolha um tema e receba 5 slides prontos para postar com legenda em segundos.",
+  metadataBase: new URL('https://easypost.app'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'EasyPost — Carrosséis para Instagram com IA',
+    description: 'Crie carrosséis profissionais para Instagram em segundos. IA gera imagens, textos e legendas para seu nicho.',
+    url: 'https://easypost.app',
+    siteName: 'EasyPost',
+    locale: 'pt_BR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'EasyPost — Carrosséis para Instagram com IA',
+    description: 'Crie carrosséis profissionais para Instagram em segundos com IA.',
+  },
+  other: {
+    'theme-color': '#0d1117',
+  },
 };
 
 export default function RootLayout({
