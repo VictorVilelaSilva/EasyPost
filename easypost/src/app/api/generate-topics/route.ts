@@ -20,11 +20,11 @@ export async function POST(req: Request) {
 
     const prompt = `Você é um estrategista de conteúdo expert em Instagram. O usuário vai fornecer um nicho de conteúdo. Seu trabalho é gerar exatamente 15 temas de posts de carrossel para Instagram altamente envolventes, em alta e compartilháveis para esse nicho.
 
-Os temas DEVEM ser escritos em Português do Brasil.
-Os temas devem ser chamativos, específicos e acionáveis.
-Exemplos de formato: "5 Ganchos para Prender a Atenção", "O Segredo por Trás de [X]", "Pare de Fazer Isso no [X]".
+      Os temas DEVEM ser escritos em Português do Brasil.
+      Os temas devem ser chamativos, específicos e acionáveis.
+      Exemplos de formato: "5 Ganchos para Prender a Atenção", "O Segredo por Trás de [X]", "Pare de Fazer Isso no [X]".
 
-Nicho: "${niche}"`;
+      Nicho: "${niche}"`;
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",

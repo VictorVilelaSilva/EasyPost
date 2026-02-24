@@ -32,87 +32,88 @@ function buildPrompt(
     customDesc: string
 ): string {
     const slideType = slide.slideType || 'content';
+    console.log("Building prompt for slide:", slide, "index:", index, "totalSlides:", totalSlides);
 
     if (slideType === 'cover') {
         return `Gere um gráfico de CAPA de carrossel para Instagram (1:1 quadrado, 1080x1080px).
 
-ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
-${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
-${brandDesc || (paletteDesc ? `PALETA: ${paletteDesc}` : '')}
-${audienceDesc}
-${customDesc}
+            ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
+            ${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
+            ${brandDesc || (paletteDesc ? `PALETA: ${paletteDesc}` : '')}
+            ${audienceDesc}
+            ${customDesc}
 
-LAYOUT DA CAPA:
-- Fundo claro/branco clean com textura sutil de papel.
-- Um elemento visual decorativo relacionado ao tema no canto inferior direito (ex: produto, ilustração 3D, objeto temático).
-- Uma faixa/badge retangular arredondada em azul marinho escuro (#1a2744) no centro-esquerda da imagem.
-- DENTRO do badge: O título principal em BRANCO, fonte serif bold, CAIXA ALTA.
-- Abaixo do badge: O subtítulo em azul marinho escuro, fonte serif, CAIXA ALTA.
-- Canto inferior esquerdo: um ícone/logo minimalista em azul marinho.
+            LAYOUT DA CAPA:
+            - Fundo claro/branco clean com textura sutil de papel.
+            - Um elemento visual decorativo relacionado ao tema no canto inferior direito (ex: produto, ilustração 3D, objeto temático).
+            - Uma faixa/badge retangular arredondada em azul marinho escuro (#1a2744) no centro-esquerda da imagem.
+            - DENTRO do badge: O título principal em BRANCO, fonte serif bold, CAIXA ALTA.
+            - Abaixo do badge: O subtítulo em azul marinho escuro, fonte serif, CAIXA ALTA.
+            - Canto inferior esquerdo: um ícone/logo minimalista em azul marinho.
 
-TEXTO A RENDERIZAR (EXATAMENTE, sem inventar):
-- TÍTULO (dentro do badge): "${slide.title}"
-- SUBTÍTULO (abaixo do badge): "${slide.content}"
+            TEXTO A RENDERIZAR (EXATAMENTE, sem inventar):
+            - TÍTULO (dentro do badge): "${slide.title}"
+            - SUBTÍTULO (abaixo do badge): "${slide.content}"
 
-REGRAS:
-- Tipografia serif elegante (estilo editorial).
-- NÃO adicione texto inventado, gibberish ou nomes de pessoas.
-- O texto DEVE estar em Português do Brasil.
-- Este é um gráfico de mídia social profissional.`;
+            REGRAS:
+            - Tipografia serif elegante (estilo editorial).
+            - NÃO adicione texto inventado, gibberish ou nomes de pessoas.
+            - O texto DEVE estar em Português do Brasil.
+            - Este é um gráfico de mídia social profissional.`;
     }
 
     if (slideType === 'cta') {
         return `Gere um gráfico de CTA (Call to Action) de carrossel para Instagram (1:1 quadrado, 1080x1080px).
 
-ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
-${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
-${brandDesc || (paletteDesc ? `PALETA: ${paletteDesc}` : '')}
-${audienceDesc}
-${customDesc}
+            ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
+            ${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
+            ${brandDesc || (paletteDesc ? `PALETA: ${paletteDesc}` : '')}
+            ${audienceDesc}
+            ${customDesc}
 
-LAYOUT DO CTA:
-- Fundo claro/branco clean.
-- No centro-esquerda: Uma faixa/badge retangular arredondada em azul marinho escuro (#1a2744).
-- DENTRO do badge: "${slide.title}" em BRANCO, fonte serif bold, CAIXA ALTA.
-- Abaixo do badge, listar verticalmente com ícones:
-  ❤️ CURTA
-  💬 COMENTE
-  ✈️ COMPARTILHE
-- Cada item com o ícone correspondente ao lado, texto em azul marinho, fonte serif, CAIXA ALTA.
-- Canto inferior esquerdo: ícone/logo minimalista.
+            LAYOUT DO CTA:
+            - Fundo claro/branco clean.
+            - No centro-esquerda: Uma faixa/badge retangular arredondada em azul marinho escuro (#1a2744).
+            - DENTRO do badge: "${slide.title}" em BRANCO, fonte serif bold, CAIXA ALTA.
+            - Abaixo do badge, listar verticalmente com ícones:
+            ❤️ CURTA
+            💬 COMENTE
+            ✈️ COMPARTILHE
+            - Cada item com o ícone correspondente ao lado, texto em azul marinho, fonte serif, CAIXA ALTA.
+            - Canto inferior esquerdo: ícone/logo minimalista.
 
-REGRAS:
-- Tipografia serif elegante.
-- NÃO invente texto ou nomes de pessoas. NÃO coloque foto de pessoa.
-- O texto DEVE estar em Português do Brasil.`;
+            REGRAS:
+            - Tipografia serif elegante.
+            - NÃO invente texto ou nomes de pessoas. NÃO coloque foto de pessoa.
+            - O texto DEVE estar em Português do Brasil.`;
     }
 
     // Content slides (slideType === 'content')
     return `Gere um gráfico de slide de CONTEÚDO de carrossel para Instagram (1:1 quadrado, 1080x1080px).
 
-ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
-${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
-${brandDesc || (paletteDesc ? `PALETA: ${paletteDesc}` : '')}
-${audienceDesc}
-${customDesc}
+            ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
+            ${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
+            ${brandDesc || (paletteDesc ? `PALETA: ${paletteDesc}` : '')}
+            ${audienceDesc}
+            ${customDesc}
 
-LAYOUT DO CONTEÚDO:
-- Fundo azul marinho escuro sólido (#1a2744) ou gradiente escuro elegante.
-- Um ícone de "deslizar" (mão apontando para direita) no canto superior direito em branco.
-- O texto principal em BRANCO, fonte serif, CAIXA ALTA, ocupando a maior parte da imagem.
-- O texto deve ser grande, legível, e preencher bem o espaço.
-- Um elemento visual decorativo sutil na parte inferior (relativo ao tema, como splash, forma abstrata).
-- Canto inferior esquerdo: ícone/logo minimalista em branco.
+            LAYOUT DO CONTEÚDO:
+            - Fundo azul marinho escuro sólido (#1a2744) ou gradiente escuro elegante.
+            - Um ícone de "deslizar" (mão apontando para direita) no canto superior direito em branco.
+            - O texto principal em BRANCO, fonte serif, CAIXA ALTA, ocupando a maior parte da imagem.
+            - O texto deve ser grande, legível, e preencher bem o espaço.
+            - Um elemento visual decorativo sutil na parte inferior (relativo ao tema, como splash, forma abstrata).
+            - Canto inferior esquerdo: ícone/logo minimalista em branco.
 
-TEXTO A RENDERIZAR (EXATAMENTE, sem inventar):
-- CORPO DO TEXTO: "${slide.content}"
+            TEXTO A RENDERIZAR (EXATAMENTE, sem inventar):
+            - CORPO DO TEXTO: "${slide.content}"
 
-REGRAS:
-- Tipografia serif elegante (tipo editorial/revista).
-- Texto grande, ocupando 60-70% da área da imagem.
-- NÃO adicione texto inventado ou gibberish.
-- NÃO coloque foto de pessoa.
-- O texto DEVE estar em Português do Brasil.`;
+            REGRAS:
+            - Tipografia serif elegante (tipo editorial/revista).
+            - Texto grande, ocupando 60-70% da área da imagem.
+            - NÃO adicione texto inventado ou gibberish.
+            - NÃO coloque foto de pessoa.
+            - O texto DEVE estar em Português do Brasil.`;
 }
 
 export async function POST(req: NextRequest) {

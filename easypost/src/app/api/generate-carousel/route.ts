@@ -19,36 +19,36 @@ export async function POST(req: Request) {
         const ai = new GoogleGenAI({ apiKey });
 
         const prompt = `Você é um estrategista de conteúdo e copywriter expert em Instagram para o mercado brasileiro.
-Tópico: "${topic}"
-Nicho: "${niche}"
+            Tópico: "${topic}"
+            Nicho: "${niche}"
 
-Objetivo: Criar o roteiro de um carrossel de 5 slides para Instagram no estilo educativo/informativo brasileiro.
+            Objetivo: Criar o roteiro de um carrossel de 5 slides para Instagram no estilo educativo/informativo brasileiro.
 
-IMPORTANTE: Todo o conteúdo DEVE ser escrito em Português do Brasil.
+            IMPORTANTE: Todo o conteúdo DEVE ser escrito em Português do Brasil.
 
-ESTRUTURA OBRIGATÓRIA DOS SLIDES:
+            ESTRUTURA OBRIGATÓRIA DOS SLIDES:
 
-Slide 1 — CAPA (Gancho que para o scroll):
-- slideType: "cover"
-- title: Uma pergunta provocativa ou afirmação impactante que gere curiosidade (máx 50 chars). Exemplo: "ISSO VALE A PENA?", "PARE DE FAZER ISSO"
-- content: Um subtítulo curto complementando o gancho (máx 60 chars)
+            Slide 1 — CAPA (Gancho que para o scroll):
+            - slideType: "cover"
+            - title: Uma pergunta provocativa ou afirmação impactante que gere curiosidade (máx 50 chars). Exemplo: "ISSO VALE A PENA?", "PARE DE FAZER ISSO"
+            - content: Um subtítulo curto complementando o gancho (máx 60 chars)
 
-Slides 2 e 3 — CONTEÚDO (Valor educativo):
-- slideType: "content"
-- title: Um subtítulo curto do bloco de conteúdo (máx 40 chars)
-- content: Texto educativo mais longo explicando o ponto, como se fosse um parágrafo de um post informativo. Pode ter de 150 a 300 caracteres. Use linguagem direta, conversacional, em caixa alta seria ideal.
+            Slides 2 e 3 — CONTEÚDO (Valor educativo):
+            - slideType: "content"
+            - title: Um subtítulo curto do bloco de conteúdo (máx 40 chars)
+            - content: Texto educativo mais longo explicando o ponto, como se fosse um parágrafo de um post informativo. Pode ter de 150 a 300 caracteres. Use linguagem direta, conversacional, em caixa alta seria ideal.
 
-Slide 4 — CONTEÚDO FINAL (Conclusão/Insight):
-- slideType: "content"
-- title: Conclusão ou insight final (máx 40 chars)
-- content: Texto de 150-300 chars com o argumento final, conselho prático ou dado que fecha o raciocínio.
+            Slide 4 — CONTEÚDO FINAL (Conclusão/Insight):
+            - slideType: "content"
+            - title: Conclusão ou insight final (máx 40 chars)
+            - content: Texto de 150-300 chars com o argumento final, conselho prático ou dado que fecha o raciocínio.
 
-Slide 5 — CTA (Chamada para Ação):
-- slideType: "cta"
-- title: "GOSTOU DO CONTEÚDO?" ou variação
-- content: "❤️ CURTA | 💬 COMENTE | ✈️ COMPARTILHE | 📌 SALVE"
+            Slide 5 — CTA (Chamada para Ação):
+            - slideType: "cta"
+            - title: "GOSTOU DO CONTEÚDO?" ou variação
+            - content: "❤️ CURTA | 💬 COMENTE | ✈️ COMPARTILHE | 📌 SALVE"
 
-Para a 'caption', escreva uma legenda envolvente para Instagram incluindo emojis e exatamente 7 hashtags relevantes em português.`;
+            Para a 'caption', escreva uma legenda envolvente para Instagram incluindo emojis e exatamente 7 hashtags relevantes em português.`;
 
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",

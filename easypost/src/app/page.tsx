@@ -117,10 +117,6 @@ export default function Home() {
 
         {/* Hero */}
         <div className="text-center mb-16 animate-reveal">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-medium tracking-wide" style={{ background: 'var(--color-card)', border: '1px solid var(--color-border)', color: 'var(--color-text-muted)', fontFamily: 'var(--font-display)' }}>
-            <Sparkles size={14} style={{ color: 'var(--color-primary)' }} />
-            Criado com Gemini AI
-          </div>
           <h1
             className="text-5xl md:text-6xl lg:text-7xl font-extrabold gradient-text-shimmer mb-5 leading-tight"
             style={{ fontFamily: 'var(--font-display)' }}
