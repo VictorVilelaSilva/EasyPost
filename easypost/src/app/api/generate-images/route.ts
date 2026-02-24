@@ -104,7 +104,6 @@ function buildPrompt(
             - Um ícone de "deslizar" (mão apontando para direita) no canto superior direito em branco.
             - O texto principal em BRANCO, fonte serif, CAIXA ALTA, ocupando a maior parte da imagem.
             - O texto deve ser grande, legível, e preencher bem o espaço.
-            - Um elemento visual decorativo sutil na parte inferior (relativo ao tema, como splash, forma abstrata).
             ${hasLogo ? '- Canto inferior esquerdo: DEIXE UMA ÁREA LIVRE (sem texto, sem ícone) para inserção posterior de logo.' : ''}
 
             TEXTO A RENDERIZAR (EXATAMENTE, sem inventar):
@@ -136,7 +135,7 @@ async function overlayLogo(imageBase64: string, logoDataUrl: string): Promise<st
     const logoWidth = logoMeta.width || 80;
     const logoHeight = logoMeta.height || 80;
 
-    const margin = 30;
+    const margin = 50;
     const imageSize = 1080; // Generated images are 1080x1080
 
     // Composite logo on bottom-left
