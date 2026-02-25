@@ -1,0 +1,177 @@
+/* Landing page specific colors and design tokens */
+.root {
+    position: relative;
+    min-height: 100vh;
+    /* Palette — monochromatic + lime accent */
+    --lp-bg: #0a0a0a;
+    --lp-surface: #131313;
+    --lp-surface-elevated: #1a1a1a;
+    --lp-border: rgba(255, 255, 255, 0.08);
+    --lp-border-hover: rgba(255, 255, 255, 0.16);
+    --lp-text: #f5f5f5;
+    --lp-muted: #a5a5a5;
+    --lp-dim: #7e7e7e;
+    --lp-subtle: #585858;
+    --lp-dark: #313131;
+    --lp-accent: #c8ff00;
+    --lp-accent-muted: rgba(200, 255, 0, 0.15);
+    --lp-accent-glow: rgba(200, 255, 0, 0.25);
+    color: var(--lp-text);
+    background-color: var(--lp-bg);
+}
+
+/* Hide global layout elements when this page is active */
+:global(body:has(.lp-active)) {
+    background: #0a0a0a !important;
+}
+
+:global(body:has(.lp-active))> :global(.gradient-mesh),
+:global(body:has(.lp-active))> :global(.grain-overlay) {
+    display: none !important;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btnPrimary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: var(--lp-accent);
+    color: #0a0a0a;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+    min-height: 48px;
+}
+
+.btnPrimary:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 32px var(--lp-accent-glow);
+}
+
+.btnSecondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: transparent;
+    color: var(--lp-text);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 100px;
+    border: 1px solid var(--lp-subtle);
+    cursor: pointer;
+    transition: border-color 0.25s ease, background 0.25s ease;
+    min-height: 48px;
+}
+
+.btnSecondary:hover {
+    border-color: var(--lp-muted);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* ============================================
+   GLASSMORPHIC PANEL
+   ============================================ */
+
+.glassPanel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--lp-border);
+    border-radius: 1.25rem;
+}
+
+/* ============================================
+   FEATURE CARD
+   ============================================ */
+
+.featureCard {
+    background: var(--lp-surface);
+    border: 1px solid var(--lp-border);
+    border-radius: 1rem;
+    padding: 2rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.featureCard:hover {
+    border-color: var(--lp-border-hover);
+    box-shadow: 0 0 48px -12px var(--lp-accent-muted);
+}
+
+/* ============================================
+   ACCENT GLOW BACKGROUND
+   ============================================ */
+
+.glowBg {
+    position: relative;
+}
+
+.glowBg::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(ellipse, var(--lp-accent-muted) 0%, transparent 70%);
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ============================================
+   BADGE PILL
+   ============================================ */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border: 1px solid var(--lp-subtle);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lp-accent);
+}
+
+.badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--lp-accent);
+}
+
+/* ============================================
+   STEP CIRCLE
+   ============================================ */
+
+.stepCircle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--lp-accent);
+    color: var(--lp-accent);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+}
