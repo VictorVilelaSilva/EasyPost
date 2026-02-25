@@ -13,9 +13,9 @@
     --lp-dim: #7e7e7e;
     --lp-subtle: #585858;
     --lp-dark: #313131;
-    --lp-accent: #c8ff00;
-    --lp-accent-muted: rgba(200, 255, 0, 0.15);
-    --lp-accent-glow: rgba(200, 255, 0, 0.25);
+    --lp-accent: #7C3AED;
+    --lp-accent-muted: rgba(124, 58, 237, 0.15);
+    --lp-accent-glow: rgba(124, 58, 237, 0.25);
     color: var(--lp-text);
     background-color: var(--lp-bg);
 }
