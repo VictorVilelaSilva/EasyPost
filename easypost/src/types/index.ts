@@ -24,3 +24,13 @@ export interface ImageConfig {
     };
     customPrompt: string;
 }
+
+export type Platform = 'instagram' | 'linkedin';
+
+export type PostObjective = 'comercial' | 'informativo' | 'autoridade' | 'engajamento';
+
+export interface PostConfig {
+    platform: Platform;
+    objective: PostObjective;
+    slideCount: number;
+}

@@ -337,21 +337,189 @@ h6 {
 }
 
 /* ============================================
+   FLOATING GRADIENT ORB (Hero depth)
+   ============================================ */
+
+.floating-orb {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-primary-glow) 0%, var(--color-accent-glow) 40%, transparent 70%);
+  filter: blur(80px);
+  opacity: 0.5;
+  animation: orbFloat 12s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes orbFloat {
+  0% { transform: translate(-20%, -30%) scale(1); }
+  50% { transform: translate(10%, -10%) scale(1.15); }
+  100% { transform: translate(-10%, -25%) scale(0.95); }
+}
+
+/* ============================================
+   STEP INDICATOR
+   ============================================ */
+
+.step-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 4px;
+}
+
+.step-track::-webkit-scrollbar {
+  display: none;
+}
+
+.step-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  color: var(--color-text-subtle);
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.step-badge-completed {
+  color: var(--color-primary);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.step-badge-active {
+  color: var(--color-text);
+  background: var(--color-card);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 20px -6px var(--color-primary-glow);
+}
+
+.step-connector {
+  width: 20px;
+  height: 1px;
+  background: var(--color-border);
+  flex-shrink: 0;
+  transition: background 0.3s ease;
+}
+
+.step-connector-done {
+  background: var(--color-primary);
+}
+
+/* ============================================
+   SELECTED CARD PULSE
+   ============================================ */
+
+@keyframes selectPulse {
+  0% { box-shadow: 0 0 0 0 var(--color-primary-glow); }
+  50% { box-shadow: 0 0 24px -4px var(--color-primary-glow); }
+  100% { box-shadow: 0 0 0 0 var(--color-primary-glow); }
+}
+
+.card-selected {
+  border-color: var(--color-primary) !important;
+  animation: selectPulse 2s ease-in-out infinite;
+}
+
+.card-selected-accent {
+  border-color: var(--color-accent) !important;
+  animation: selectPulseAccent 2s ease-in-out infinite;
+}
+
+@keyframes selectPulseAccent {
+  0% { box-shadow: 0 0 0 0 var(--color-accent-glow); }
+  50% { box-shadow: 0 0 24px -4px var(--color-accent-glow); }
+  100% { box-shadow: 0 0 0 0 var(--color-accent-glow); }
+}
+
+/* ============================================
+   SKELETON SHIMMER LOADER
+   ============================================ */
+
+@keyframes skeletonShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-card) 0%,
+    rgba(255, 255, 255, 0.06) 40%,
+    var(--color-card) 80%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.8s ease-in-out infinite;
+  border-radius: var(--radius-lg);
+}
+
+/* ============================================
+   SCROLL-TRIGGERED VIEW ANIMATION
+   ============================================ */
+
+.animate-on-scroll {
+  animation: fadeSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+/* ============================================
+   STEP TRANSITION
+   ============================================ */
+
+.step-enter {
+  animation: stepEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes stepEnter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* ============================================
    ACCESSIBILITY: REDUCED MOTION
    ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
-  .gradient-mesh {
+  .gradient-mesh,
+  .floating-orb {
     animation: none;
   }
 
   .animate-reveal,
   .animate-fade-in,
+  .animate-on-scroll,
+  .step-enter,
   .stagger-children>*,
-  .gradient-text-shimmer {
+  .gradient-text-shimmer,
+  .card-selected,
+  .card-selected-accent,
+  .skeleton-shimmer {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
   }
 }
 

@@ -2,7 +2,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 
 export async function POST(req: Request) {
   try {
-    const { niche } = await req.json();
+    const { niche, platform, objective } = await req.json();
 
     if (!niche) {
       return new Response(JSON.stringify({ error: "Nicho é obrigatório" }), {
@@ -18,10 +18,20 @@ export async function POST(req: Request) {
 
     const ai = new GoogleGenAI({ apiKey });
 
-    const prompt = `Você é um estrategista de conteúdo expert em Instagram. O usuário vai fornecer um nicho de conteúdo. Seu trabalho é gerar exatamente 15 temas de posts de carrossel para Instagram altamente envolventes, em alta e compartilháveis para esse nicho.
+    const platformLabel = platform === 'linkedin' ? 'LinkedIn' : 'Instagram';
+    const objectiveMap: Record<string, string> = {
+      comercial: 'vendas e conversão',
+      informativo: 'educar e informar o público',
+      autoridade: 'posicionamento como especialista e autoridade',
+      engajamento: 'gerar interação, comentários e compartilhamentos',
+    };
+    const objectiveDesc = objectiveMap[objective] || '';
+
+    const prompt = `Você é um estrategista de conteúdo expert em ${platformLabel}. O usuário vai fornecer um nicho de conteúdo. Seu trabalho é gerar exatamente 15 temas de posts de carrossel para ${platformLabel} altamente envolventes, em alta e compartilháveis para esse nicho.
 
       Os temas DEVEM ser escritos em Português do Brasil.
       Os temas devem ser chamativos, específicos e acionáveis.
+      ${objectiveDesc ? `O objetivo dos posts é: ${objectiveDesc}. Os temas devem refletir isso.` : ''}
       Exemplos de formato: "5 Ganchos para Prender a Atenção", "O Segredo por Trás de [X]", "Pare de Fazer Isso no [X]".
 
       Nicho: "${niche}"`;
