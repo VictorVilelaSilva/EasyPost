@@ -1,138 +1,43 @@
 'use client';
 
-import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Loader2, Sparkles } from 'lucide-react';
 import TopicList from './TopicList';
-import { CarouselData, ImageConfig } from '../types';
+import LoadingCard from './LoadingCard';
+import { useCarouselWorkflow } from '../hooks/useCarouselWorkflow';
 
 const ImageConfigPanel = dynamic(() => import('./ImageConfig'), {
     loading: () => (
-        <div className="flex items-center justify-center py-12 glass-card-static" style={{ borderStyle: 'dashed' }}>
-            <Loader2 className="animate-spin" size={32} style={{ color: 'var(--color-primary)' }} />
+        <div className="flex items-center justify-center py-12 glass-card-static border-dashed">
+            <Loader2 className="animate-spin text-primary" size={32} />
         </div>
     ),
 });
 
 const CarouselPreview = dynamic(() => import('./CarouselPreview'), {
     loading: () => (
-        <div className="flex items-center justify-center py-12 glass-card-static" style={{ borderStyle: 'dashed' }}>
-            <Loader2 className="animate-spin" size={32} style={{ color: 'var(--color-accent)' }} />
+        <div className="flex items-center justify-center py-12 glass-card-static border-dashed">
+            <Loader2 className="animate-spin text-accent" size={32} />
         </div>
     ),
 });
 
 export default function HomeClient() {
-    const [niche, setNiche] = useState('');
-    const [topics, setTopics] = useState<string[]>([]);
-    const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-    const [carouselData, setCarouselData] = useState<CarouselData | null>(null);
-    const [images, setImages] = useState<string[] | null>(null);
-    const [showConfig, setShowConfig] = useState(false);
-
-    const [isGeneratingTopics, setIsGeneratingTopics] = useState(false);
-    const [isGeneratingText, setIsGeneratingText] = useState(false);
-    const [isGeneratingImages, setIsGeneratingImages] = useState(false);
-
-    const handleGenerateTopics = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!niche.trim()) return;
-
-        setIsGeneratingTopics(true);
-        setTopics([]);
-        setSelectedTopic(null);
-        setCarouselData(null);
-        setImages(null);
-        setShowConfig(false);
-
-        try {
-            const res = await fetch('/api/generate-topics', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ niche }),
-            });
-            const data = await res.json();
-            if (data.topics) {
-                setTopics(data.topics);
-            } else {
-                alert(data.error || 'Falha ao gerar tópicos');
-            }
-        } catch (e) {
-            console.error(e);
-            alert('Erro de conexão ao gerar tópicos');
-        }
-        setIsGeneratingTopics(false);
-    };
-
-    const handleSelectTopic = async (topic: string) => {
-        setSelectedTopic(topic);
-        setIsGeneratingText(true);
-        setCarouselData(null);
-        setImages(null);
-        setShowConfig(false);
-
-        try {
-            const resText = await fetch('/api/generate-carousel', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ topic, niche }),
-            });
-            const dataText = await resText.json();
-
-            if (!dataText.slides || !dataText.caption) {
-                throw new Error(dataText.error || 'Falha ao gerar texto do carrossel');
-            }
-            setCarouselData(dataText);
-            setShowConfig(true);
-        } catch (e: unknown) {
-            console.error(e);
-            if (e instanceof Error) {
-                alert(e.message || 'Erro de conexão ao gerar texto do carrossel');
-            } else {
-                alert('Erro de conexão ao gerar texto do carrossel');
-            }
-        }
-        setIsGeneratingText(false);
-    };
-
-    const handleGenerateImages = async (config: ImageConfig) => {
-        if (!carouselData) return;
-
-        setIsGeneratingImages(true);
-        setImages(null);
-        setShowConfig(false);
-
-        try {
-            const resImages = await fetch('/api/generate-images', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    slides: carouselData.slides,
-                    visualStyle: config.visualStyle,
-                    colorPalette: config.colorPalette,
-                    brandColors: config.brandColors,
-                    audience: config.audience,
-                    customPrompt: config.customPrompt,
-                }),
-            });
-            const dataImages = await resImages.json();
-
-            if (!dataImages.images) {
-                throw new Error(dataImages.error || 'Falha ao gerar imagens');
-            }
-
-            setImages(dataImages.images);
-        } catch (e: unknown) {
-            console.error(e);
-            if (e instanceof Error) {
-                alert(e.message || 'Erro de conexão ao gerar imagens');
-            } else {
-                alert('Erro de conexão ao gerar imagens');
-            }
-            setShowConfig(true);
-        }
-        setIsGeneratingImages(false);
-    };
+    const {
+        niche,
+        topics,
+        selectedTopic,
+        carouselData,
+        images,
+        showConfig,
+        isGeneratingTopics,
+        isGeneratingText,
+        isGeneratingImages,
+        setNiche,
+        handleGenerateTopics,
+        handleSelectTopic,
+        handleGenerateImages,
+    } = useCarouselWorkflow();
 
     return (
         <>
@@ -147,26 +52,14 @@ export default function HomeClient() {
                         name="niche"
                         autoComplete="off"
                         aria-label="Seu nicho de conteúdo"
-                        className="input-glow flex-1 px-5 py-3.5 rounded-xl text-base"
-                        style={{
-                            background: 'var(--color-card)',
-                            border: '1px solid var(--color-border)',
-                            color: 'var(--color-text)',
-                            fontFamily: 'var(--font-body)',
-                            minHeight: '48px',
-                        }}
+                        className="input-glow flex-1 px-5 py-3.5 rounded-xl text-base bg-card border-default text-[var(--color-text)] font-body min-h-12"
                         required
                     />
                     <button
                         type="submit"
                         disabled={isGeneratingTopics || !niche.trim()}
                         aria-label="Gerar temas em alta para seu nicho"
-                        className="btn-glow cursor-pointer px-7 py-3.5 text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                        style={{
-                            background: 'linear-gradient(135deg, var(--color-primary), var(--color-accent))',
-                            fontFamily: 'var(--font-display)',
-                            minHeight: '48px',
-                        }}
+                        className="btn-glow cursor-pointer px-7 py-3.5 text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-primary font-display min-h-12"
                     >
                         {isGeneratingTopics ? <Loader2 className="animate-spin" size={20} /> : (
                             <>
@@ -180,12 +73,7 @@ export default function HomeClient() {
 
             {/* Loading: gerando texto */}
             {isGeneratingText && (
-                <div className="flex flex-col items-center justify-center py-16 glass-card-static mb-8 animate-reveal" style={{ borderStyle: 'dashed' }}>
-                    <Loader2 className="animate-spin mb-4" size={40} style={{ color: 'var(--color-primary)' }} />
-                    <p className="font-medium" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-body)' }}>
-                        Gerando texto dos slides e legenda…
-                    </p>
-                </div>
+                <LoadingCard message="Gerando texto dos slides e legenda…" color="primary" />
             )}
 
             {/* Painel de Configuração */}
@@ -199,12 +87,7 @@ export default function HomeClient() {
 
             {/* Loading: gerando imagens */}
             {isGeneratingImages && (
-                <div className="flex flex-col items-center justify-center py-16 glass-card-static mb-8 animate-reveal" style={{ borderStyle: 'dashed' }}>
-                    <Loader2 className="animate-spin mb-4" size={40} style={{ color: 'var(--color-accent)' }} />
-                    <p className="font-medium" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-body)' }}>
-                        Criando suas 5 imagens com IA. Isso pode levar alguns segundos…
-                    </p>
-                </div>
+                <LoadingCard message="Criando suas 5 imagens com IA. Isso pode levar alguns segundos…" color="accent" />
             )}
 
             {/* Preview do Carrossel */}

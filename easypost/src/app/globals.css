@@ -155,6 +155,42 @@ h6 {
 }
 
 /* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.bg-card {
+  background: var(--color-card);
+}
+
+.border-default {
+  border: 1px solid var(--color-border);
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+}
+
+/* ============================================
    GLASSMORPHIC UTILITIES
    ============================================ */
 
