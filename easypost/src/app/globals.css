@@ -30,6 +30,12 @@
   --color-accent: var(--color-5);
   --color-accent-glow: rgba(165, 165, 165, 0.15);
 
+  /* Purple Palette (Landing Page & Branding) */
+  --color-purple: #A855F7;
+  --color-purple-deep: #7C3AED;
+  --color-purple-dark: #2D1150;
+  --color-purple-darker: #1E0B36;
+
   --color-text: #f5f5f5;
   --color-text-muted: var(--color-5);
   --color-text-subtle: var(--color-4);
@@ -62,6 +68,10 @@
 @theme inline {
   --color-background: var(--color-surface);
   --color-foreground: var(--color-text);
+  --color-purple: #A855F7;
+  --color-purple-deep: #7C3AED;
+  --color-purple-dark: #2D1150;
+  --color-purple-darker: #1E0B36;
   --font-sans: var(--font-body);
   --font-mono: var(--font-body);
 }

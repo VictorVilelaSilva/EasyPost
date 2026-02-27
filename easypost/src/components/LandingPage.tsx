@@ -59,7 +59,7 @@ export default function LandingPage() {
     }
 
     return (
-        <div className="bg-[#000000] text-slate-200 font-['Spline_Sans'] selection:bg-[#A855F7]/30 min-h-screen relative z-10 overflow-hidden">
+        <div className="bg-[#000000] text-slate-200 font-['Spline_Sans'] selection:bg-purple/30 min-h-screen relative z-10 overflow-hidden">
             <style jsx global>{`
                 @import url('https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700;800&display=swap');
                 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
@@ -81,8 +81,8 @@ export default function LandingPage() {
                     y: backgroundY,
                     backgroundColor: '#000000',
                     backgroundImage: `
-                        radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 50%),
-                        radial-gradient(at 100% 100%, rgba(124, 58, 237, 0.12) 0px, transparent 50%)
+                        radial-gradient(at 0% 0%, color-mix(in srgb, var(--color-purple) 12%, transparent) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, color-mix(in srgb, var(--color-purple-deep) 12%, transparent) 0px, transparent 50%)
                     `
                 }}
             />
@@ -103,7 +103,7 @@ export default function LandingPage() {
                         <Link href="/login" className="hidden sm:block text-sm font-semibold text-slate-300 hover:text-white px-4 py-2">
                             Entrar
                         </Link>
-                        <Link href="/create" className="bg-[#A855F7] hover:bg-[#A855F7]/90 text-white px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg shadow-[#A855F7]/25 hover:scale-105 active:scale-95">
+                        <Link href="/create" className="bg-purple hover:bg-purple/90 text-white px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg shadow-purple/25 hover:scale-105 active:scale-95">
                             Começar grátis
                         </Link>
                     </div>
@@ -118,15 +118,15 @@ export default function LandingPage() {
                         animate="visible"
                         className="space-y-8 relative z-10"
                     >
-                        <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#A855F7]/10 border border-[#A855F7]/20 text-[#A855F7] text-xs font-bold uppercase tracking-wider">
+                        <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple/10 border border-purple/20 text-purple text-xs font-bold uppercase tracking-wider">
                             <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#A855F7] opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#A855F7]"></span>
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-purple"></span>
                             </span>
                             Artes Visuais com IA
                         </motion.div>
                         <motion.h1 variants={fadeInUp} className="text-5xl lg:text-7xl font-extrabold leading-[1.1] text-white">
-                            Transforme sua <span className="text-[#A855F7]">presença digital</span> com a magia da IA.
+                            Transforme sua <span className="text-purple">presença digital</span> com a magia da IA.
                         </motion.h1>
                         <motion.p variants={fadeInUp} className="text-xl text-slate-400 max-w-xl leading-relaxed">
                             Crie stories e carrosséis visuais deslumbrantes para o Instagram e LinkedIn em segundos. O poder de um estúdio de design criativo inteiro focado na mesma ferramenta.
@@ -134,9 +134,9 @@ export default function LandingPage() {
                         <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 pt-4">
                             <div className="relative flex-1 max-w-md">
                                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">mail</span>
-                                <input className="w-full bg-[#0F0F0F] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:ring-2 focus:ring-[#A855F7] focus:border-transparent transition-all" placeholder="Digite seu melhor e-mail" type="email" />
+                                <input className="w-full bg-[#0F0F0F] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:ring-2 focus:ring-purple focus:border-transparent transition-all" placeholder="Digite seu melhor e-mail" type="email" />
                             </div>
-                            <button onClick={() => router.push('/login')} className="bg-[#A855F7] text-white px-8 py-4 rounded-xl font-bold text-lg hover:brightness-110 active:scale-[0.98] transition-all shadow-xl shadow-[#A855F7]/20 hover:shadow-2xl hover:shadow-[#A855F7]/30">
+                            <button onClick={() => router.push('/login')} className="bg-purple text-white px-8 py-4 rounded-xl font-bold text-lg hover:brightness-110 active:scale-[0.98] transition-all shadow-xl shadow-purple/20 hover:shadow-2xl hover:shadow-purple/30">
                                 Começar a Criar
                             </button>
                         </motion.div>
@@ -157,29 +157,29 @@ export default function LandingPage() {
                         style={{ y: heroRightY }}
                         className="relative group z-10"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-tr from-[#A855F7]/30 to-[#7C3AED]/30 blur-[100px] opacity-40 group-hover:opacity-70 transition-opacity duration-700"></div>
+                        <div className="absolute inset-0 bg-gradient-to-tr from-purple/30 to-purple-deep/30 blur-[100px] opacity-40 group-hover:opacity-70 transition-opacity duration-700"></div>
                         <div className="relative bg-[#0F0F0F]/60 border border-white/10 p-8 rounded-[2rem] shadow-2xl backdrop-blur-md">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="aspect-square bg-white/5 rounded-2xl flex items-center justify-center p-6 border border-white/5 hover:bg-white/10 transition-colors">
                                     <span className="material-symbols-outlined text-6xl text-slate-500">photo_library</span>
                                 </div>
-                                <div className="aspect-square bg-[#A855F7]/15 rounded-2xl flex items-center justify-center p-6 border border-[#A855F7]/20 relative overflow-hidden group/star">
-                                    <span className="material-symbols-outlined text-6xl text-[#A855F7] relative z-10 group-hover/star:scale-110 transition-transform">auto_awesome</span>
-                                    <div className="absolute inset-0 bg-[#A855F7]/5 animate-pulse"></div>
+                                <div className="aspect-square bg-purple/15 rounded-2xl flex items-center justify-center p-6 border border-purple/20 relative overflow-hidden group/star">
+                                    <span className="material-symbols-outlined text-6xl text-purple relative z-10 group-hover/star:scale-110 transition-transform">auto_awesome</span>
+                                    <div className="absolute inset-0 bg-purple/5 animate-pulse"></div>
                                 </div>
                                 <div className="aspect-square bg-white/5 rounded-2xl flex items-center justify-center p-6 border border-white/5 hover:bg-white/10 transition-colors">
                                     <span className="material-symbols-outlined text-6xl text-slate-500">share</span>
                                 </div>
-                                <div className="aspect-square bg-[#7C3AED]/15 rounded-2xl flex items-center justify-center p-6 border border-[#7C3AED]/20">
-                                    <span className="material-symbols-outlined text-6xl text-[#7C3AED]">insights</span>
+                                <div className="aspect-square bg-purple-deep/15 rounded-2xl flex items-center justify-center p-6 border border-purple-deep/20">
+                                    <span className="material-symbols-outlined text-6xl text-purple-deep">insights</span>
                                 </div>
                             </div>
                             <motion.div
                                 animate={{ y: [0, -10, 0] }}
                                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute -top-6 -right-6 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-2xl shadow-[#A855F7]/50 border"
+                                className="absolute -top-6 -right-6 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-2xl shadow-purple/50 border"
                             >
-                                <span className="material-symbols-outlined text-[#A855F7] text-3xl font-bold">star</span>
+                                <span className="material-symbols-outlined text-purple text-3xl font-bold">star</span>
                             </motion.div>
                         </div>
                     </motion.div>
@@ -210,8 +210,8 @@ export default function LandingPage() {
                                     variants={slideInLeft}
                                     className="lg:col-span-5 space-y-6"
                                 >
-                                    <div className="w-12 h-12 bg-[#A855F7]/10 border border-[#A855F7]/20 rounded-xl flex items-center justify-center">
-                                        <span className="material-symbols-outlined text-[#A855F7]">photo_camera</span>
+                                    <div className="w-12 h-12 bg-purple/10 border border-purple/20 rounded-xl flex items-center justify-center">
+                                        <span className="material-symbols-outlined text-purple">photo_camera</span>
                                     </div>
                                     <h3 className="text-4xl font-bold text-white">Carrosséis de Instagram</h3>
                                     <p className="text-slate-400 text-lg">
@@ -219,11 +219,11 @@ export default function LandingPage() {
                                     </p>
                                     <ul className="space-y-4 pt-4">
                                         <li className="flex items-center gap-3 text-slate-300 font-medium">
-                                            <span className="material-symbols-outlined text-[#A855F7]">check_circle</span>
+                                            <span className="material-symbols-outlined text-purple">check_circle</span>
                                             Otimização de Layout por IA
                                         </li>
                                         <li className="flex items-center gap-3 text-slate-300 font-medium">
-                                            <span className="material-symbols-outlined text-[#A855F7]">check_circle</span>
+                                            <span className="material-symbols-outlined text-purple">check_circle</span>
                                             Harmonização de cores em um clique
                                         </li>
                                     </ul>
@@ -236,7 +236,7 @@ export default function LandingPage() {
                                     style={{ y: mockup1Y }}
                                     className="lg:col-span-7"
                                 >
-                                    <div className="rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-[#A855F7]/10 bg-[#0F0F0F] group">
+                                    <div className="rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-purple/10 bg-[#0F0F0F] group">
                                         <div className="bg-center bg-no-repeat aspect-[16/9] bg-cover transition-transform duration-700 group-hover:scale-105 opacity-90" style={{ backgroundImage: 'url("/stitch_assets/mockup1.jpg")' }}></div>
                                     </div>
                                 </motion.div>
@@ -256,7 +256,7 @@ export default function LandingPage() {
                                     style={{ y: mockup2Y }}
                                     className="lg:col-span-7 order-2 lg:order-1"
                                 >
-                                    <div className="rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-[#7C3AED]/10 bg-[#0F0F0F] group">
+                                    <div className="rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-purple-deep/10 bg-[#0F0F0F] group">
                                         <div className="bg-center bg-no-repeat aspect-[16/9] bg-cover transition-transform duration-700 group-hover:scale-105 opacity-90" style={{ backgroundImage: 'url("/stitch_assets/mockup2.jpg")' }}></div>
                                     </div>
                                 </motion.div>
@@ -267,8 +267,8 @@ export default function LandingPage() {
                                     variants={slideInRight}
                                     className="lg:col-span-5 space-y-6 order-1 lg:order-2"
                                 >
-                                    <div className="w-12 h-12 bg-[#A855F7]/10 border border-[#A855F7]/20 rounded-xl flex items-center justify-center">
-                                        <span className="material-symbols-outlined text-[#A855F7]">view_carousel</span>
+                                    <div className="w-12 h-12 bg-purple/10 border border-purple/20 rounded-xl flex items-center justify-center">
+                                        <span className="material-symbols-outlined text-purple">view_carousel</span>
                                     </div>
                                     <h3 className="text-4xl font-bold text-white">Carrosséis Profissionais</h3>
                                     <p className="text-slate-400 text-lg">
@@ -276,11 +276,11 @@ export default function LandingPage() {
                                     </p>
                                     <ul className="space-y-4 pt-4">
                                         <li className="flex items-center gap-3 text-slate-300 font-medium">
-                                            <span className="material-symbols-outlined text-[#A855F7]">check_circle</span>
+                                            <span className="material-symbols-outlined text-purple">check_circle</span>
                                             Geração autônoma de slides
                                         </li>
                                         <li className="flex items-center gap-3 text-slate-300 font-medium">
-                                            <span className="material-symbols-outlined text-[#A855F7]">check_circle</span>
+                                            <span className="material-symbols-outlined text-purple">check_circle</span>
                                             Sincronize com o kit da marca
                                         </li>
                                     </ul>
@@ -300,8 +300,8 @@ export default function LandingPage() {
                                     variants={slideInLeft}
                                     className="lg:col-span-5 space-y-6"
                                 >
-                                    <div className="w-12 h-12 bg-[#A855F7]/10 border border-[#A855F7]/20 rounded-xl flex items-center justify-center">
-                                        <span className="material-symbols-outlined text-[#A855F7]">image</span>
+                                    <div className="w-12 h-12 bg-purple/10 border border-purple/20 rounded-xl flex items-center justify-center">
+                                        <span className="material-symbols-outlined text-purple">image</span>
                                     </div>
                                     <h3 className="text-4xl font-bold text-white">Visuais para Stories</h3>
                                     <p className="text-slate-400 text-lg">
@@ -309,11 +309,11 @@ export default function LandingPage() {
                                     </p>
                                     <ul className="space-y-4 pt-4">
                                         <li className="flex items-center gap-3 text-slate-300 font-medium">
-                                            <span className="material-symbols-outlined text-[#A855F7]">check_circle</span>
+                                            <span className="material-symbols-outlined text-purple">check_circle</span>
                                             Múltiplos formatos automáticos
                                         </li>
                                         <li className="flex items-center gap-3 text-slate-300 font-medium">
-                                            <span className="material-symbols-outlined text-[#A855F7]">check_circle</span>
+                                            <span className="material-symbols-outlined text-purple">check_circle</span>
                                             Pré-visualize no celular em 1-clique
                                         </li>
                                     </ul>
@@ -326,7 +326,7 @@ export default function LandingPage() {
                                     style={{ y: mockup3Y }}
                                     className="lg:col-span-7"
                                 >
-                                    <div className="rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-[#A855F7]/10 bg-[#0F0F0F] group">
+                                    <div className="rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-purple/10 bg-[#0F0F0F] group">
                                         <div className="bg-center bg-no-repeat aspect-[16/9] bg-cover transition-transform duration-700 group-hover:scale-105 opacity-90" style={{ backgroundImage: 'url("/stitch_assets/mockup3.jpg")' }}></div>
                                     </div>
                                 </motion.div>
@@ -341,10 +341,10 @@ export default function LandingPage() {
                         whileInView={{ opacity: 1, y: 0, scale: 1 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 1, ease: "easeOut" }}
-                        className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#1E0B36] via-[#2D1150] to-[#1E0B36] p-12 lg:p-24 text-center border border-white/5"
+                        className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-purple-darker via-purple-dark to-purple-darker p-12 lg:p-24 text-center border border-white/5"
                     >
                         <div className="absolute inset-0 dotted-pattern opacity-40"></div>
-                        <div className="absolute inset-0 bg-gradient-to-tr from-[#A855F7]/10 via-transparent to-[#7C3AED]/10"></div>
+                        <div className="absolute inset-0 bg-gradient-to-tr from-purple/10 via-transparent to-purple-deep/10"></div>
                         <div className="relative z-10 space-y-8">
                             <h2 className="text-4xl lg:text-6xl font-black text-white leading-tight">Pronto para criar <br />suas histórias visuais?</h2>
                             <p className="text-slate-300 text-lg lg:text-xl max-w-2xl mx-auto font-medium">
@@ -355,7 +355,7 @@ export default function LandingPage() {
                                     onClick={() => router.push('/login')}
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="bg-[#A855F7] text-white px-10 py-5 rounded-2xl font-bold text-xl hover:brightness-110 shadow-2xl shadow-[#A855F7]/40 cursor-pointer"
+                                    className="bg-purple text-white px-10 py-5 rounded-2xl font-bold text-xl hover:brightness-110 shadow-2xl shadow-purple/40 cursor-pointer"
                                 >
                                     Começar Grátis
                                 </motion.button>
@@ -385,34 +385,34 @@ export default function LandingPage() {
                         <div>
                             <h4 className="text-white font-bold mb-4">Produto</h4>
                             <ul className="space-y-2 text-sm text-slate-400">
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Funcionalidades</a></li>
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Integrações</a></li>
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Modelos e Temas</a></li>
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Preços</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Funcionalidades</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Integrações</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Modelos e Temas</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Preços</a></li>
                             </ul>
                         </div>
                         <div>
                             <h4 className="text-white font-bold mb-4">Empresa</h4>
                             <ul className="space-y-2 text-sm text-slate-400">
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Sobre nós</a></li>
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Carreiras</a></li>
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Blog</a></li>
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Contatos</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Sobre nós</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Carreiras</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Blog</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Contatos</a></li>
                             </ul>
                         </div>
                         <div>
                             <h4 className="text-white font-bold mb-4">Suporte</h4>
                             <ul className="space-y-2 text-sm text-slate-400">
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Central de ajuda</a></li>
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Docs de API</a></li>
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Nossa comunidade</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Central de ajuda</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Docs de API</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Nossa comunidade</a></li>
                             </ul>
                         </div>
                         <div>
                             <h4 className="text-white font-bold mb-4">Jurídico</h4>
                             <ul className="space-y-2 text-sm text-slate-400">
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Privacidade</a></li>
-                                <li><a className="hover:text-[#A855F7] transition-colors" href="#">Termos de Uso</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Privacidade</a></li>
+                                <li><a className="hover:text-purple transition-colors" href="#">Termos de Uso</a></li>
                             </ul>
                         </div>
                     </div>
