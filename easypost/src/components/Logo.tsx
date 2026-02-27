@@ -8,7 +8,7 @@ export function Logo({ className }: { className?: string }) {
                 alt="EasyPost Logo"
                 width={600}
                 height={200}
-                className="h-[1.5em] w-auto object-contain"
+                className="h-[2.5em] w-auto object-contain"
                 priority
             />
         </div>

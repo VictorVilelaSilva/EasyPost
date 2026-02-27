@@ -93,7 +93,7 @@ export default function LandingPage() {
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 className="sticky-nav fixed top-0 w-full z-50 border-b border-white/5"
             >
-                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                <div className="w-full px-6 lg:px-12 xl:px-16 h-20 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <Logo />
                     </div>
@@ -111,7 +111,7 @@ export default function LandingPage() {
             </motion.nav>
 
             <main className="pt-20 min-h-screen">
-                <section className="max-w-7xl mx-auto px-6 py-20 lg:py-32 grid lg:grid-cols-2 gap-16 items-center">
+                <section className="max-w-[1400px] mx-auto px-6 lg:px-16 py-20 lg:py-36 grid lg:grid-cols-[1fr_1fr] gap-12 lg:gap-24 items-center">
                     <motion.div
                         variants={staggerContainer}
                         initial="hidden"
@@ -191,7 +191,7 @@ export default function LandingPage() {
                         whileInView="visible"
                         viewport={{ once: true, margin: "-100px" }}
                         variants={fadeInUp}
-                        className="max-w-7xl mx-auto px-6 text-center"
+                        className="max-w-[1400px] mx-auto px-6 lg:px-16 text-center"
                     >
                         <h2 className="text-3xl lg:text-5xl font-bold text-white mb-6">Visuais que geram resultados</h2>
                         <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
@@ -201,8 +201,8 @@ export default function LandingPage() {
 
                     {/* Story 1 */}
                     <div className="relative">
-                        <div className="max-w-7xl mx-auto px-6">
-                            <div className="grid lg:grid-cols-12 gap-12 items-center">
+                        <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
+                            <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
                                 <motion.div
                                     initial="hidden"
                                     whileInView="visible"
@@ -246,8 +246,8 @@ export default function LandingPage() {
 
                     {/* Story 2 */}
                     <div className="relative bg-gradient-to-b from-transparent via-[#0F0F0F]/80 to-transparent py-24 my-10">
-                        <div className="max-w-7xl mx-auto px-6">
-                            <div className="grid lg:grid-cols-12 gap-12 items-center">
+                        <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
+                            <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
@@ -291,8 +291,8 @@ export default function LandingPage() {
 
                     {/* Story 3 */}
                     <div className="relative pb-24">
-                        <div className="max-w-7xl mx-auto px-6">
-                            <div className="grid lg:grid-cols-12 gap-12 items-center">
+                        <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
+                            <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
                                 <motion.div
                                     initial="hidden"
                                     whileInView="visible"
@@ -335,7 +335,7 @@ export default function LandingPage() {
                     </div>
                 </section>
 
-                <section className="max-w-7xl mx-auto px-6 py-24 relative z-10">
+                <section className="max-w-[1400px] mx-auto px-6 lg:px-16 py-24 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 50, scale: 0.95 }}
                         whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -373,7 +373,7 @@ export default function LandingPage() {
                 </section>
 
                 <footer className="border-t border-white/5 py-12 bg-black relative z-10">
-                    <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-10">
+                    <div className="max-w-[1400px] mx-auto px-6 lg:px-16 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-10">
                         <div className="col-span-2">
                             <div className="flex items-center gap-3 mb-6">
                                 <Logo />
@@ -416,7 +416,7 @@ export default function LandingPage() {
                             </ul>
                         </div>
                     </div>
-                    <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="max-w-[1400px] mx-auto px-6 lg:px-16 mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
                         <p className="text-slate-500 text-sm">© 2026 EasyPost AI. Todos os direitos reservados.</p>
                         <div className="flex gap-6">
                             <a className="text-slate-500 hover:text-white transition-colors" href="#"><span className="material-symbols-outlined">public</span></a>
