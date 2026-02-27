@@ -10,8 +10,9 @@ import {
 } from 'firebase/auth'
 import { auth, googleProvider } from '@/lib/firebase'
 import { useAuth } from '@/contexts/AuthContext'
-import { Sparkles, ArrowRight, Loader2, ArrowLeft } from 'lucide-react'
+import { ArrowRight, Loader2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { Logo } from '@/components/Logo'
 
 type Step = 'email' | 'password'
 
@@ -112,17 +113,7 @@ export default function LoginForm() {
 
         {/* Branding */}
         <div className="flex items-center gap-3 mb-10 w-full justify-center">
-          <div
-            className="size-10 rounded-lg flex items-center justify-center text-white shrink-0"
-            style={{
-              background: 'linear-gradient(135deg, var(--color-primary), var(--color-accent))',
-            }}
-          >
-            <Sparkles className="size-5 text-white" />
-          </div>
-          <h1 className="text-slate-900 dark:text-slate-100 text-2xl font-bold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-            EasyPost
-          </h1>
+          <Logo className="text-3xl" />
         </div>
 
         {/* Hero Text */}

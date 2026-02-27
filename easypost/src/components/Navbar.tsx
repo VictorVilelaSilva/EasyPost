@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+import { Logo } from '@/components/Logo'
 
 export default function Navbar() {
   const { user, loading, logout } = useAuth()
@@ -27,34 +28,10 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 transition-opacity hover:opacity-80"
+          className="transition-opacity hover:opacity-80"
           aria-label="EasyPost — início"
         >
-          <div
-            className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-            style={{
-              background: 'linear-gradient(135deg, var(--color-primary), var(--color-accent))',
-            }}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              className="w-3.5 h-3.5"
-              aria-hidden
-            >
-              <path
-                d="M12 2L13.09 8.26L19 6L15.45 11.09L21 13L15.45 14.91L19 20L13.09 15.74L12 22L10.91 15.74L5 20L8.55 14.91L3 13L8.55 11.09L5 6L10.91 8.26L12 2Z"
-                fill="white"
-                fillOpacity="0.9"
-              />
-            </svg>
-          </div>
-          <span
-            className="text-sm font-bold tracking-tight"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            EasyPost
-          </span>
+          <Logo className="text-2xl" />
         </Link>
 
         {/* Auth area */}

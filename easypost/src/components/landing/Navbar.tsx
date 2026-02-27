@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Zap } from 'lucide-react';
+import { Logo } from '@/components/Logo';
 import styles from '../LandingPage.module.css';
 
 export function Navbar() {
@@ -14,19 +14,8 @@ export function Navbar() {
             style={{ borderBottom: '1px solid var(--lp-border)' }}
         >
             {/* Logo */}
-            <div className="flex items-center gap-2">
-                <div
-                    className="flex items-center justify-center w-9 h-9 rounded-lg"
-                    style={{ background: 'var(--lp-accent)' }}
-                >
-                    <Zap size={18} color="#0a0a0a" strokeWidth={2.5} />
-                </div>
-                <span
-                    className="text-lg font-bold"
-                    style={{ fontFamily: 'var(--font-display)', color: 'var(--lp-text)' }}
-                >
-                    EasyPost
-                </span>
+            <div>
+                <Logo className="text-2xl" />
             </div>
 
             {/* Nav Links — hidden on mobile */}

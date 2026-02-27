@@ -1,6 +1,6 @@
 'use client';
 
-import { Zap } from 'lucide-react';
+import { Logo } from '@/components/Logo';
 
 export function Footer() {
     return (
@@ -9,19 +9,8 @@ export function Footer() {
             style={{ borderTop: '1px solid var(--lp-border)' }}
         >
             {/* Logo */}
-            <div className="flex items-center gap-2">
-                <div
-                    className="flex items-center justify-center w-7 h-7 rounded-md"
-                    style={{ background: 'var(--lp-accent)' }}
-                >
-                    <Zap size={14} color="#0a0a0a" strokeWidth={2.5} />
-                </div>
-                <span
-                    className="text-sm font-bold"
-                    style={{ fontFamily: 'var(--font-display)', color: 'var(--lp-text)' }}
-                >
-                    EasyPost
-                </span>
+            <div>
+                <Logo className="text-lg" />
             </div>
 
             {/* Links */}
