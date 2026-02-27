@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Logo } from './Logo';
@@ -11,10 +11,9 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 export default function LandingPage() {
     const router = useRouter();
     const { user, loading } = useAuth();
-    const containerRef = useRef(null);
 
-    // GSAP-like Scroll Parallax using Framer Motion
-    const { scrollYProgress } = useScroll({ target: containerRef });
+    // Scroll Parallax using Framer Motion (global window scroll — avoids SSR hydration issues)
+    const { scrollYProgress } = useScroll();
 
     // Background mesh moves slower (parallax)
     const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
@@ -28,17 +27,17 @@ export default function LandingPage() {
     // Animation Configs
     const fadeInUp = {
         hidden: { opacity: 0, y: 40 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } }
     };
 
     const slideInLeft = {
         hidden: { opacity: 0, x: -50 },
-        visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+        visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } }
     };
 
     const slideInRight = {
         hidden: { opacity: 0, x: 50 },
-        visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+        visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } }
     };
 
     const staggerContainer = {
@@ -60,7 +59,7 @@ export default function LandingPage() {
     }
 
     return (
-        <div ref={containerRef} className="bg-[#000000] text-slate-200 font-['Spline_Sans'] selection:bg-[#A855F7]/30 min-h-screen relative z-10 overflow-hidden">
+        <div className="bg-[#000000] text-slate-200 font-['Spline_Sans'] selection:bg-[#A855F7]/30 min-h-screen relative z-10 overflow-hidden">
             <style jsx global>{`
                 @import url('https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700;800&display=swap');
                 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
