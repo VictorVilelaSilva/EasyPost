@@ -57,7 +57,7 @@ export function Hero() {
                     <motion.a
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        href="#"
+                        href="/login"
                         className={`${styles.btnPrimary} text-base px-8`}
                     >
                         Criar Meu Primeiro Post
@@ -65,10 +65,10 @@ export function Hero() {
                     <motion.a
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        href="#"
+                        href="/create"
                         className={`${styles.btnSecondary} text-base px-8`}
                     >
-                        Ver Galeria
+                        Ver Demo
                     </motion.a>
                 </motion.div>
             </motion.div>

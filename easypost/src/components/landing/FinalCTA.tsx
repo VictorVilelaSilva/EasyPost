@@ -32,7 +32,7 @@ export function FinalCTA() {
                     <motion.a
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        href="#"
+                        href="/login"
                         className={`${styles.btnPrimary} text-lg px-10 py-4 inline-block`}
                     >
                         Comece Grátis

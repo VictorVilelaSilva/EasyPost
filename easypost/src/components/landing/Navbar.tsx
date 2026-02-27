@@ -43,7 +43,7 @@ export function Navbar() {
             {/* Auth */}
             <div className="flex items-center gap-4">
                 <a
-                    href="#"
+                    href="/login"
                     className="hidden sm:inline text-sm hover:text-white transition-colors"
                     style={{ color: 'var(--lp-muted)', fontFamily: 'var(--font-body)' }}
                 >
@@ -52,7 +52,7 @@ export function Navbar() {
                 <motion.a
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    href="#"
+                    href="/login"
                     className={`${styles.btnPrimary} py-2! px-5! text-sm!`}
                 >
                     Teste Grátis
