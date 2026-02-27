@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import {
     Sparkles, Wand2, Palette, Users, Pen,
     Minimize2, Gem, Building2, Zap, Brush, Sun,
-    Upload, Plus, X, Image as ImageIcon, Pipette
+    Upload, Plus, X, Pipette
 } from 'lucide-react';
 import { ImageConfig as ImageConfigType } from '../types';
 import { extractColorsFromImage } from '../lib/extractColors';

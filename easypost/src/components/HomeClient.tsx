@@ -84,9 +84,13 @@ export default function HomeClient() {
             }
             setCarouselData(dataText);
             setShowConfig(true);
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.error(e);
-            alert(e.message || 'Erro de conexão ao gerar texto do carrossel');
+            if (e instanceof Error) {
+                alert(e.message || 'Erro de conexão ao gerar texto do carrossel');
+            } else {
+                alert('Erro de conexão ao gerar texto do carrossel');
+            }
         }
         setIsGeneratingText(false);
     };
@@ -118,9 +122,13 @@ export default function HomeClient() {
             }
 
             setImages(dataImages.images);
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.error(e);
-            alert(e.message || 'Erro de conexão ao gerar imagens');
+            if (e instanceof Error) {
+                alert(e.message || 'Erro de conexão ao gerar imagens');
+            } else {
+                alert('Erro de conexão ao gerar imagens');
+            }
             setShowConfig(true);
         }
         setIsGeneratingImages(false);

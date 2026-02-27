@@ -2,6 +2,8 @@
 
 import { AlertTriangle } from 'lucide-react';
 
+import { useEffect } from 'react';
+
 export default function Error({
     error,
     reset,
@@ -9,6 +11,9 @@ export default function Error({
     error: Error & { digest?: string };
     reset: () => void;
 }) {
+    useEffect(() => {
+        console.error(error);
+    }, [error]);
     return (
         <main className="min-h-screen flex items-center justify-center px-4" style={{ color: 'var(--color-text)' }}>
             <div className="text-center max-w-md">

@@ -1,7 +1,6 @@
 'use client';
 
 import { Zap } from 'lucide-react';
-import styles from '../LandingPage.module.css';
 
 export function Footer() {
     return (
