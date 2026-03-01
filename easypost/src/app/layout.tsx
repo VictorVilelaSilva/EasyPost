@@ -40,6 +40,8 @@ export const metadata: Metadata = {
   },
 };
 
+import GlobalHeader from "@/components/GlobalHeader";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -54,7 +56,10 @@ export default function RootLayout({
         <div className="gradient-mesh" aria-hidden="true" />
         {/* Grain overlay */}
         <div className="grain-overlay" aria-hidden="true" />
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <GlobalHeader />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

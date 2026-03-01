@@ -1,5 +1,4 @@
 import HomeClient from './components/HomeClient';
-import Navbar from '@/components/Navbar';
 
 export const metadata = {
     title: 'Criar Carrossel — EasyPost',
@@ -9,9 +8,8 @@ export const metadata = {
 export default function CreatePage() {
     return (
         <>
-            <Navbar />
             <main
-                className="min-h-screen flex flex-col items-center px-4 py-16"
+                className="min-h-screen flex flex-col items-center px-4 py-8"
                 style={{ fontFamily: 'var(--font-body)' }}
             >
                 {/* Header */}
