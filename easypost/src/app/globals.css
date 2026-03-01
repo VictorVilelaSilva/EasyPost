@@ -5,21 +5,40 @@
    ============================================ */
 
 :root {
-  /* Colors */
+  /* Colors - Monochromatic Palette */
   color-scheme: dark;
-  --color-surface: hsl(225, 30%, 6%);
-  --color-surface-elevated: hsl(225, 25%, 10%);
-  --color-card: rgba(255, 255, 255, 0.035);
-  --color-card-hover: rgba(255, 255, 255, 0.06);
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-hover: rgba(255, 255, 255, 0.15);
-  --color-primary: hsl(230, 85%, 60%);
-  --color-primary-glow: hsla(230, 85%, 60%, 0.3);
-  --color-accent: hsl(280, 75%, 65%);
-  --color-accent-glow: hsla(280, 75%, 65%, 0.25);
-  --color-text: hsl(220, 20%, 92%);
-  --color-text-muted: hsl(220, 15%, 55%);
-  --color-text-subtle: hsl(220, 12%, 40%);
+  --color-1: #0a0a0a;
+  --color-2: #313131;
+  --color-3: #585858;
+  --color-4: #7e7e7e;
+  --color-5: #a5a5a5;
+
+  /* UI Roles mapped to new palette */
+  --color-surface: var(--color-1);
+  --color-surface-elevated: var(--color-2);
+  --color-card: rgba(88, 88, 88, 0.1);
+  /* Based on color-3 */
+  --color-card-hover: rgba(88, 88, 88, 0.2);
+  --color-border: var(--color-2);
+  /* color-2 */
+  --color-border-hover: var(--color-3);
+  /* color-3 */
+
+  --color-primary: #f5f5f5;
+  /* White for buttons/highlights for contrast */
+  --color-primary-glow: rgba(245, 245, 245, 0.15);
+  --color-accent: var(--color-5);
+  --color-accent-glow: rgba(165, 165, 165, 0.15);
+
+  /* Purple Palette (Landing Page & Branding) */
+  --color-purple: #A855F7;
+  --color-purple-deep: #7C3AED;
+  --color-purple-dark: #2D1150;
+  --color-purple-darker: #1E0B36;
+
+  --color-text: #f5f5f5;
+  --color-text-muted: var(--color-5);
+  --color-text-subtle: var(--color-4);
 
   /* Typography */
   --font-display: var(--font-sora), 'Sora', system-ui, sans-serif;
@@ -49,8 +68,36 @@
 @theme inline {
   --color-background: var(--color-surface);
   --color-foreground: var(--color-text);
+  --color-purple: #A855F7;
+  --color-purple-deep: #7C3AED;
+  --color-purple-dark: #2D1150;
+  --color-purple-darker: #1E0B36;
   --font-sans: var(--font-body);
   --font-mono: var(--font-body);
+}
+
+/* ============================================
+   USER REQUESTED COLOR PALETTE CLASSES
+   ============================================ */
+
+.color1 {
+  color: #0a0a0a;
+}
+
+.color2 {
+  color: #313131;
+}
+
+.color3 {
+  color: #585858;
+}
+
+.color4 {
+  color: #7e7e7e;
+}
+
+.color5 {
+  color: #a5a5a5;
 }
 
 /* ============================================
@@ -115,6 +162,42 @@ h6 {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 128px 128px;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.bg-card {
+  background: var(--color-card);
+}
+
+.border-default {
+  border: 1px solid var(--color-border);
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
 }
 
 /* ============================================

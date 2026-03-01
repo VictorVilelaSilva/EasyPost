@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sora, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -53,7 +54,7 @@ export default function RootLayout({
         <div className="gradient-mesh" aria-hidden="true" />
         {/* Grain overlay */}
         <div className="grain-overlay" aria-hidden="true" />
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

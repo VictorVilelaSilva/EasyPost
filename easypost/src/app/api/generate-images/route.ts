@@ -132,7 +132,6 @@ async function overlayLogo(imageBase64: string, logoDataUrl: string): Promise<st
 
     // Get logo metadata after resize for positioning
     const logoMeta = await sharp(resizedLogo).metadata();
-    const logoWidth = logoMeta.width || 80;
     const logoHeight = logoMeta.height || 80;
 
     const margin = 50;
@@ -194,7 +193,7 @@ export async function POST(req: NextRequest) {
                 contents: prompt,
                 config: {
                     aspectRatio: "1:1"
-                } as any
+                } as unknown as Record<string, unknown>
             });
 
             let base64Image = null;
@@ -223,8 +222,11 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ images: generatedImages }, { status: 200 });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Erro ao gerar imagens:", error);
-        return NextResponse.json({ error: error.message || "Falha ao gerar imagens" }, { status: 500 });
+        if (error instanceof Error) {
+            return NextResponse.json({ error: error.message || "Falha ao gerar imagens" }, { status: 500 });
+        }
+        return NextResponse.json({ error: "Falha ao gerar imagens" }, { status: 500 });
     }
 }

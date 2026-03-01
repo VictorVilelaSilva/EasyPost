@@ -4,9 +4,9 @@ import dynamic from 'next/dynamic';
 import { Loader2, Sparkles } from 'lucide-react';
 import TopicList from './TopicList';
 import LoadingCard from './LoadingCard';
-import { useCarouselWorkflow } from '../hooks/useCarouselWorkflow';
+import { useCarouselWorkflow } from '../../hooks/useCarouselWorkflow';
 
-const ImageConfigPanel = dynamic(() => import('./ImageConfig'), {
+const ImageConfigPanel = dynamic(() => import('../../components/ImageConfig'), {
     loading: () => (
         <div className="flex items-center justify-center py-12 glass-card-static border-dashed">
             <Loader2 className="animate-spin text-primary" size={32} />
@@ -14,51 +14,13 @@ const ImageConfigPanel = dynamic(() => import('./ImageConfig'), {
     ),
 });
 
-const CarouselPreview = dynamic(() => import('./CarouselPreview'), {
+const CarouselPreview = dynamic(() => import('../../components/CarouselPreview'), {
     loading: () => (
         <div className="flex items-center justify-center py-12 glass-card-static border-dashed">
             <Loader2 className="animate-spin text-accent" size={32} />
         </div>
     ),
 });
-
-/* Skeleton loader for text generation */
-function SkeletonSlides() {
-    return (
-        <div className="glass-card-static p-6 mb-8 step-enter" style={{ borderStyle: 'dashed' }}>
-            <div className="flex items-center gap-3 mb-6">
-                <Loader2 className="animate-spin" size={24} style={{ color: 'var(--color-primary)' }} />
-                <span className="font-medium text-sm" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-body)' }}>
-                    Gerando texto dos slides e legenda…
-                </span>
-            </div>
-            <div className="grid grid-cols-5 gap-3">
-                {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="skeleton-shimmer aspect-square rounded-xl" />
-                ))}
-            </div>
-        </div>
-    );
-}
-
-/* Skeleton loader for image generation */
-function SkeletonImages({ count }: { count: number }) {
-    return (
-        <div className="glass-card-static p-6 mb-8 step-enter" style={{ borderStyle: 'dashed' }}>
-            <div className="flex items-center gap-3 mb-6">
-                <Loader2 className="animate-spin" size={24} style={{ color: 'var(--color-accent)' }} />
-                <span className="font-medium text-sm" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-body)' }}>
-                    Criando suas {count} imagens com IA…
-                </span>
-            </div>
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-                {Array.from({ length: count }).map((_, i) => (
-                    <div key={i} className="skeleton-shimmer aspect-square rounded-xl" style={{ animationDelay: `${i * 0.15}s` }} />
-                ))}
-            </div>
-        </div>
-    );
-}
 
 export default function HomeClient() {
     const {
@@ -114,13 +76,12 @@ export default function HomeClient() {
                 <LoadingCard message="Gerando texto dos slides e legenda…" color="primary" />
             )}
 
-            {/* Step 3: Slide Count */}
-            {canProceedToNiche && (
-                <SlideCountInput
-                    value={slideCount}
-                    onChange={setSlideCount}
-                    min={2}
-                    max={platform === 'instagram' ? 10 : 20}
+            {/* Painel de Configuração */}
+            {showConfig && carouselData && selectedTopic && (
+                <ImageConfigPanel
+                    topic={selectedTopic}
+                    onGenerate={handleGenerateImages}
+                    isLoading={isGeneratingImages}
                 />
             )}
 
@@ -128,9 +89,6 @@ export default function HomeClient() {
             {isGeneratingImages && (
                 <LoadingCard message="Criando suas 5 imagens com IA. Isso pode levar alguns segundos…" color="accent" />
             )}
-
-            {/* Skeleton: gerando imagens */}
-            {isGeneratingImages && <SkeletonImages count={slideCount} />}
 
             {/* Preview do Carrossel */}
             {!isGeneratingImages && carouselData && selectedTopic && images && (
