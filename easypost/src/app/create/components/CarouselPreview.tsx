@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { CarouselData } from '../types';
-import { downloadCarouselZip } from '../lib/downloadZip';
+import { CarouselData } from '@/types';
+import { downloadCarouselZip } from '@/lib/downloadZip';
 import { Download, Copy, CheckCircle2, ZoomIn, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Props {

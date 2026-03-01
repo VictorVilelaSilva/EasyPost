@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CarouselData, ImageConfig } from '../types';
+import { CarouselData, ImageConfig, Platform, PostObjective } from '../types';
 
 interface CarouselWorkflowState {
     niche: string;
@@ -10,6 +10,9 @@ interface CarouselWorkflowState {
     carouselData: CarouselData | null;
     images: string[] | null;
     showConfig: boolean;
+    platform: Platform;
+    objective: PostObjective;
+    slideCount: number;
     isGeneratingTopics: boolean;
     isGeneratingText: boolean;
     isGeneratingImages: boolean;
@@ -17,6 +20,9 @@ interface CarouselWorkflowState {
 
 interface CarouselWorkflowActions {
     setNiche: (niche: string) => void;
+    setPlatform: (platform: Platform) => void;
+    setObjective: (objective: PostObjective) => void;
+    setSlideCount: (count: number) => void;
     handleGenerateTopics: (e: React.FormEvent) => Promise<void>;
     handleSelectTopic: (topic: string) => Promise<void>;
     handleGenerateImages: (config: ImageConfig) => Promise<void>;
@@ -31,6 +37,10 @@ export function useCarouselWorkflow(): CarouselWorkflow {
     const [carouselData, setCarouselData] = useState<CarouselData | null>(null);
     const [images, setImages] = useState<string[] | null>(null);
     const [showConfig, setShowConfig] = useState(false);
+
+    const [platform, setPlatform] = useState<Platform>('instagram');
+    const [objective, setObjective] = useState<PostObjective>('informativo');
+    const [slideCount, setSlideCount] = useState(7);
 
     const [isGeneratingTopics, setIsGeneratingTopics] = useState(false);
     const [isGeneratingText, setIsGeneratingText] = useState(false);
@@ -77,7 +87,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
             const resText = await fetch('/api/generate-carousel', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ topic, niche }),
+                body: JSON.stringify({ topic, niche, platform, objective, slideCount }),
             });
             const dataText = await resText.json();
 
@@ -143,10 +153,16 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         carouselData,
         images,
         showConfig,
+        platform,
+        objective,
+        slideCount,
         isGeneratingTopics,
         isGeneratingText,
         isGeneratingImages,
         setNiche,
+        setPlatform,
+        setObjective,
+        setSlideCount,
         handleGenerateTopics,
         handleSelectTopic,
         handleGenerateImages,

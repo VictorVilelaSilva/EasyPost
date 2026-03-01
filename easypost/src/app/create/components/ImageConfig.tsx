@@ -6,8 +6,8 @@ import {
     Minimize2, Gem, Building2, Zap, Brush, Sun,
     Upload, Plus, X, Pipette
 } from 'lucide-react';
-import { ImageConfig as ImageConfigType } from '../types';
-import { extractColorsFromImage } from '../lib/extractColors';
+import { ImageConfig as ImageConfigType } from '@/types';
+import { extractColorsFromImage } from '@/lib/extractColors';
 
 const VISUAL_STYLES = [
     { id: 'minimalist', label: 'Minimalista', icon: Minimize2 },

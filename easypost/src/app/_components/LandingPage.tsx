@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { Logo } from './Logo';
+import { Logo } from '@/components/Logo';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -64,10 +64,6 @@ export default function LandingPage() {
                 @import url('https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700;800&display=swap');
                 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
                 
-                .sticky-nav {
-                    backdrop-filter: blur(16px);
-                    background-color: rgba(0, 0, 0, 0.75);
-                }
                 .dotted-pattern {
                     background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
                     background-size: 24px 24px;
@@ -87,28 +83,7 @@ export default function LandingPage() {
                 }}
             />
 
-            <motion.nav
-                initial={{ y: -100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="sticky-nav fixed top-0 w-full z-50 border-b border-white/5"
-            >
-                <div className="w-full px-6 lg:px-12 xl:px-16 h-20 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <Logo />
-                    </div>
-                    <div className="hidden md:flex items-center gap-10">
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <Link href="/login" className="hidden sm:block text-sm font-semibold text-slate-300 hover:text-white px-4 py-2">
-                            Entrar
-                        </Link>
-                        <Link href="/create" className="bg-purple hover:bg-purple/90 text-white px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg shadow-purple/25 hover:scale-105 active:scale-95">
-                            Começar grátis
-                        </Link>
-                    </div>
-                </div>
-            </motion.nav>
+
 
             <main className="pt-20 min-h-screen">
                 <section className="max-w-[1400px] mx-auto px-6 lg:px-16 py-20 lg:py-36 grid lg:grid-cols-[1fr_1fr] gap-12 lg:gap-24 items-center">

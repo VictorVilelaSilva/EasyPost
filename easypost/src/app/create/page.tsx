@@ -1,5 +1,5 @@
-import HomeClient from '../../components/HomeClient';
-import Navbar from '../../components/Navbar';
+import HomeClient from './components/HomeClient';
+import Navbar from '@/components/Navbar';
 
 export const metadata = {
     title: 'Criar Carrossel — EasyPost',
