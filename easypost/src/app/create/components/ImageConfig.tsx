@@ -264,10 +264,10 @@ export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props
                                         className="cursor-pointer px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2"
                                         style={{
                                             minHeight: '44px',
-                                            background: isActive ? 'var(--color-primary)' : 'var(--color-card)',
-                                            color: isActive ? '#fff' : 'var(--color-text-muted)',
-                                            border: `1px solid ${isActive ? 'var(--color-primary)' : 'var(--color-border)'}`,
-                                            boxShadow: isActive ? 'var(--shadow-glow)' : 'none',
+                                            background: isActive ? 'rgba(168, 85, 247, 0.15)' : 'var(--color-card)',
+                                            color: isActive ? '#A855F7' : 'var(--color-text-muted)',
+                                            border: `1px solid ${isActive ? '#A855F7' : 'var(--color-border)'}`,
+                                            boxShadow: isActive ? '0 0 20px -6px rgba(168, 85, 247, 0.4)' : 'none',
                                             transform: isActive ? 'scale(1.03)' : 'scale(1)',
                                         }}
                                     >
@@ -322,9 +322,9 @@ export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props
                                         className="cursor-pointer flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-200"
                                         style={{
                                             minHeight: '44px',
-                                            background: isActive ? 'var(--color-card-hover)' : 'var(--color-card)',
-                                            border: `1px solid ${isActive ? 'var(--color-primary)' : 'var(--color-border)'}`,
-                                            boxShadow: isActive ? '0 0 0 2px var(--color-primary-glow)' : 'none',
+                                            background: isActive ? 'rgba(168, 85, 247, 0.1)' : 'var(--color-card)',
+                                            border: `1px solid ${isActive ? '#A855F7' : 'var(--color-border)'}`,
+                                            boxShadow: isActive ? '0 0 0 2px rgba(168, 85, 247, 0.3)' : 'none',
                                             transform: isActive ? 'scale(1.05)' : 'scale(1)',
                                         }}
                                     >
@@ -407,15 +407,15 @@ export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props
                         onClick={handleGenerate}
                         disabled={isLoading}
                         aria-label="Gerar imagens do carousel"
-                        className="btn-glow w-full py-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl flex items-center justify-center gap-3 text-lg"
+                        className="w-full py-4 bg-[#7f0df2] hover:bg-[#922cee] cursor-pointer rounded-xl flex items-center justify-center gap-3 transition-transform active:scale-[0.98] shadow-[0_0_30px_rgba(127,13,242,0.3)] group disabled:opacity-50 disabled:cursor-not-allowed mt-4"
                         style={{
-                            background: 'linear-gradient(135deg, var(--color-primary), var(--color-accent))',
                             fontFamily: 'var(--font-display)',
-                            minHeight: '56px',
                         }}
                     >
-                        <Sparkles size={22} />
-                        {isLoading ? 'Gerando Imagens...' : 'Gerar Imagens'}
+                        <Sparkles size={20} className="text-white group-hover:rotate-12 transition-transform" />
+                        <span className="text-white font-bold text-lg">
+                            {isLoading ? 'Gerando Imagens...' : 'Gerar Imagens'}
+                        </span>
                     </button>
                 </div>
             </div>
