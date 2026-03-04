@@ -29,6 +29,10 @@ const CarouselPreview = dynamic(() => import("./CarouselPreview"), {
 export default function HomeClient() {
   const {
     niche,
+    platform,
+    objective,
+    language,
+    slidesCount,
     topics,
     selectedTopic,
     carouselData,
@@ -38,16 +42,16 @@ export default function HomeClient() {
     isGeneratingText,
     isGeneratingImages,
     setNiche,
+    setPlatform,
+    setObjective,
+    setLanguage,
+    setSlidesCount,
     handleGenerateTopics,
     handleSelectTopic,
     handleGenerateImages,
   } = useCarouselWorkflow();
 
-  const [platform, setPlatform] = useState("instagram");
   const [theme, setTheme] = useState("AIGenerated");
-  const [objective, setObjective] = useState("commercial");
-  const [language, setLanguage] = useState("portugueseBR");
-  const [slides, setSlides] = useState("");
 
   return (
     <>
@@ -152,7 +156,7 @@ export default function HomeClient() {
             </span>
 
             <div className="w-20">
-              <TextInput type="number" value={slides} onChange={setSlides} />
+              <TextInput type="number" value={slidesCount} onChange={setSlidesCount} />
             </div>
           </div>
         </div>
@@ -179,7 +183,7 @@ export default function HomeClient() {
             ) : (
               <>
                 <Sparkles size={18} />
-                Gerar 15 Temas em Alta
+                Gerar Temas em Alta
               </>
             )}
           </button>
@@ -206,7 +210,7 @@ export default function HomeClient() {
       {/* Loading: gerando imagens */}
       {isGeneratingImages && (
         <LoadingCard
-          message="Criando suas 5 imagens com IA. Isso pode levar alguns segundos…"
+          message="Criando suas imagens com IA. Isso pode levar alguns segundos…"
           color="accent"
         />
       )}

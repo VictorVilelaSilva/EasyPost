@@ -4,6 +4,10 @@ import sharp from 'sharp';
 
 export const maxDuration = 60;
 
+function truncateResearch(text: string, maxChars = 2000): string {
+    return text.length <= maxChars ? text : text.slice(0, maxChars) + '...';
+}
+
 const STYLE_MAP: Record<string, string> = {
     minimalist: "Ultra-clean minimalist design. White space, thin lines, simple geometric shapes. Flat colors, no textures.",
     luxury: "Luxurious, premium aesthetic. Rich deep colors, gold or silver accents, elegant sophisticated feel. Subtle leather or marble textures.",
@@ -31,14 +35,19 @@ function buildPrompt(
     brandDesc: string,
     audienceDesc: string,
     customDesc: string,
-    hasLogo: boolean
+    hasLogo: boolean,
+    topicContext: string,
 ): string {
     const slideType = slide.slideType || 'content';
     console.log("Building prompt for slide:", slide, "index:", index, "totalSlides:", totalSlides);
 
+    const contextSection = topicContext
+        ? `\nCONTEXTO VISUAL DO TEMA (use para inspirar elementos visuais):\n${topicContext}\n`
+        : '';
+
     if (slideType === 'cover') {
         return `Gere um gráfico de CAPA de carrossel para Instagram (1:1 quadrado, 1080x1080px).
-
+${contextSection}
             ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
             ${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
             ${brandDesc || (paletteDesc ? `PALETA: ${paletteDesc}` : '')}
@@ -66,7 +75,7 @@ function buildPrompt(
 
     if (slideType === 'cta') {
         return `Gere um gráfico de CTA (Call to Action) de carrossel para Instagram (1:1 quadrado, 1080x1080px).
-
+${contextSection}
             ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
             ${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
             ${brandDesc || (paletteDesc ? `PALETA: ${paletteDesc}` : '')}
@@ -92,7 +101,7 @@ function buildPrompt(
 
     // Content slides (slideType === 'content')
     return `Gere um gráfico de slide de CONTEÚDO de carrossel para Instagram (1:1 quadrado, 1080x1080px).
-
+${contextSection}
             ESTILO DE REFERÊNCIA: Post educativo brasileiro profissional.
             ${styleDesc ? `ESTILO ADICIONAL: ${styleDesc}` : ''}
             ${brandDesc || (paletteDesc ? `PALETA: ${paletteDesc}` : '')}
@@ -152,7 +161,7 @@ async function overlayLogo(imageBase64: string, logoDataUrl: string): Promise<st
 
 export async function POST(req: NextRequest) {
     try {
-        const { slides, visualStyle, colorPalette, brandColors, audience, customPrompt } = await req.json();
+        const { slides, topic, niche, visualStyle, colorPalette, brandColors, audience, customPrompt } = await req.json();
         const logoDataUrl: string | undefined = brandColors?.logoDataUrl;
 
         // Validate logo size (max ~2MB base64)
@@ -171,6 +180,34 @@ export async function POST(req: NextRequest) {
 
         const ai = new GoogleGenAI({ apiKey });
 
+        // Step 1: Visual research (once, before generating images)
+        let topicContext = "";
+        if (topic && niche) {
+            try {
+                const searchResponse = await ai.models.generateContent({
+                    model: "gemini-2.5-flash",
+                    contents: `Pesquise referências visuais e informações-chave sobre "${topic}" no nicho "${niche}".
+
+                        Busque:
+                        - Elementos visuais comuns associados a esse tema (cores, ícones, objetos, símbolos)
+                        - Dados-chave, números ou estatísticas que poderiam aparecer nos slides
+                        - Referências estéticas de posts populares sobre esse tema
+                        - Paleta de cores e estilo visual que combinam com o assunto
+
+                        Retorne um resumo conciso com os elementos visuais e dados mais relevantes.`,
+                    config: {
+                        temperature: 0.3,
+                        tools: [{ googleSearch: {} }],
+                        systemInstruction: "Você é um diretor de arte digital especializado em design para redes sociais. Pesquise referências visuais e dados relevantes para orientar a criação de slides.",
+                    },
+                });
+
+                topicContext = truncateResearch(searchResponse.text || "");
+            } catch (searchError) {
+                console.warn("Visual research failed, continuing without context:", searchError);
+            }
+        }
+
         const styleDesc = STYLE_MAP[visualStyle] || '';
         const paletteDesc = PALETTE_MAP[colorPalette] || '';
 
@@ -186,17 +223,7 @@ export async function POST(req: NextRequest) {
         const customDesc = customPrompt ? `Instruções Adicionais: ${customPrompt}` : '';
 
         const imagePromises = slides.map(async (slide: { slideType: string; title: string; content: string }, index: number) => {
-            const prompt = buildPrompt(slide, index, slides.length, styleDesc, paletteDesc, brandDesc, audienceDesc, customDesc, !!logoDataUrl);
-
-            const tools = [
-                {
-                    googleSearch: {
-                        searchTypes: {
-                            webSearch: {},
-                        },
-                    }
-                },
-            ];
+            const prompt = buildPrompt(slide, index, slides.length, styleDesc, paletteDesc, brandDesc, audienceDesc, customDesc, !!logoDataUrl, topicContext);
 
             const config = {
                 thinkingConfig: {
@@ -205,13 +232,11 @@ export async function POST(req: NextRequest) {
                 imageConfig: {
                     aspectRatio: "4:5",
                     imageSize: "1K",
-                    personGeneration: "",
                 },
                 responseModalities: [
                     'IMAGE',
                     'TEXT',
                 ],
-                tools,
             };
 
             const response = await ai.models.generateContentStream({

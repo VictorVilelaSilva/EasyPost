@@ -5,6 +5,10 @@ import { CarouselData, ImageConfig } from '../types';
 
 interface CarouselWorkflowState {
     niche: string;
+    platform: string;
+    objective: string;
+    language: string;
+    slidesCount: string;
     topics: string[];
     selectedTopic: string | null;
     carouselData: CarouselData | null;
@@ -17,6 +21,10 @@ interface CarouselWorkflowState {
 
 interface CarouselWorkflowActions {
     setNiche: (niche: string) => void;
+    setPlatform: (platform: string) => void;
+    setObjective: (objective: string) => void;
+    setLanguage: (language: string) => void;
+    setSlidesCount: (slidesCount: string) => void;
     handleGenerateTopics: (e: React.FormEvent) => Promise<void>;
     handleSelectTopic: (topic: string) => Promise<void>;
     handleGenerateImages: (config: ImageConfig) => Promise<void>;
@@ -26,6 +34,10 @@ export type CarouselWorkflow = CarouselWorkflowState & CarouselWorkflowActions;
 
 export function useCarouselWorkflow(): CarouselWorkflow {
     const [niche, setNiche] = useState('');
+    const [platform, setPlatform] = useState('instagram');
+    const [objective, setObjective] = useState('commercial');
+    const [language, setLanguage] = useState('portugueseBR');
+    const [slidesCount, setSlidesCount] = useState('');
     const [topics, setTopics] = useState<string[]>([]);
     const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
     const [carouselData, setCarouselData] = useState<CarouselData | null>(null);
@@ -51,7 +63,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
             const res = await fetch('/api/generate-topics', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ niche }),
+                body: JSON.stringify({ niche, platform, language }),
             });
             const data = await res.json();
             if (data.topics) {
@@ -73,11 +85,14 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         setImages(null);
         setShowConfig(false);
 
+        const count = parseInt(slidesCount, 10);
+        const finalSlidesCount = count > 0 ? count : 5;
+
         try {
             const resText = await fetch('/api/generate-carousel', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ topic, niche }),
+                body: JSON.stringify({ topic, niche, platform, objective, language, slidesCount: finalSlidesCount }),
             });
             const dataText = await resText.json();
 
@@ -110,6 +125,8 @@ export function useCarouselWorkflow(): CarouselWorkflow {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     slides: carouselData.slides,
+                    topic: selectedTopic,
+                    niche,
                     visualStyle: config.visualStyle,
                     colorPalette: config.colorPalette,
                     brandColors: config.brandColors,
@@ -138,6 +155,10 @@ export function useCarouselWorkflow(): CarouselWorkflow {
 
     return {
         niche,
+        platform,
+        objective,
+        language,
+        slidesCount,
         topics,
         selectedTopic,
         carouselData,
@@ -147,6 +168,10 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         isGeneratingText,
         isGeneratingImages,
         setNiche,
+        setPlatform,
+        setObjective,
+        setLanguage,
+        setSlidesCount,
         handleGenerateTopics,
         handleSelectTopic,
         handleGenerateImages,
