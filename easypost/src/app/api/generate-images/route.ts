@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import sharp from 'sharp';
 
 export const maxDuration = 60;
@@ -188,21 +188,56 @@ export async function POST(req: NextRequest) {
         const imagePromises = slides.map(async (slide: { slideType: string; title: string; content: string }, index: number) => {
             const prompt = buildPrompt(slide, index, slides.length, styleDesc, paletteDesc, brandDesc, audienceDesc, customDesc, !!logoDataUrl);
 
-            const response = await ai.models.generateContent({
-                model: "gemini-3-pro-image-preview",
-                contents: prompt,
-                config: {
-                    aspectRatio: "1:1"
-                } as unknown as Record<string, unknown>
+            const tools = [
+                {
+                    googleSearch: {
+                        searchTypes: {
+                            webSearch: {},
+                        },
+                    }
+                },
+            ];
+
+            const config = {
+                thinkingConfig: {
+                    thinkingLevel: ThinkingLevel.MINIMAL,
+                },
+                imageConfig: {
+                    aspectRatio: "4:5",
+                    imageSize: "1K",
+                    personGeneration: "",
+                },
+                responseModalities: [
+                    'IMAGE',
+                    'TEXT',
+                ],
+                tools,
+            };
+
+            const response = await ai.models.generateContentStream({
+                model: "gemini-3.1-flash-image-preview",
+                config: config as unknown as Record<string, unknown>,
+                contents: [
+                    {
+                        role: 'user',
+                        parts: [
+                            {
+                                text: prompt,
+                            },
+                        ],
+                    },
+                ],
             });
 
-            let base64Image = null;
-            if (response.candidates?.[0]?.content?.parts) {
-                for (const part of response.candidates[0].content.parts) {
-                    if (part.inlineData) {
-                        base64Image = part.inlineData.data;
-                        break;
-                    }
+            let base64Image: string | null = null;
+            for await (const chunk of response) {
+                if (!chunk.candidates || !chunk.candidates[0]?.content || !chunk.candidates[0]?.content?.parts) {
+                    continue;
+                }
+                if (chunk.candidates?.[0]?.content?.parts?.[0]?.inlineData) {
+                    const inlineData = chunk.candidates[0].content.parts[0].inlineData;
+                    base64Image = inlineData.data || null;
+                    break;
                 }
             }
 
