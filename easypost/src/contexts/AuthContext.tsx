@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { onAuthStateChanged, signOut, User } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
+import { createUserIfNotExists } from '@/lib/userService'
 
 type AuthContextValue = {
   user: User | null
@@ -22,6 +23,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, firebaseUser => {
+      if (firebaseUser) {
+        createUserIfNotExists(firebaseUser)
+      }
       setUser(firebaseUser)
       setLoading(false)
     })
