@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { CarouselData, ImageConfig } from '../types';
+import { useAuth } from '@/contexts/AuthContext';
+import { incrementRequestCount } from '@/lib/userService';
 
 interface CarouselWorkflowState {
     niche: string;
@@ -25,6 +27,7 @@ interface CarouselWorkflowActions {
 export type CarouselWorkflow = CarouselWorkflowState & CarouselWorkflowActions;
 
 export function useCarouselWorkflow(): CarouselWorkflow {
+    const { user } = useAuth();
     const [niche, setNiche] = useState('');
     const [topics, setTopics] = useState<string[]>([]);
     const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
@@ -124,6 +127,9 @@ export function useCarouselWorkflow(): CarouselWorkflow {
             }
 
             setImages(dataImages.images);
+            if (user) {
+                await incrementRequestCount(user.uid);
+            }
         } catch (e: unknown) {
             console.error(e);
             if (e instanceof Error) {

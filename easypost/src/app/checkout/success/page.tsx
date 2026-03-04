@@ -4,6 +4,8 @@ import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { stripePromise } from '@/lib/stripe'
 import { Logo } from '@/components/Logo'
+import { useAuth } from '@/contexts/AuthContext'
+import { markAsPaid } from '@/lib/userService'
 import { CheckCircle, ArrowRight, Sparkles, Loader2, AlertCircle, Clock, FileText } from 'lucide-react'
 
 type PaymentStatus = 'loading' | 'succeeded' | 'processing' | 'requires_action' | 'failed'
@@ -11,6 +13,7 @@ type PaymentStatus = 'loading' | 'succeeded' | 'processing' | 'requires_action' 
 function SuccessContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
+    const { user } = useAuth()
     const [status, setStatus] = useState<PaymentStatus>('loading')
 
     useEffect(() => {
@@ -31,6 +34,9 @@ function SuccessContent() {
                 setStatus('failed')
             } else if (paymentIntent?.status === 'succeeded') {
                 setStatus('succeeded')
+                if (user) {
+                    await markAsPaid(user.uid)
+                }
             } else if (paymentIntent?.status === 'processing') {
                 setStatus('processing')
             } else if (paymentIntent?.status === 'requires_action') {
