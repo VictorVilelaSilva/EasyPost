@@ -2,7 +2,8 @@
 
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
-import { Loader2, Sparkles, Wand2, Lightbulb, Bolt, ArrowLeft } from 'lucide-react';
+import { Loader2, Wand2, Lightbulb, Bolt, ArrowLeft } from 'lucide-react';
+import { ImageConfig } from '@/types';
 import TopicList from './TopicList';
 import LoadingCard from './LoadingCard';
 import PlatformSelector from './PlatformSelector';
@@ -26,11 +27,20 @@ const CarouselPreview = dynamic(() => import('./CarouselPreview'), {
     ),
 });
 
+const VisualStyleGallery = dynamic(() => import('./VisualStyleGallery'), {
+    loading: () => (
+        <div className="flex items-center justify-center py-12 glass-card-static border-dashed">
+            <Loader2 className="animate-spin text-[#A855F7]" size={32} />
+        </div>
+    ),
+});
+
 const STEP_LABELS: Record<number, string> = {
-    1: 'Passo 1 de 4',
-    2: 'Passo 2 de 4',
-    3: 'Passo 3 de 4',
-    4: 'Concluído',
+    1: 'Passo 1 de 5',
+    2: 'Passo 2 de 5',
+    3: 'Passo 3 de 5',
+    4: 'Passo 4 de 5',
+    5: 'Concluído',
 };
 
 const FontSelectionStep = dynamic(() => import('./FontSelectionStep'), {
@@ -85,6 +95,7 @@ export default function HomeClient() {
     const [manualTopic, setManualTopic] = useState('');
     const [selectedFont, setSelectedFont] = useState('Inter');
     const [currentStep, setCurrentStep] = useState(1);
+    const [partialImageConfig, setPartialImageConfig] = useState<Omit<ImageConfig, 'visualStyle'> | null>(null);
 
     useEffect(() => {
         if (carouselData && !isGeneratingText && currentStep === 1) {
@@ -94,9 +105,9 @@ export default function HomeClient() {
     }, [carouselData, isGeneratingText, currentStep]);
 
     useEffect(() => {
-        if (images && !isGeneratingImages && currentStep === 3) {
+        if (images && !isGeneratingImages && currentStep === 4) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
-            setCurrentStep((prev) => (prev === 3 ? 4 : prev));
+            setCurrentStep((prev) => (prev === 4 ? 5 : prev));
         }
     }, [images, isGeneratingImages, currentStep]);
 
@@ -117,7 +128,7 @@ export default function HomeClient() {
             <div className="flex flex-col gap-6 animate-reveal">
                 <div className="flex items-center justify-between px-2">
                     <div className="flex items-center gap-4">
-                        {currentStep === 3 && !isGeneratingImages && (
+                        {currentStep >= 3 && !isGeneratingImages && currentStep <= 4 && (
                             <button
                                 onClick={goBack}
                                 aria-label="Voltar ao passo anterior"
@@ -135,7 +146,7 @@ export default function HomeClient() {
                     </span>
                 </div>
                 <div className="flex items-center gap-2 w-full px-2">
-                    {[1, 2, 3, 4].map((i) => (
+                    {[1, 2, 3, 4, 5].map((i) => (
                         <div
                             key={i}
                             className={`h-1.5 flex-1 rounded-full transition-all duration-500 cursor-default ${currentStep >= i
@@ -255,7 +266,19 @@ export default function HomeClient() {
                     <ImageConfigPanel
                         topic={selectedTopic}
                         fontFamily={selectedFont}
-                        onGenerate={handleGenerateImages}
+                        onContinue={(config) => {
+                            setPartialImageConfig(config);
+                            setCurrentStep(4);
+                        }}
+                    />
+                </div>
+            )}
+
+            {/* ── Step 4: Visual Style Gallery ── */}
+            {currentStep === 4 && partialImageConfig && !isGeneratingImages && (
+                <div className="glass-panel rounded-xl p-0 overflow-hidden border border-white/5 shadow-2xl animate-fade-in mt-8" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
+                    <VisualStyleGallery
+                        onGenerate={(visualStyle) => handleGenerateImages({ ...partialImageConfig, visualStyle })}
                         isLoading={isGeneratingImages}
                     />
                 </div>
@@ -269,8 +292,8 @@ export default function HomeClient() {
                 </div>
             )}
 
-            {/* ── Step 4: Carousel preview ── */}
-            {currentStep === 4 && !isGeneratingImages && carouselData && images && images.length > 0 && (
+            {/* ── Step 5: Carousel preview ── */}
+            {currentStep === 5 && !isGeneratingImages && carouselData && images && images.length > 0 && (
                 <CarouselPreview data={carouselData} topic={selectedTopic || manualTopic || niche} images={images} />
             )}
 

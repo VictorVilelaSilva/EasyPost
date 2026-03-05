@@ -2,21 +2,11 @@
 
 import { useState, useRef } from 'react';
 import {
-    Sparkles, Wand2, Palette, Users, Pen,
-    Minimize2, Gem, Building2, Zap, Brush, Sun,
-    Upload, Plus, X, Pipette
+    Wand2, Palette, Users, Pen,
+    Upload, Plus, X, Pipette, ArrowRight
 } from 'lucide-react';
 import { ImageConfig as ImageConfigType } from '@/types';
 import { extractColorsFromImage } from '@/lib/extractColors';
-
-const VISUAL_STYLES = [
-    { id: 'minimalist', label: 'Minimalista', icon: Minimize2 },
-    { id: 'luxury', label: 'Luxo', icon: Gem },
-    { id: 'corporate', label: 'Corporativo', icon: Building2 },
-    { id: 'clean-tech', label: 'Clean Tech', icon: Zap },
-    { id: 'creative', label: 'Criativo', icon: Brush },
-    { id: 'neon', label: 'Neon', icon: Sun },
-];
 
 const COLOR_PALETTES = [
     { id: 'dark', label: 'Dark', colors: ['#0f172a', '#1e293b', '#334155'] },
@@ -30,12 +20,10 @@ const COLOR_PALETTES = [
 interface Props {
     topic: string;
     fontFamily: string;
-    onGenerate: (config: ImageConfigType) => void;
-    isLoading: boolean;
+    onContinue: (config: Omit<ImageConfigType, 'visualStyle'>) => void;
 }
 
-export default function ImageConfigPanel({ topic, fontFamily, onGenerate, isLoading }: Props) {
-    const [visualStyle, setVisualStyle] = useState('minimalist');
+export default function ImageConfigPanel({ topic, fontFamily, onContinue }: Props) {
     const [colorPalette, setColorPalette] = useState('dark');
     const [age, setAge] = useState('');
 
@@ -85,9 +73,8 @@ export default function ImageConfigPanel({ topic, fontFamily, onGenerate, isLoad
         setBrandColors(brandColors.filter((_, i) => i !== index));
     };
 
-    const handleGenerate = () => {
-        onGenerate({
-            visualStyle,
+    const handleContinue = () => {
+        onContinue({
             colorPalette,
             brandColors: {
                 colors: brandColors,
@@ -246,41 +233,6 @@ export default function ImageConfigPanel({ topic, fontFamily, onGenerate, isLoad
                         </div>
                     </div>
 
-                    {/* Visual Style */}
-                    <div className="glass-card-static p-5">
-                        <div className="flex items-center gap-2 mb-3">
-                            <Palette size={14} style={{ color: 'var(--color-text-muted)' }} />
-                            <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-display)' }}>
-                                Estilo Visual
-                            </h3>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                            {VISUAL_STYLES.map((style) => {
-                                const Icon = style.icon;
-                                const isActive = visualStyle === style.id;
-                                return (
-                                    <button
-                                        key={style.id}
-                                        onClick={() => setVisualStyle(style.id)}
-                                        aria-label={`Estilo ${style.label}`}
-                                        className="cursor-pointer px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2"
-                                        style={{
-                                            minHeight: '44px',
-                                            background: isActive ? 'rgba(168, 85, 247, 0.15)' : 'var(--color-card)',
-                                            color: isActive ? '#A855F7' : 'var(--color-text-muted)',
-                                            border: `1px solid ${isActive ? '#A855F7' : 'var(--color-border)'}`,
-                                            boxShadow: isActive ? '0 0 20px -6px rgba(168, 85, 247, 0.4)' : 'none',
-                                            transform: isActive ? 'scale(1.03)' : 'scale(1)',
-                                        }}
-                                    >
-                                        <Icon size={15} />
-                                        {style.label}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-
                     {/* Color Palette */}
                     <div className="glass-card-static p-5" style={{ position: 'relative', overflow: 'hidden' }}>
                         <div className="flex items-center gap-2 mb-3">
@@ -404,20 +356,18 @@ export default function ImageConfigPanel({ topic, fontFamily, onGenerate, isLoad
                         />
                     </div>
 
-                    {/* Generate Button */}
                     <button
-                        onClick={handleGenerate}
-                        disabled={isLoading}
-                        aria-label="Gerar imagens do carousel"
-                        className="w-full py-4 bg-[#7f0df2] hover:bg-[#922cee] cursor-pointer rounded-xl flex items-center justify-center gap-3 transition-transform active:scale-[0.98] shadow-[0_0_30px_rgba(127,13,242,0.3)] group disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+                        onClick={handleContinue}
+                        aria-label="Continuar para a seleção de estilo visual"
+                        className="w-full py-4 bg-[#7f0df2] hover:bg-[#922cee] cursor-pointer rounded-xl flex items-center justify-center gap-3 transition-transform active:scale-[0.98] shadow-[0_0_30px_rgba(127,13,242,0.3)] group mt-4"
                         style={{
                             fontFamily: 'var(--font-display)',
                         }}
                     >
-                        <Sparkles size={20} className="text-white group-hover:rotate-12 transition-transform" />
                         <span className="text-white font-bold text-lg">
-                            {isLoading ? 'Gerando Imagens...' : 'Gerar Imagens'}
+                            Continuar
                         </span>
+                        <ArrowRight size={20} className="text-white group-hover:translate-x-1 transition-transform" />
                     </button>
                 </div>
             </div>
