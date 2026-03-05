@@ -1,8 +1,8 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
-import { Loader2, Sparkles, Wand2, Lightbulb, Bolt } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Loader2, Sparkles, Wand2, Lightbulb, Bolt, ArrowLeft } from 'lucide-react';
 import TopicList from './TopicList';
 import LoadingCard from './LoadingCard';
 import PlatformSelector from './PlatformSelector';
@@ -19,6 +19,21 @@ const ImageConfigPanel = dynamic(() => import('./ImageConfig'), {
 });
 
 const CarouselPreview = dynamic(() => import('./CarouselPreview'), {
+    loading: () => (
+        <div className="flex items-center justify-center py-12 glass-card-static border-dashed">
+            <Loader2 className="animate-spin text-[#A855F7]" size={32} />
+        </div>
+    ),
+});
+
+const STEP_LABELS: Record<number, string> = {
+    1: 'Passo 1 de 4',
+    2: 'Passo 2 de 4',
+    3: 'Passo 3 de 4',
+    4: 'Concluído',
+};
+
+const FontSelectionStep = dynamic(() => import('./FontSelectionStep'), {
     loading: () => (
         <div className="flex items-center justify-center py-12 glass-card-static border-dashed">
             <Loader2 className="animate-spin text-[#A855F7]" size={32} />
@@ -68,6 +83,22 @@ export default function HomeClient() {
     } = useCarouselWorkflow();
 
     const [manualTopic, setManualTopic] = useState('');
+    const [selectedFont, setSelectedFont] = useState('Inter');
+    const [currentStep, setCurrentStep] = useState(1);
+
+    useEffect(() => {
+        if (carouselData && !isGeneratingText && currentStep === 1) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setCurrentStep((prev) => (prev === 1 ? 2 : prev));
+        }
+    }, [carouselData, isGeneratingText, currentStep]);
+
+    useEffect(() => {
+        if (images && !isGeneratingImages && currentStep === 3) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setCurrentStep((prev) => (prev === 3 ? 4 : prev));
+        }
+    }, [images, isGeneratingImages, currentStep]);
 
     const onSubmitGeneration = (e: React.FormEvent) => {
         e.preventDefault();
@@ -77,26 +108,47 @@ export default function HomeClient() {
         }
     };
 
+    const goBack = () => setCurrentStep((s) => Math.max(1, s - 1));
+
     return (
         <div className="mx-auto w-full max-w-[840px] flex flex-col gap-8 pb-32">
 
             {/* Header and Progress */}
             <div className="flex flex-col gap-6 animate-reveal">
                 <div className="flex items-center justify-between px-2">
-                    <h1 className="text-3xl font-bold tracking-tight text-white font-display">Configure seu Post</h1>
+                    <div className="flex items-center gap-4">
+                        {currentStep === 3 && !isGeneratingImages && (
+                            <button
+                                onClick={goBack}
+                                aria-label="Voltar ao passo anterior"
+                                className="cursor-pointer flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-white"
+                                style={{ color: 'rgba(255,255,255,0.4)' }}
+                            >
+                                <ArrowLeft size={16} />
+                                Voltar
+                            </button>
+                        )}
+                        <h1 className="text-3xl font-bold tracking-tight text-white font-display">Configure seu Post</h1>
+                    </div>
                     <span className="text-[#A855F7] font-medium px-3 py-1 bg-[#A855F7]/10 rounded-full text-xs uppercase tracking-widest border border-[#A855F7]/20">
-                        {images ? 'Concluído' : showConfig ? 'Passo 2 de 3' : 'Passo 1 de 3'}
+                        {STEP_LABELS[currentStep]}
                     </span>
                 </div>
                 <div className="flex items-center gap-2 w-full px-2">
-                    <div className={`h-1.5 flex-1 rounded-full ${!showConfig && !images ? 'bg-[#A855F7] shadow-[0_0_10px_rgba(168,85,247,0.6)]' : 'bg-white/10'}`}></div>
-                    <div className={`h-1.5 flex-1 rounded-full ${showConfig || images ? 'bg-[#A855F7] shadow-[0_0_10px_rgba(168,85,247,0.6)]' : 'bg-white/10'}`}></div>
-                    <div className={`h-1.5 flex-1 rounded-full ${images ? 'bg-[#A855F7] shadow-[0_0_10px_rgba(168,85,247,0.6)]' : 'bg-white/10'}`}></div>
+                    {[1, 2, 3, 4].map((i) => (
+                        <div
+                            key={i}
+                            className={`h-1.5 flex-1 rounded-full transition-all duration-500 cursor-default ${currentStep >= i
+                                ? 'bg-[#A855F7] shadow-[0_0_10px_rgba(168,85,247,0.6)]'
+                                : 'bg-white/10'
+                                }`}
+                        />
+                    ))}
                 </div>
             </div>
 
-            {/* Main Configuration Card */}
-            {!carouselData && !isGeneratingText && (
+            {/* ── Step 1: Configuration form ── */}
+            {currentStep === 1 && !isGeneratingText && (
                 <div className="glass-panel rounded-xl p-8 flex flex-col gap-10 border border-white/5 shadow-2xl animate-fade-in" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
 
                     <PlatformSelector value={platform} onChange={setPlatform} />
@@ -184,11 +236,25 @@ export default function HomeClient() {
                 </div>
             )}
 
-            {/* Painel de Configuração e Loading Images */}
-            {showConfig && carouselData && selectedTopic && (
-                <div className="glass-panel rounded-xl p-0 overflow-hidden border border-white/5 shadow-2xl animate-fade-in" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
+            {/* ── Step 2: Font selection ── */}
+            {currentStep === 2 && carouselData && !isGeneratingText && (
+                <div className="glass-panel rounded-xl p-8 border border-white/5 shadow-2xl animate-fade-in mt-8" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
+                    <FontSelectionStep
+                        platform={platform}
+                        carouselData={carouselData}
+                        value={selectedFont}
+                        onChange={setSelectedFont}
+                        onContinue={() => setCurrentStep(3)}
+                    />
+                </div>
+            )}
+
+            {/* ── Step 3: Image config ── */}
+            {currentStep === 3 && showConfig && carouselData && selectedTopic && (
+                <div className="glass-panel rounded-xl p-0 overflow-hidden border border-white/5 shadow-2xl animate-fade-in mt-8" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
                     <ImageConfigPanel
                         topic={selectedTopic}
+                        fontFamily={selectedFont}
                         onGenerate={handleGenerateImages}
                         isLoading={isGeneratingImages}
                     />
@@ -203,8 +269,8 @@ export default function HomeClient() {
                 </div>
             )}
 
-            {/* Preview do Carrossel Finalizado (Sem wrapper glass pois ele mesmo ja o tem) */}
-            {!isGeneratingImages && carouselData && images && images.length > 0 && (
+            {/* ── Step 4: Carousel preview ── */}
+            {currentStep === 4 && !isGeneratingImages && carouselData && images && images.length > 0 && (
                 <CarouselPreview data={carouselData} topic={selectedTopic || manualTopic || niche} images={images} />
             )}
 

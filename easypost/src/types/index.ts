@@ -23,6 +23,7 @@ export interface ImageConfig {
         interests: string;
     };
     customPrompt: string;
+    fontFamily?: string;
 }
 
 export type Platform = 'instagram' | 'linkedin';

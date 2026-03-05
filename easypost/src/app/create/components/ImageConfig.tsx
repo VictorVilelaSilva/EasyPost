@@ -29,11 +29,12 @@ const COLOR_PALETTES = [
 
 interface Props {
     topic: string;
+    fontFamily: string;
     onGenerate: (config: ImageConfigType) => void;
     isLoading: boolean;
 }
 
-export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props) {
+export default function ImageConfigPanel({ topic, fontFamily, onGenerate, isLoading }: Props) {
     const [visualStyle, setVisualStyle] = useState('minimalist');
     const [colorPalette, setColorPalette] = useState('dark');
     const [age, setAge] = useState('');
@@ -94,6 +95,7 @@ export default function ImageConfigPanel({ topic, onGenerate, isLoading }: Props
             },
             audience: { age, interests: '' },
             customPrompt,
+            fontFamily,
         });
     };
 
