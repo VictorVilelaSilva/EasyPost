@@ -85,7 +85,7 @@ export default function VisualStyleGallery({ onGenerate, isLoading, onBack }: Pr
         setPreviewTemplateId(id);
     };
 
-    const templateToPreview = previewTemplateId ? VISUAL_STYLES.find(s => s.id === previewTemplateId) : null;
+
 
     return (
         <div className="w-full animate-reveal relative p-2 md:p-8" style={{ fontFamily: 'var(--font-display)' }}>
@@ -193,14 +193,15 @@ export default function VisualStyleGallery({ onGenerate, isLoading, onBack }: Pr
             <TemplatePreviewModal
                 isOpen={!!previewTemplateId}
                 onClose={() => setPreviewTemplateId(null)}
-                template={templateToPreview ? {
-                    id: templateToPreview.id,
-                    title: templateToPreview.title,
-                    description: templateToPreview.description,
-                    tag: templateToPreview.tag,
-                    preview: templateToPreview.preview,
-                    previewContent: templateToPreview.fullContent
-                } : null}
+                templates={VISUAL_STYLES.map(s => ({
+                    id: s.id,
+                    title: s.title,
+                    description: s.description,
+                    tag: s.tag,
+                    preview: s.preview,
+                    previewContent: s.fullContent
+                }))}
+                initialTemplateId={previewTemplateId}
                 onSelect={(id) => setSelectedStyle(id)}
             />
         </div>
