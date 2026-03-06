@@ -73,7 +73,7 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
             {/* Section 1: Topic Context */}
             <section
                 className="relative overflow-hidden rounded-xl p-8 group"
-                style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.08)' }}
+                style={{ background: 'rgba(8, 5, 16, 0.5)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.05)' }}
             >
                 <div className="absolute top-0 left-0 w-1 h-full bg-[#a855f7]/40 group-hover:bg-[#a855f7] transition-colors rounded-l-xl" />
                 <div className="flex flex-col gap-7 pl-2">
@@ -168,15 +168,15 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
                                         onClick={() => setSelectedSuggestionId(suggestion.id)}
                                         className="relative rounded-xl p-6 cursor-pointer transition-all duration-300 group"
                                         style={{
-                                            background: isSelected ? 'rgba(168,85,247,0.1)' : 'rgba(255,255,255,0.04)',
+                                            background: isSelected ? 'rgba(168,85,247,0.1)' : 'rgba(8, 5, 16, 0.5)',
                                             backdropFilter: 'blur(12px)',
-                                            border: isSelected ? '2px solid #a855f7' : '1px solid rgba(255,255,255,0.08)',
+                                            border: isSelected ? '2px solid #a855f7' : '1px solid rgba(255,255,255,0.05)',
                                         }}
                                         onMouseEnter={(e) => {
                                             if (!isSelected) e.currentTarget.style.borderColor = 'rgba(168,85,247,0.4)';
                                         }}
                                         onMouseLeave={(e) => {
-                                            if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+                                            if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
                                         }}
                                     >
                                         {isSelected && (
@@ -209,7 +209,7 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
             {/* Section 3: Slide Count */}
             <section
                 className="relative overflow-hidden rounded-xl p-8 group"
-                style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.08)' }}
+                style={{ background: 'rgba(8, 5, 16, 0.5)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.05)' }}
             >
                 <div className="absolute top-0 left-0 w-1 h-full bg-[#a855f7]/40 group-hover:bg-[#a855f7] transition-colors rounded-l-xl" />
                 <div className="flex flex-col gap-8 pl-2">

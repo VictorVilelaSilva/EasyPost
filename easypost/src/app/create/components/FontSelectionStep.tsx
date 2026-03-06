@@ -49,8 +49,8 @@ export default function FontSelectionStep({ platform, carouselData, value, onCha
 
             {/* LEFT PANEL — font picker */}
             <div
-                className="lg:w-[42%] flex flex-col rounded-2xl border border-white/8 overflow-hidden"
-                style={{ background: 'rgba(14, 10, 22, 0.7)', backdropFilter: 'blur(16px)' }}
+                className="lg:w-[42%] flex flex-col rounded-2xl border border-white/5 overflow-hidden"
+                style={{ background: 'rgba(8, 5, 16, 0.5)', backdropFilter: 'blur(12px)' }}
             >
                 {/* Panel header */}
                 <div className="px-6 pt-6 pb-4 border-b border-white/5">
