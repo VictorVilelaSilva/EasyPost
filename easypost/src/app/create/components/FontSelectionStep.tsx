@@ -1,29 +1,27 @@
 'use client';
 
-import { useEffect } from 'react';
-import { Type, Check, ArrowRight, Instagram, Linkedin } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Type, CheckCircle, Sparkles, Instagram, Linkedin, MoreHorizontal, Heart, MessageCircle, Send, Bookmark } from 'lucide-react';
 import { FONT_OPTIONS } from './FontSelector';
 import { CarouselData, Platform } from '@/types';
 
+type FontCategory = 'Todos' | 'Sans-serif' | 'Display' | 'Serif';
+
 interface Props {
-    platform: Platform;
-    carouselData: CarouselData;
+    platform: Platform | null;
+    carouselData: CarouselData | null;
     value: string;
     onChange: (font: string) => void;
     onContinue: () => void;
+    onBack: () => void;
 }
 
-export default function FontSelectionStep({
-    platform,
-    carouselData,
-    value,
-    onChange,
-    onContinue,
-}: Props) {
-    // Load all fonts once
+export default function FontSelectionStep({ platform, carouselData, value, onChange, onContinue, onBack }: Props) {
+    const [activeCategory, setActiveCategory] = useState<FontCategory>('Todos');
+
     useEffect(() => {
         const url = `https://fonts.googleapis.com/css2?${FONT_OPTIONS.map(
-            (f) => `family=${f.id.replace(/ /g, '+')}:wght@400;600;700`
+            (f) => `family=${f.id.replace(/ /g, '+')}:wght@400;500;600;700`
         ).join('&')}&display=swap`;
 
         if (!document.getElementById('easypost-gfonts')) {
@@ -36,268 +34,238 @@ export default function FontSelectionStep({
     }, []);
 
     const selectedFont = FONT_OPTIONS.find((f) => f.id === value) || FONT_OPTIONS[0];
-    const firstSlide = carouselData.slides[0];
+    const firstSlide = carouselData?.slides[0];
+    const PlatformIcon = platform === 'linkedin' ? Linkedin : Instagram;
+    const platformLabel = platform === 'linkedin' ? 'LinkedIn' : 'Instagram';
 
-    const PlatformIcon = platform === 'instagram' ? Instagram : Linkedin;
-    const platformLabel = platform === 'instagram' ? 'Instagram' : 'LinkedIn';
+    const categories: FontCategory[] = ['Todos', 'Sans-serif', 'Display', 'Serif'];
+    const filtered = activeCategory === 'Todos'
+        ? FONT_OPTIONS
+        : FONT_OPTIONS.filter((f) => f.category === activeCategory);
 
     return (
-        <div className="w-full animate-fade-in">
-            {/* Step header */}
-            <div className="flex items-center justify-between mb-6 px-2">
-                <div className="flex items-center gap-3">
-                    <div
-                        className="p-2 rounded-xl"
-                        style={{ background: 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.25)' }}
-                    >
-                        <Type size={20} style={{ color: '#A855F7' }} />
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-bold text-white font-display">Tipografia</h2>
-                        <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                            Escolha a fonte do seu post
-                        </p>
-                    </div>
-                </div>
-            </div>
+        <div className="w-full flex flex-col gap-6">
+        <div className="flex flex-col lg:flex-row gap-6" style={{ minHeight: '600px' }}>
 
-            {/* Two-column layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-
-                {/* LEFT: Font list (2/5) */}
-                <div className="lg:col-span-2 flex flex-col gap-4">
-                    <div
-                        className="glass-panel rounded-2xl overflow-hidden flex flex-col"
-                        style={{ background: 'rgba(25, 16, 34, 0.7)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.06)' }}
-                    >
-                        {/* Font list header */}
-                        <div className="px-4 pt-4 pb-3 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                            <p className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)' }}>
-                                17 fontes disponíveis
-                            </p>
+            {/* LEFT PANEL — font picker */}
+            <div
+                className="lg:w-[42%] flex flex-col rounded-2xl border border-white/8 overflow-hidden"
+                style={{ background: 'rgba(14, 10, 22, 0.7)', backdropFilter: 'blur(16px)' }}
+            >
+                {/* Panel header */}
+                <div className="px-6 pt-6 pb-4 border-b border-white/5">
+                    <div className="flex items-center gap-3 mb-1">
+                        <div className="w-8 h-8 rounded-xl bg-purple-500/15 flex items-center justify-center">
+                            <Type size={16} className="text-purple-400" />
                         </div>
+                        <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>
+                            Tipografia
+                        </h2>
+                    </div>
+                    <p className="text-xs text-slate-500 ml-11">Escolha a fonte que vai definir o visual do seu post</p>
+                </div>
 
-                        {/* Scrollable list */}
-                        <div
-                            className="flex flex-col overflow-y-auto py-2 px-2"
-                            style={{ maxHeight: '460px', scrollbarWidth: 'thin' }}
+                {/* Category tabs */}
+                <div className="flex gap-1.5 px-6 py-3 border-b border-white/5">
+                    {categories.map((cat) => (
+                        <button
+                            key={cat}
+                            type="button"
+                            onClick={() => setActiveCategory(cat)}
+                            className="px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all"
+                            style={{
+                                background: activeCategory === cat ? 'rgba(168, 85, 247, 0.18)' : 'rgba(255,255,255,0.04)',
+                                border: `1px solid ${activeCategory === cat ? 'rgba(168, 85, 247, 0.4)' : 'rgba(255,255,255,0.06)'}`,
+                                color: activeCategory === cat ? '#c084fc' : '#64748b',
+                                fontFamily: 'var(--font-display)',
+                            }}
                         >
-                            {FONT_OPTIONS.map((font) => {
-                                const isActive = value === font.id;
-                                return (
-                                    <button
-                                        key={font.id}
-                                        onClick={() => onChange(font.id)}
-                                        aria-label={`Selecionar fonte ${font.label}`}
-                                        aria-pressed={isActive}
-                                        className="cursor-pointer w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all duration-200 mb-1"
+                            {cat}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Font list — fills remaining height */}
+                <div
+                    className="overflow-y-auto px-4 py-3 flex flex-col gap-1.5"
+                    style={{ height: '420px', scrollbarWidth: 'thin', scrollbarColor: 'rgba(168, 85, 247, 0.15) transparent' }}
+                >
+                    {filtered.map((font) => {
+                        const isActive = value === font.id;
+                        return (
+                            <button
+                                key={font.id}
+                                type="button"
+                                onClick={() => onChange(font.id)}
+                                className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all duration-150 group"
+                                style={{
+                                    background: isActive ? 'rgba(168, 85, 247, 0.12)' : 'transparent',
+                                    border: `1px solid ${isActive ? 'rgba(168, 85, 247, 0.35)' : 'transparent'}`,
+                                }}
+                                onMouseEnter={(e) => {
+                                    if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+                                }}
+                            >
+                                <div className="flex flex-col gap-0.5 min-w-0">
+                                    {/* Sample text in the actual font */}
+                                    <span
+                                        className="text-base leading-tight truncate"
                                         style={{
-                                            background: isActive ? 'rgba(168,85,247,0.12)' : 'transparent',
-                                            border: `1px solid ${isActive ? '#A855F7' : 'rgba(255,255,255,0.05)'}`,
-                                            boxShadow: isActive ? '0 0 20px -5px rgba(168,85,247,0.4)' : 'none',
-                                            minHeight: '56px',
+                                            fontFamily: `'${font.id}', sans-serif`,
+                                            color: isActive ? '#ffffff' : '#94a3b8',
+                                            fontWeight: isActive ? 700 : 500,
                                         }}
                                     >
-                                        <div className="flex flex-col gap-0.5 min-w-0 flex-1 overflow-hidden">
-                                            <span
-                                                className="text-[10px] font-semibold uppercase tracking-wider"
-                                                style={{
-                                                    color: isActive ? '#A855F7' : 'rgba(255,255,255,0.35)',
-                                                    fontFamily: 'var(--font-display)',
-                                                }}
-                                            >
-                                                {font.label}
-                                                <span className="ml-1.5 font-normal normal-case tracking-normal opacity-60">
-                                                    · {font.category}
-                                                </span>
-                                            </span>
-                                            <span
-                                                className="text-sm truncate leading-snug"
-                                                style={{
-                                                    fontFamily: `'${font.id}', sans-serif`,
-                                                    color: isActive ? '#e9d9ff' : 'rgba(255,255,255,0.5)',
-                                                }}
-                                            >
-                                                Seu Post no Instagram
-                                            </span>
-                                        </div>
-                                        {isActive && (
-                                            <div
-                                                className="ml-3 shrink-0 w-5 h-5 rounded-full flex items-center justify-center"
-                                                style={{ background: '#A855F7' }}
-                                            >
-                                                <Check size={11} className="text-white" strokeWidth={3} />
-                                            </div>
-                                        )}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                    {/* Continue button */}
-                    <button
-                        onClick={onContinue}
-                        className="w-full py-4 bg-[#7f0df2] hover:bg-[#922cee] cursor-pointer rounded-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-[0_0_30px_rgba(127,13,242,0.35)] group"
-                    >
-                        <span className="text-white font-bold text-base">Continuar</span>
-                        <ArrowRight size={18} className="text-white group-hover:translate-x-1 transition-transform" />
-                    </button>
+                                        {font.label}
+                                    </span>
+                                    <span className="text-[10px] uppercase tracking-widest" style={{ color: isActive ? '#a78bfa' : '#475569', fontFamily: 'var(--font-display)' }}>
+                                        {font.description}
+                                    </span>
+                                </div>
+                                {isActive && <CheckCircle size={16} className="text-purple-400 shrink-0 ml-3" />}
+                            </button>
+                        );
+                    })}
                 </div>
 
-                {/* RIGHT: Live preview (3/5) */}
-                <div className="lg:col-span-3 flex flex-col gap-4">
-                    {/* Preview header */}
-                    <div className="flex items-center justify-between px-1">
-                        <div>
-                            <p className="text-sm font-semibold text-white">Preview do Post</p>
-                            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                                Assim ficará a fonte nas suas imagens
-                            </p>
-                        </div>
-                        <div
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
-                            style={{
-                                background: 'rgba(168,85,247,0.1)',
-                                border: '1px solid rgba(168,85,247,0.25)',
-                                color: '#C084FC',
-                            }}
-                        >
-                            <PlatformIcon size={12} />
-                            {platformLabel}
-                        </div>
+            </div>
+
+            {/* RIGHT PANEL — live preview */}
+            <div
+                className="lg:w-[58%] rounded-2xl flex flex-col p-6 relative overflow-hidden border border-white/5"
+                style={{ background: 'rgba(8, 5, 16, 0.5)', backdropFilter: 'blur(12px)' }}
+            >
+                {/* Ambient glows */}
+                <div className="absolute top-0 right-0 w-96 h-96 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, transparent 70%)', transform: 'translate(20%, -20%)' }} />
+                <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(168, 85, 247, 0.05) 0%, transparent 70%)', transform: 'translate(-20%, 20%)' }} />
+
+                {/* Preview header */}
+                <div className="flex items-center justify-between mb-5 z-10">
+                    <h3 className="text-sm font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>
+                        Preview do Post
+                    </h3>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/8 bg-white/3">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_6px_rgba(168,85,247,0.8)]" />
+                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest" style={{ fontFamily: 'var(--font-display)' }}>
+                            ao vivo
+                        </span>
                     </div>
+                </div>
 
-                    {/* Mock slide card */}
-                    <div
-                        className="relative rounded-2xl overflow-hidden flex flex-col justify-between p-8"
-                        style={{
-                            background: 'linear-gradient(145deg, #1a0a2e 0%, #0d0820 45%, #18103a 100%)',
-                            border: '1px solid rgba(168,85,247,0.2)',
-                            minHeight: '420px',
-                            boxShadow: '0 0 60px -15px rgba(168,85,247,0.35)',
-                        }}
-                    >
-                        {/* Ambient glow top right */}
-                        <div
-                            className="absolute top-0 right-0 w-64 h-64 rounded-full pointer-events-none"
-                            style={{
-                                background: 'radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 65%)',
-                                transform: 'translate(35%, -35%)',
-                            }}
-                        />
-                        {/* Ambient glow bottom left */}
-                        <div
-                            className="absolute bottom-0 left-0 w-48 h-48 rounded-full pointer-events-none"
-                            style={{
-                                background: 'radial-gradient(circle, rgba(91,33,182,0.12) 0%, transparent 65%)',
-                                transform: 'translate(-35%, 35%)',
-                            }}
-                        />
+                {/* Phone mockup — full column width */}
+                <div className="flex-1 flex items-center justify-center z-10">
+                    <div className="w-full max-w-[380px] bg-black/50 rounded-[24px] p-4 border border-white/10 shadow-2xl">
 
-                        {/* Slide type badge */}
-                        <div className="flex items-center justify-between relative z-10">
-                            <span
-                                className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full"
-                                style={{
-                                    background: 'rgba(168,85,247,0.15)',
-                                    border: '1px solid rgba(168,85,247,0.3)',
-                                    color: '#A855F7',
-                                    fontFamily: 'var(--font-display)',
-                                }}
-                            >
-                                Slide 1 · Capa
-                            </span>
-                            <span
-                                className="text-[10px] font-semibold uppercase tracking-widest"
-                                style={{
-                                    color: 'rgba(255,255,255,0.25)',
-                                    fontFamily: `'${selectedFont.id}', sans-serif`,
-                                }}
-                            >
-                                {selectedFont.label}
-                            </span>
+                        {/* Mockup header */}
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2.5">
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-[2px]">
+                                    <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
+                                        <span className="text-[9px] text-purple-300 font-bold">IA</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-bold text-white leading-none mb-0.5" style={{ fontFamily: 'var(--font-display)' }}>seu_perfil</p>
+                                    <p className="text-[9px] text-slate-500 leading-none">
+                                        {platform === 'linkedin' ? 'Just now • 🌍' : 'Original Audio'}
+                                    </p>
+                                </div>
+                            </div>
+                            <MoreHorizontal size={16} className="text-slate-400" />
                         </div>
 
-                        {/* Main slide content */}
-                        <div className="flex flex-col gap-4 relative z-10 my-auto py-8">
-                            <h1
-                                className="font-bold leading-tight"
-                                style={{
-                                    fontFamily: `'${selectedFont.id}', sans-serif`,
-                                    color: '#ffffff',
-                                    fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-                                    letterSpacing: '-0.01em',
-                                }}
-                            >
-                                {firstSlide?.title || 'Título do Post Aqui'}
-                            </h1>
+                        {/* Slide */}
+                        <div className="aspect-[4/5] w-full rounded-xl overflow-hidden relative border border-white/8">
+                            <div className="absolute inset-0 bg-[#0c0d15]">
+                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/30 via-transparent to-purple-900/30" />
+                                <div className="absolute inset-0 opacity-30 mix-blend-overlay" style={{ background: 'radial-gradient(circle at 50% 40%, rgba(168,85,247,0.4), transparent 65%)' }} />
+                            </div>
 
-                            {/* Content bullets */}
-                            <div className="flex flex-col gap-2.5">
-                                {(firstSlide?.content || 'Conteúdo de exemplo do seu post gerado por IA.')
-                                    .split(/[.•\n]/)
-                                    .filter((s: string) => s.trim().length > 0)
-                                    .slice(0, 3)
-                                    .map((line: string, i: number) => (
-                                        <div key={i} className="flex items-start gap-2.5">
-                                            <span
-                                                className="shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full"
-                                                style={{ background: '#A855F7' }}
-                                            />
-                                            <p
-                                                className="text-sm leading-relaxed"
-                                                style={{
-                                                    fontFamily: `'${selectedFont.id}', sans-serif`,
-                                                    color: 'rgba(255,255,255,0.65)',
-                                                }}
-                                            >
-                                                {line.trim()}
-                                            </p>
-                                        </div>
-                                    ))}
+                            <div className="relative h-full flex flex-col p-6 justify-between z-10">
+                                <div className="flex items-center gap-1.5 self-start bg-white/10 backdrop-blur-md px-2 py-1 rounded-md border border-white/15">
+                                    <PlatformIcon size={10} className="text-white" />
+                                    <span className="text-[8px] font-bold tracking-widest text-white uppercase" style={{ fontFamily: 'var(--font-display)' }}>{platformLabel}</span>
+                                </div>
+
+                                <div className="space-y-5 my-auto pt-4">
+                                    <h4
+                                        className="font-bold leading-[1.1] text-white text-2xl"
+                                        style={{ fontFamily: `'${selectedFont.id}', sans-serif` }}
+                                    >
+                                        {firstSlide?.title || 'Título do Post Aqui'}
+                                    </h4>
+                                    <ul className="space-y-3">
+                                        {(firstSlide?.content || 'Conteúdo de exemplo do seu post gerado por IA.\nPonto explicativo sobre o slide.\nConclusão visual e leitura clara.')
+                                            .split(/[.•\n]/)
+                                            .filter((s: string) => s.trim().length > 0)
+                                            .slice(0, 3)
+                                            .map((line: string, i: number) => (
+                                                <li key={i} className="flex items-start gap-2.5 text-slate-200">
+                                                    <span className="w-1.5 h-1.5 shrink-0 mt-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.8)]" />
+                                                    <span className="text-sm leading-snug opacity-85" style={{ fontFamily: `'${selectedFont.id}', sans-serif` }}>{line.trim()}</span>
+                                                </li>
+                                            ))}
+                                    </ul>
+                                </div>
+
+                                <div className="border-t border-white/10 pt-3">
+                                    <p className="text-slate-500 text-[10px] font-semibold uppercase tracking-wider" style={{ fontFamily: `'${selectedFont.id}', sans-serif` }}>
+                                        {selectedFont.label} · {selectedFont.description}
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
-                        {/* CTA / footer */}
-                        <div className="relative z-10 pt-6 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
-                            <p
-                                className="text-xs font-semibold"
-                                style={{
-                                    fontFamily: `'${selectedFont.id}', sans-serif`,
-                                    color: 'rgba(255,255,255,0.35)',
-                                    letterSpacing: '0.05em',
-                                    textTransform: 'uppercase',
-                                }}
-                            >
-                                Arraste para ver mais →
-                            </p>
+                        {/* Engagement row */}
+                        <div className="mt-3 px-1">
+                            {platform === 'linkedin' ? (
+                                <div className="flex items-center justify-between border-t border-white/8 pt-2.5">
+                                    {[Heart, MessageCircle, Send].map((Icon, i) => (
+                                        <div key={i} className="flex items-center gap-1 text-slate-400">
+                                            <Icon size={14} />
+                                            <span className="text-[10px] font-bold">{['Gostei', 'Comentar', 'Enviar'][i]}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <Heart size={18} className="text-white" />
+                                        <MessageCircle size={18} className="text-white" />
+                                        <Send size={18} className="text-white" />
+                                    </div>
+                                    <Bookmark size={18} className="text-white" />
+                                </div>
+                            )}
                         </div>
                     </div>
-
-                    {/* Font name callout */}
-                    <div
-                        className="flex items-center justify-center gap-2 py-3 rounded-xl"
-                        style={{
-                            background: 'rgba(168,85,247,0.07)',
-                            border: '1px solid rgba(168,85,247,0.18)',
-                        }}
-                    >
-                        <Type size={13} style={{ color: '#A855F7' }} />
-                        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                            Fonte selecionada:{' '}
-                            <span
-                                className="font-semibold"
-                                style={{
-                                    fontFamily: `'${selectedFont.id}', sans-serif`,
-                                    color: '#C084FC',
-                                }}
-                            >
-                                {selectedFont.label}
-                            </span>
-                        </p>
-                    </div>
                 </div>
+
+                {/* Bottom hint */}
+                <p className="text-center text-[11px] text-slate-600 mt-4 z-10 tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
+                    A fonte será aplicada em todos os slides do carrossel
+                </p>
+            </div>
+        </div>
+            <div className="w-full flex justify-between items-center border-t border-white/10 pt-8 mt-2">
+                <button
+                    type="button"
+                    onClick={onBack}
+                    className="flex items-center justify-center rounded-xl h-12 px-6 bg-transparent text-slate-400 hover:text-white text-base font-bold transition-colors"
+                >
+                    Voltar
+                </button>
+                <button
+                    type="button"
+                    onClick={onContinue}
+                    className="flex items-center justify-center gap-2 rounded-xl h-12 px-8 bg-[#7f0df2] hover:bg-[#922cee] text-white text-base font-bold shadow-[0_0_20px_rgba(127,13,242,0.4)] transition-all transform hover:-translate-y-0.5"
+                >
+                    Próximo Passo
+                    <Sparkles size={18} />
+                </button>
             </div>
         </div>
     );

@@ -1,376 +1,325 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import {
-    Wand2, Palette, Users, Pen,
-    Upload, Plus, X, Pipette, ArrowRight
-} from 'lucide-react';
+import { useState } from 'react';
+import { Sparkles, Layers, Terminal, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { ImageConfig as ImageConfigType } from '@/types';
-import { extractColorsFromImage } from '@/lib/extractColors';
 
-const COLOR_PALETTES = [
-    { id: 'dark', label: 'Dark', colors: ['#0f172a', '#1e293b', '#334155'] },
-    { id: 'light', label: 'Light', colors: ['#f8fafc', '#e2e8f0', '#cbd5e1'] },
-    { id: 'blue', label: 'Blue', colors: ['#1e3a5f', '#2563eb', '#60a5fa'] },
-    { id: 'green', label: 'Green', colors: ['#064e3b', '#059669', '#34d399'] },
-    { id: 'warm', label: 'Warm', colors: ['#7c2d12', '#ea580c', '#fb923c'] },
-    { id: 'purple', label: 'Purple', colors: ['#3b0764', '#7c3aed', '#a78bfa'] },
+const NICHE_OPTIONS = [
+    { value: 'saude', label: 'Saúde & Bem-estar' },
+    { value: 'tecnologia', label: 'Tecnologia' },
+    { value: 'financas', label: 'Finanças' },
+    { value: 'marketing', label: 'Marketing Digital' },
+    { value: 'educacao', label: 'Educação' },
+    { value: 'empreendedorismo', label: 'Empreendedorismo' },
+    { value: 'lifestyle', label: 'Lifestyle' },
+    { value: 'fitness', label: 'Fitness & Esporte' },
+];
+
+const ALL_SUGGESTIONS = [
+    { id: 1, title: 'Mitos do Setor', description: 'Uma análise técnica sobre falácias comuns e como evitá-las no cotidiano.' },
+    { id: 2, title: 'Guia Rápido', description: 'Protocolos eficientes para resultados de performance consistentes.' },
+    { id: 3, title: '5 Erros Comuns', description: 'Pequenos deslizes que sabotam os resultados de longo prazo.' },
+    { id: 4, title: 'Tendências 2024', description: 'O que a ciência moderna diz sobre otimização e alto desempenho.' },
+    { id: 5, title: 'Leitura de Dados', description: 'Decodificando as métricas que realmente importam para o seu nicho.' },
+    { id: 6, title: 'Fundamentos Sólidos', description: 'A base que poucos dominam e o impacto direto nos seus resultados.' },
+    { id: 7, title: 'Case de Sucesso', description: 'Como os maiores nomes do setor chegaram onde estão hoje.' },
+    { id: 8, title: 'Desmistificando', description: 'Quebrando os mitos mais populares com dados e evidências concretas.' },
+    { id: 9, title: 'Estratégia Avançada', description: 'Técnicas utilizadas por profissionais de alto nível para escalar resultados.' },
+    { id: 10, title: 'Futuro do Setor', description: 'O que esperar dos próximos anos e como se posicionar com antecedência.' },
+    { id: 11, title: 'Primeiros Passos', description: 'O caminho mais direto para quem está começando do zero agora.' },
+    { id: 12, title: 'Produtividade Real', description: 'Sistemas práticos que eliminam o ruído e geram tração de verdade.' },
 ];
 
 interface Props {
     topic: string;
     fontFamily: string;
     onContinue: (config: Omit<ImageConfigType, 'visualStyle'>) => void;
+    onBack: () => void;
 }
 
-export default function ImageConfigPanel({ topic, fontFamily, onContinue }: Props) {
-    const [colorPalette, setColorPalette] = useState('dark');
-    const [age, setAge] = useState('');
+export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack }: Props) {
+    const [topicContext, setTopicContext] = useState(topic || '');
+    const [niche, setNiche] = useState('saude');
+    const [selectedSuggestionId, setSelectedSuggestionId] = useState(1);
+    const [slideCount, setSlideCount] = useState(5);
+    const [suggestionSet, setSuggestionSet] = useState(0);
 
-    const [customPrompt, setCustomPrompt] = useState('');
+    const visibleSuggestions = ALL_SUGGESTIONS.slice(suggestionSet * 6, suggestionSet * 6 + 6);
 
-    // Brand colors state
-    const [brandColors, setBrandColors] = useState<string[]>([]);
-    const [logoPreview, setLogoPreview] = useState<string | null>(null);
-    const [isExtractingColors, setIsExtractingColors] = useState(false);
-    const [manualColorInput, setManualColorInput] = useState('');
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        // Show preview
-        const reader = new FileReader();
-        reader.onload = () => setLogoPreview(reader.result as string);
-        reader.readAsDataURL(file);
-
-        // Extract colors
-        setIsExtractingColors(true);
-        try {
-            const colors = await extractColorsFromImage(file, 5);
-            setBrandColors(colors);
-        } catch (err) {
-            console.error('Erro ao extrair cores:', err);
-            alert('Não foi possível extrair as cores da imagem');
-        }
-        setIsExtractingColors(false);
-    };
-
-    const addManualColor = () => {
-        let color = manualColorInput.trim();
-        if (!color) return;
-        if (!color.startsWith('#')) color = '#' + color;
-        if (/^#[0-9A-Fa-f]{3,8}$/.test(color)) {
-            if (brandColors.length < 6) {
-                setBrandColors([...brandColors, color]);
-                setManualColorInput('');
-            }
-        }
-    };
-
-    const removeColor = (index: number) => {
-        setBrandColors(brandColors.filter((_, i) => i !== index));
+    const handleRecalculate = () => {
+        const nextSet = (suggestionSet + 1) % 2;
+        setSuggestionSet(nextSet);
+        setSelectedSuggestionId(ALL_SUGGESTIONS[nextSet * 6].id);
     };
 
     const handleContinue = () => {
+        const selected = ALL_SUGGESTIONS.find(s => s.id === selectedSuggestionId);
         onContinue({
-            colorPalette,
-            brandColors: {
-                colors: brandColors,
-                logoDataUrl: logoPreview || undefined,
-            },
-            audience: { age, interests: '' },
-            customPrompt,
+            colorPalette: 'dark',
+            brandColors: { colors: [] },
+            audience: { age: String(slideCount), interests: niche },
+            customPrompt: topicContext || (selected?.title ?? ''),
             fontFamily,
         });
     };
 
+    const col1 = visibleSuggestions.slice(0, 2);
+    const col2 = visibleSuggestions.slice(2, 4);
+    const col3 = visibleSuggestions.slice(4, 6);
+
     return (
-        <div className="w-full mt-8 mb-8 animate-reveal">
-            {/* Header */}
-            <div className="flex items-center gap-3 mb-6">
-                <div className="p-2.5 rounded-xl" style={{ background: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-                    <Wand2 size={20} style={{ color: 'var(--color-primary)' }} />
-                </div>
-                <div>
-                    <h2 className="text-xl font-bold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-text)' }}>
-                        Configurações da Imagem
-                    </h2>
-                    <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                        Personalize o visual do seu carousel sobre <span className="font-medium" style={{ color: 'var(--color-primary)' }}>&ldquo;{topic}&rdquo;</span>
-                    </p>
-                </div>
-            </div>
+        <div className="w-full flex flex-col gap-8 mt-8 mb-8 animate-reveal" style={{ fontFamily: 'var(--font-display)' }}>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {/* Section 1: Topic Context */}
+            <section
+                className="relative overflow-hidden rounded-xl p-8 group"
+                style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
+                <div className="absolute top-0 left-0 w-1 h-full bg-[#a855f7]/40 group-hover:bg-[#a855f7] transition-colors rounded-l-xl" />
+                <div className="flex flex-col gap-7 pl-2">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-[#a855f7]/10">
+                            <Terminal size={18} className="text-[#a855f7]" />
+                        </div>
+                        <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>
+                            Qual o tema de hoje?
+                        </h2>
+                    </div>
 
-                {/* Left Column */}
-                <div className="space-y-5">
-
-                    {/* ============ BRAND IDENTITY ============ */}
-                    <div className="glass-card-static p-5">
-                        <div className="flex items-center gap-2 mb-4">
-                            <Pipette size={14} style={{ color: 'var(--color-accent)' }} />
-                            <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-display)' }}>
-                                Identidade da Marca
-                            </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="flex flex-col gap-2">
+                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
+                                Contexto do Post
+                            </label>
+                            <input
+                                type="text"
+                                value={topicContext}
+                                onChange={(e) => setTopicContext(e.target.value)}
+                                placeholder="Ex: Estratégias de Growth para SaaS 2024"
+                                className="w-full h-14 px-5 rounded-lg text-slate-100 transition-all outline-none"
+                                style={{
+                                    background: 'rgba(0,0,0,0.4)',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    fontFamily: 'var(--font-body)',
+                                }}
+                                onFocus={(e) => { e.currentTarget.style.borderColor = '#a855f7'; e.currentTarget.style.boxShadow = '0 0 0 1px #a855f7'; }}
+                                onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none'; }}
+                            />
                         </div>
 
-                        {/* Logo Upload */}
-                        <div className="mb-4">
-                            <p className="text-xs mb-2" style={{ color: 'var(--color-text-subtle)' }}>
-                                Envie sua logo para extrair as cores automaticamente:
-                            </p>
-                            <div className="flex items-center gap-3">
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleLogoUpload}
-                                    className="hidden"
-                                    aria-label="Upload de logo"
-                                />
-                                <button
-                                    onClick={() => fileInputRef.current?.click()}
-                                    className="cursor-pointer flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                        <div className="flex flex-col gap-2">
+                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
+                                Nicho Operacional
+                            </label>
+                            <div className="relative">
+                                <select
+                                    value={niche}
+                                    onChange={(e) => setNiche(e.target.value)}
+                                    className="w-full h-14 px-5 rounded-lg text-slate-100 appearance-none transition-all outline-none cursor-pointer"
                                     style={{
-                                        background: 'var(--color-card)',
-                                        border: '1px solid var(--color-border)',
-                                        color: 'var(--color-text-muted)',
-                                        minHeight: '44px',
+                                        background: 'rgba(0,0,0,0.4)',
+                                        border: '1px solid rgba(255,255,255,0.1)',
+                                        fontFamily: 'var(--font-body)',
                                     }}
-                                    aria-label="Selecionar imagem da logo"
+                                    onFocus={(e) => { e.currentTarget.style.borderColor = '#a855f7'; e.currentTarget.style.boxShadow = '0 0 0 1px #a855f7'; }}
+                                    onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none'; }}
                                 >
-                                    <Upload size={16} />
-                                    {isExtractingColors ? 'Extraindo cores...' : 'Enviar Logo'}
-                                </button>
-
-                                {logoPreview && (
-                                    <div className="relative w-11 h-11 rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border)' }}>
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img src={logoPreview} alt="Logo preview" width={44} height={44} className="w-full h-full object-contain" style={{ background: '#fff' }} />
-                                        <button
-                                            onClick={() => { setLogoPreview(null); setBrandColors([]); }}
-                                            className="cursor-pointer absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center"
-                                            style={{ background: 'var(--color-primary)', color: '#fff' }}
-                                            aria-label="Remover logo"
-                                        >
-                                            <X size={10} />
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Extracted / Manual Colors */}
-                        <div>
-                            <p className="text-xs mb-2" style={{ color: 'var(--color-text-subtle)' }}>
-                                {brandColors.length > 0 ? 'Cores da marca (clique para remover):' : 'Ou adicione cores manualmente:'}
-                            </p>
-
-                            {/* Color Swatches */}
-                            <div className="flex flex-wrap gap-2 mb-3">
-                                {brandColors.map((color, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => removeColor(i)}
-                                        className="cursor-pointer group relative w-10 h-10 rounded-lg transition-transform hover:scale-110"
-                                        style={{ backgroundColor: color, border: '2px solid var(--color-border)' }}
-                                        aria-label={`Remover cor ${color}`}
-                                        title={color}
-                                    >
-                                        <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" style={{ background: 'rgba(0,0,0,0.5)' }}>
-                                            <X size={12} className="text-white" />
-                                        </span>
-                                    </button>
-                                ))}
-
-                                {/* Add Color Button */}
-                                {brandColors.length < 6 && (
-                                    <div className="flex items-center gap-1.5">
-                                        <input
-                                            type="color"
-                                            value={manualColorInput || '#3b82f6'}
-                                            onChange={(e) => {
-                                                setManualColorInput(e.target.value);
-                                            }}
-                                            className="cursor-pointer w-10 h-10 rounded-lg border-0 p-0"
-                                            style={{ background: 'transparent' }}
-                                            title="Escolher cor"
-                                            aria-label="Seletor de cor"
-                                        />
-                                        <input
-                                            type="text"
-                                            value={manualColorInput}
-                                            onChange={(e) => setManualColorInput(e.target.value)}
-                                            onKeyDown={(e) => e.key === 'Enter' && addManualColor()}
-                                            placeholder="#hex"
-                                            className="input-glow w-24 px-3 py-2 rounded-lg text-xs font-mono"
-                                            style={{
-                                                background: 'var(--color-surface)',
-                                                border: '1px solid var(--color-border)',
-                                                color: 'var(--color-text)',
-                                                minHeight: '40px',
-                                            }}
-                                            aria-label="Código hex da cor"
-                                        />
-                                        <button
-                                            onClick={addManualColor}
-                                            className="cursor-pointer w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
-                                            style={{
-                                                background: 'var(--color-card)',
-                                                border: '1px solid var(--color-border)',
-                                                color: 'var(--color-text-muted)',
-                                            }}
-                                            aria-label="Adicionar cor"
-                                        >
-                                            <Plus size={16} />
-                                        </button>
-                                    </div>
-                                )}
+                                    {NICHE_OPTIONS.map((opt) => (
+                                        <option key={opt.value} value={opt.value} style={{ background: '#0f0a1a' }}>
+                                            {opt.label}
+                                        </option>
+                                    ))}
+                                </select>
+                                <svg className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    {/* Color Palette */}
-                    <div className="glass-card-static p-5" style={{ position: 'relative', overflow: 'hidden' }}>
-                        <div className="flex items-center gap-2 mb-3">
-                            <Palette size={14} style={{ color: 'var(--color-text-muted)' }} />
-                            <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-display)' }}>
-                                Paleta de Cores
-                            </h3>
-                        </div>
+            {/* Section 2: AI Suggestions */}
+            <section className="flex flex-col gap-5">
+                <div className="flex justify-between items-center px-1">
+                    <div className="flex items-center gap-3">
+                        <Sparkles size={18} className="text-[#a855f7]" />
+                        <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>
+                            Sugestões da IA
+                        </h2>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={handleRecalculate}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#a855f7] text-xs font-bold uppercase tracking-widest transition-all hover:bg-[#a855f7]/10 cursor-pointer"
+                        style={{ border: '1px solid rgba(168,85,247,0.3)' }}
+                    >
+                        <RefreshCw size={14} />
+                        Recalcular Ideias
+                    </button>
+                </div>
 
-                        {/* Disabled overlay when brand colors are active */}
-                        {brandColors.length > 0 && (
-                            <div
-                                style={{
-                                    position: 'absolute',
-                                    inset: 0,
-                                    background: 'rgba(0, 0, 0, 0.55)',
-                                    backdropFilter: 'blur(2px)',
-                                    zIndex: 10,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    borderRadius: 'inherit',
-                                    padding: '1rem',
-                                }}
-                            >
-                                <p className="text-xs font-medium text-center" style={{ color: 'rgba(255,255,255,0.85)' }}>
-                                    🎨 Usando as cores da sua logo
-                                </p>
-                            </div>
-                        )}
-
-                        <div className="grid grid-cols-3 gap-3">
-                            {COLOR_PALETTES.map((palette) => {
-                                const isActive = colorPalette === palette.id && brandColors.length === 0;
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+                    {[col1, col2, col3].map((col, colIdx) => (
+                        <div key={colIdx} className="flex flex-col gap-5">
+                            {col.map((suggestion) => {
+                                const isSelected = selectedSuggestionId === suggestion.id;
                                 return (
-                                    <button
-                                        key={palette.id}
-                                        onClick={() => brandColors.length === 0 && setColorPalette(palette.id)}
-                                        disabled={brandColors.length > 0}
-                                        aria-label={`Paleta ${palette.label}`}
-                                        className="cursor-pointer flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-200"
+                                    <div
+                                        key={suggestion.id}
+                                        onClick={() => setSelectedSuggestionId(suggestion.id)}
+                                        className="relative rounded-xl p-6 cursor-pointer transition-all duration-300 group"
                                         style={{
-                                            minHeight: '44px',
-                                            background: isActive ? 'rgba(168, 85, 247, 0.1)' : 'var(--color-card)',
-                                            border: `1px solid ${isActive ? '#A855F7' : 'var(--color-border)'}`,
-                                            boxShadow: isActive ? '0 0 0 2px rgba(168, 85, 247, 0.3)' : 'none',
-                                            transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                                            background: isSelected ? 'rgba(168,85,247,0.1)' : 'rgba(255,255,255,0.04)',
+                                            backdropFilter: 'blur(12px)',
+                                            border: isSelected ? '2px solid #a855f7' : '1px solid rgba(255,255,255,0.08)',
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (!isSelected) e.currentTarget.style.borderColor = 'rgba(168,85,247,0.4)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
                                         }}
                                     >
-                                        <div className="flex gap-1.5">
-                                            {palette.colors.map((color, i) => (
-                                                <div
-                                                    key={i}
-                                                    className="w-5 h-5 rounded-full"
-                                                    style={{ backgroundColor: color, border: '1px solid rgba(255,255,255,0.1)' }}
-                                                />
-                                            ))}
-                                        </div>
-                                        <span className="text-xs font-medium" style={{ color: 'var(--color-text-subtle)' }}>{palette.label}</span>
-                                    </button>
+                                        {isSelected && (
+                                            <div className="flex justify-between items-start mb-4">
+                                                <div className="w-8 h-8 rounded-lg bg-[#a855f7] flex items-center justify-center">
+                                                    <CheckCircle2 size={16} className="text-white" />
+                                                </div>
+                                                <span className="text-[10px] font-mono font-bold text-[#a855f7] uppercase tracking-widest">
+                                                    Selecionado
+                                                </span>
+                                            </div>
+                                        )}
+                                        <h3
+                                            className="text-base font-bold text-white mb-2 transition-colors"
+                                            style={{ color: !isSelected ? undefined : '#ffffff' }}
+                                        >
+                                            {suggestion.title}
+                                        </h3>
+                                        <p className="text-sm leading-relaxed" style={{ color: isSelected ? 'rgba(255,255,255,0.7)' : 'rgba(148,163,184,1)' }}>
+                                            {suggestion.description}
+                                        </p>
+                                    </div>
                                 );
                             })}
                         </div>
-                        {brandColors.length === 0 && (
-                            <p className="text-xs mt-2" style={{ color: 'var(--color-text-subtle)' }}>
-                                💡 Envie sua logo acima para usar as cores da sua marca automaticamente
+                    ))}
+                </div>
+            </section>
+
+            {/* Section 3: Slide Count */}
+            <section
+                className="relative overflow-hidden rounded-xl p-8 group"
+                style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
+                <div className="absolute top-0 left-0 w-1 h-full bg-[#a855f7]/40 group-hover:bg-[#a855f7] transition-colors rounded-l-xl" />
+                <div className="flex flex-col gap-8 pl-2">
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-[#a855f7]/10">
+                                <Layers size={18} className="text-[#a855f7]" />
+                            </div>
+                            <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>
+                                Estrutura de Blocos
+                            </h2>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-tight">
+                                Config Atual:
+                            </span>
+                            <span
+                                className="text-sm font-black text-white px-4 py-1 rounded-md"
+                                style={{ background: '#a855f7', boxShadow: '0 0 15px rgba(168,85,247,0.4)' }}
+                            >
+                                {String(slideCount).padStart(2, '0')} SLIDES
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-6 px-1">
+                        <div className="flex justify-between w-full">
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                                <span
+                                    key={n}
+                                    className="text-xs font-mono transition-all duration-300"
+                                    style={{
+                                        color: n === slideCount ? '#a855f7' : 'rgba(100,116,139,0.6)',
+                                        fontWeight: n === slideCount ? 700 : 400,
+                                        transform: n === slideCount ? 'scale(1.2)' : 'scale(1)',
+                                        textShadow: n === slideCount ? '0 0 10px rgba(168,85,247,0.5)' : 'none',
+                                        display: 'inline-block',
+                                    }}
+                                >
+                                    {String(n).padStart(2, '0')}
+                                </span>
+                            ))}
+                        </div>
+
+                        <div className="relative">
+                            <input
+                                type="range"
+                                min={1}
+                                max={10}
+                                value={slideCount}
+                                onChange={(e) => setSlideCount(Number(e.target.value))}
+                                className="w-full h-1.5 rounded-full appearance-none cursor-pointer outline-none"
+                                style={{
+                                    background: `linear-gradient(to right, #a855f7 ${(slideCount - 1) / 9 * 100}%, rgba(255,255,255,0.1) ${(slideCount - 1) / 9 * 100}%)`,
+                                }}
+                            />
+                        </div>
+
+                        <div className="flex items-center justify-center gap-2 text-slate-500">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg>
+                            <p className="text-[13px] font-medium italic">
+                                O algoritmo segmentará o conteúdo em {slideCount} frames otimizados para engajamento.
                             </p>
-                        )}
+                        </div>
                     </div>
                 </div>
+            </section>
 
-                {/* Right Column */}
-                <div className="space-y-5">
-
-                    {/* Target Audience */}
-                    <div className="glass-card-static p-5">
-                        <div className="flex items-center gap-2 mb-3">
-                            <Users size={14} style={{ color: 'var(--color-text-muted)' }} />
-                            <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-display)' }}>
-                                Público-Alvo
-                            </h3>
-                        </div>
-                        <input
-                            type="text"
-                            value={age}
-                            onChange={(e) => setAge(e.target.value)}
-                            placeholder="Idade (ex: 25-35)"
-                            aria-label="Faixa etária do público"
-                            className="input-glow w-full px-4 py-2.5 rounded-xl text-sm"
-                            style={{
-                                background: 'var(--color-surface)',
-                                border: '1px solid var(--color-border)',
-                                color: 'var(--color-text)',
-                                fontFamily: 'var(--font-body)',
-                                minHeight: '44px',
-                            }}
-                        />
-                    </div>
-
-                    {/* Custom Prompt */}
-                    <div className="glass-card-static p-5">
-                        <div className="flex items-center gap-2 mb-3">
-                            <Pen size={14} style={{ color: 'var(--color-text-muted)' }} />
-                            <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-display)' }}>
-                                Prompt Personalizado
-                            </h3>
-                        </div>
-                        <textarea
-                            value={customPrompt}
-                            onChange={(e) => setCustomPrompt(e.target.value)}
-                            placeholder="Adicione instruções extras para o visual das imagens..."
-                            rows={3}
-                            aria-label="Prompt personalizado"
-                            className="input-glow w-full px-4 py-3 rounded-xl text-sm resize-none"
-                            style={{
-                                background: 'var(--color-surface)',
-                                border: '1px solid var(--color-border)',
-                                color: 'var(--color-text)',
-                                fontFamily: 'var(--font-body)',
-                            }}
-                        />
-                    </div>
-
-                    <button
-                        onClick={handleContinue}
-                        aria-label="Continuar para a seleção de estilo visual"
-                        className="w-full py-4 bg-[#7f0df2] hover:bg-[#922cee] cursor-pointer rounded-xl flex items-center justify-center gap-3 transition-transform active:scale-[0.98] shadow-[0_0_30px_rgba(127,13,242,0.3)] group mt-4"
-                        style={{
-                            fontFamily: 'var(--font-display)',
-                        }}
-                    >
-                        <span className="text-white font-bold text-lg">
-                            Continuar
-                        </span>
-                        <ArrowRight size={20} className="text-white group-hover:translate-x-1 transition-transform" />
-                    </button>
-                </div>
+            {/* Footer */}
+            <div className="w-full flex justify-between items-center border-t border-white/10 pt-8 mt-2">
+                <button
+                    type="button"
+                    onClick={onBack}
+                    className="flex items-center justify-center rounded-xl h-12 px-6 bg-transparent text-slate-400 hover:text-white text-base font-bold transition-colors cursor-pointer"
+                >
+                    Voltar
+                </button>
+                <button
+                    type="button"
+                    onClick={handleContinue}
+                    className="flex items-center justify-center gap-2 rounded-xl h-12 px-8 bg-[#7f0df2] hover:bg-[#922cee] text-white text-base font-bold shadow-[0_0_20px_rgba(127,13,242,0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                    style={{ fontFamily: 'var(--font-display)' }}
+                >
+                    Próximo Passo
+                    <Sparkles size={18} />
+                </button>
             </div>
+
+            <style>{`
+                input[type='range']::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 20px;
+                    height: 20px;
+                    background: #a855f7;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    border: 3px solid #ffffff;
+                    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+                }
+                input[type='range']::-moz-range-thumb {
+                    width: 20px;
+                    height: 20px;
+                    background: #a855f7;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    border: 3px solid #ffffff;
+                    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+                }
+            `}</style>
         </div>
     );
 }

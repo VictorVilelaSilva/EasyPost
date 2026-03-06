@@ -1,67 +1,69 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, CheckCircle2, Terminal, Upload, Plus } from 'lucide-react';
+import { Sparkles, Upload, MonitorSmartphone, Terminal, Eye } from 'lucide-react';
+import TemplatePreviewModal from './TemplatePreviewModal';
 
-// The visual styles mapped from Stitch
 const VISUAL_STYLES = [
     {
-        id: 'minimalist',
-        title: 'Master Minimalist Design',
-        subtitle: 'VisualAI Framework',
-        tag: 'Clean Minimalist',
-        preview: 'bg-[#111]',
+        id: 'tech-start',
+        title: 'Tech Start',
+        description: 'Design minimalista focado em métricas e conversão.',
+        icon: MonitorSmartphone,
+        tag: 'Tech',
+        preview: 'bg-slate-900',
         previewContent: (
-            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent flex flex-col justify-center p-6">
-                <div className="w-12 h-1 bg-white mb-4"></div>
-                <p className="text-2xl font-bold text-white leading-tight">Master Minimalist Design</p>
-                <p className="text-slate-400 mt-2 text-sm uppercase tracking-widest">VisualAI Framework</p>
-            </div>
-        )
-    },
-    {
-        id: 'neon',
-        title: 'NEON FLOW',
-        subtitle: '2024 TRENDS',
-        tag: 'Vibrant Neon',
-        preview: 'bg-gradient-to-tr from-purple-900 to-blue-900',
-        previewContent: (
-            <div className="absolute inset-0 p-6 flex flex-col items-end text-right justify-end">
-                <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-[#8b5cf6] italic">NEON FLOW</p>
-                <p className="text-white mt-2 text-xs font-bold bg-[#8b5cf6] px-2 py-1">2024 TRENDS</p>
-            </div>
-        )
-    },
-    {
-        id: 'corporate',
-        title: 'Q3 Report Summary',
-        subtitle: 'Building the future of enterprise automation with AI.',
-        tag: 'Corporate Executive',
-        preview: 'bg-[#1e293b]',
-        previewContent: (
-            <div className="absolute inset-0 p-8 flex flex-col border border-slate-600 m-4 bg-[#0f172a]">
-                <span className="text-xs font-bold text-blue-400 mb-2 uppercase">Q3 Report Summary</span>
-                <p className="text-lg font-medium text-slate-100 leading-normal">Building the future of enterprise automation with AI.</p>
-                <div className="mt-auto flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-slate-600"></div>
-                    <span className="text-[10px] text-slate-400">CEO Insights</span>
+            <>
+                <div className="absolute inset-0 bg-linear-to-br from-indigo-500/20 to-purple-600/20 group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <MonitorSmartphone className="w-16 h-16 text-[#a855f7]/30" />
+                </div>
+            </>
+        ),
+        fullContent: (
+            <div className="flex flex-col h-full bg-slate-900 justify-center items-center font-sans text-center px-4">
+                <h1 className="text-4xl md:text-5xl text-white font-bold mb-4 tracking-tight">Tech Start</h1>
+                <p className="text-slate-400 max-w-sm mb-12">Boost your metrics using our conversion-focused design templates.</p>
+                <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-sm">
+                    <div className="w-12 h-12 rounded-lg bg-indigo-500/20 flex items-center justify-center mb-4 mx-auto">
+                        <MonitorSmartphone className="w-6 h-6 text-indigo-400" />
+                    </div>
+                    <div className="h-4 w-3/4 bg-white/10 rounded mx-auto mb-2"></div>
+                    <div className="h-4 w-1/2 bg-white/10 rounded mx-auto"></div>
                 </div>
             </div>
         )
     },
     {
-        id: 'cyber-tech',
-        title: 'DARK_TECH',
-        subtitle: '> INIT_GEN',
-        tag: 'Cyber Tech',
-        preview: 'bg-black',
-        previewContainerClass: 'border border-green-500/20 m-2 w-[calc(100%-16px)] h-[calc(100%-16px)] rounded-lg',
+        id: 'developer-pro',
+        title: 'Developer Pro',
+        description: 'Inspirado em editores de código modernos e temas dark.',
+        icon: Terminal,
+        tag: 'Dev',
+        preview: 'bg-slate-900',
         previewContent: (
-            <div className="absolute inset-0 p-6 flex flex-col justify-between">
-                <Terminal className="text-green-500 w-8 h-8" />
-                <div className="space-y-3">
-                    <p className="text-sm font-mono text-green-500">&gt; INIT_GEN</p>
-                    <p className="text-2xl font-bold text-white font-mono">DARK_TECH</p>
+            <>
+                <div className="absolute inset-0 bg-linear-to-tr from-blue-500/10 to-cyan-400/10 group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <Terminal className="w-16 h-16 text-slate-700" />
+                </div>
+            </>
+        ),
+        fullContent: (
+            <div className="flex flex-col h-full bg-[#0d1117] p-8 font-mono text-left relative overflow-hidden">
+                <div className="flex gap-2 mb-8 border-b border-white/10 pb-4">
+                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <div className="flex-1 flex flex-col justify-center">
+                    <p className="text-green-400 mb-2">➜  ~ ./create_project</p>
+                    <p className="text-cyan-400 mb-8">Initializing new environment...</p>
+                    <h1 className="text-white text-4xl md:text-5xl font-bold mb-4">Code like a Pro</h1>
+                    <p className="text-slate-500 border-l-2 border-slate-700 pl-4">Dark themes to save your eyes.</p>
+                </div>
+                <div className="absolute bottom-0 right-0 p-8 opacity-10">
+                    <Terminal className="w-64 h-64 text-white" />
                 </div>
             </div>
         )
@@ -71,88 +73,136 @@ const VISUAL_STYLES = [
 interface Props {
     onGenerate: (selectedStyle: string) => void;
     isLoading: boolean;
+    onBack?: () => void;
 }
 
-export default function VisualStyleGallery({ onGenerate, isLoading }: Props) {
-    const [selectedStyle, setSelectedStyle] = useState('minimalist');
+export default function VisualStyleGallery({ onGenerate, isLoading, onBack }: Props) {
+    const [selectedStyle, setSelectedStyle] = useState('tech-start');
+    const [previewTemplateId, setPreviewTemplateId] = useState<string | null>(null);
+
+    const handlePreview = (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        setPreviewTemplateId(id);
+    };
+
+    const templateToPreview = previewTemplateId ? VISUAL_STYLES.find(s => s.id === previewTemplateId) : null;
 
     return (
-        <div className="w-full animate-reveal relative">
-            <div className="flex flex-col gap-6">
-                <nav className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                    <button className="flex h-10 shrink-0 items-center justify-center rounded-full bg-[#8b5cf6] px-6 text-white text-sm font-semibold border border-[#8b5cf6]/50">
-                        Todos
-                    </button>
-                    {VISUAL_STYLES.map(style => (
-                        <button
-                            key={`filter-${style.id}`}
-                            onClick={() => setSelectedStyle(style.id)}
-                            className="flex h-10 shrink-0 items-center justify-center rounded-full bg-[#1a1a20] border border-white/5 px-6 text-slate-300 hover:text-white hover:border-white/20 transition-all text-sm font-medium"
-                        >
-                            {style.tag}
-                        </button>
-                    ))}
-                </nav>
+        <div className="w-full animate-reveal relative p-2 md:p-8" style={{ fontFamily: 'var(--font-display)' }}>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="flex flex-col gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-2">
+                    {/* Botão Especial: Gerar com IA */}
+                    <div
+                        onClick={() => setSelectedStyle('ai-generated')}
+                        className={`flex flex-col h-[320px] md:h-[420px] rounded-xl border-2 transition-all cursor-pointer items-center justify-center text-center p-8 group relative overflow-hidden ${selectedStyle === 'ai-generated' ? 'border-[#a855f7] shadow-[0_0_20px_rgba(168,85,247,0.3)] bg-[#a855f7]/5' : 'border-[#a855f7]/40 bg-linear-to-br from-[#a855f7]/10 via-transparent to-transparent hover:border-[#a855f7]'}`}
+                    >
+                        <div className="absolute inset-0 bg-[#a855f7]/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="relative z-10 w-20 h-20 rounded-full bg-[#a855f7] flex items-center justify-center mb-6 shadow-xl shadow-[#a855f7]/40 group-hover:scale-110 transition-transform">
+                            <Sparkles className="w-10 h-10 text-white" />
+                        </div>
+                        <h3 className="relative z-10 text-xl font-bold text-white mb-3">Gerar estilo com IA</h3>
+                        <p className="relative z-10 text-slate-400 text-sm leading-relaxed">Nossa inteligência criará um design exclusivo e autoral para sua marca.</p>
+
+                        {selectedStyle === 'ai-generated' && (
+                            <div className="absolute top-4 right-4 z-20">
+                                <div className="bg-[#a855f7] text-white rounded-full p-1 shadow-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Botão Especial: Upload */}
+                    <div
+                        onClick={() => setSelectedStyle('upload')}
+                        className={`flex flex-col h-[320px] md:h-[420px] rounded-xl border border-dashed transition-all cursor-pointer items-center justify-center text-center p-8 group relative ${selectedStyle === 'upload' ? 'border-[#a855f7] bg-[#a855f7]/5' : 'border-white/20 hover:border-[#a855f7]/50 hover:bg-[#a855f7]/2'}`}
+                    >
+                        <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:bg-[#a855f7]/10 transition-colors">
+                            <Upload className={`w-8 h-8 ${selectedStyle === 'upload' ? 'text-[#a855f7]' : 'text-slate-500 group-hover:text-[#a855f7]'}`} />
+                        </div>
+                        <h3 className={`text-xl font-bold mb-3 ${selectedStyle === 'upload' ? 'text-[#a855f7]' : 'text-slate-300 group-hover:text-[#a855f7]'}`}>Enviar meu próprio</h3>
+                        <p className="text-slate-500 text-sm leading-relaxed">Arraste seus assets visuais ou clique para fazer upload.</p>
+
+                        {selectedStyle === 'upload' && (
+                            <div className="absolute top-4 right-4 z-20">
+                                <div className="bg-[#a855f7] text-white rounded-full p-1 shadow-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Templates Regulares */}
                     {VISUAL_STYLES.map((style) => {
                         const isSelected = selectedStyle === style.id;
                         return (
                             <div
                                 key={style.id}
                                 onClick={() => setSelectedStyle(style.id)}
-                                className={`cursor-pointer group relative flex flex-col rounded-xl overflow-hidden bg-[#1a1a20] border transition-all duration-300 ${isSelected ? 'border-[#8b5cf6] shadow-[0_0_0_2px_rgba(139,92,246,1),0_0_20px_rgba(139,92,246,0.4)]' : 'border-white/5 hover:border-[#8b5cf6]/50'}`}
+                                className={`flex flex-col h-[320px] md:h-[420px] rounded-xl glass-card overflow-hidden cursor-pointer relative group transition-all duration-300 ${isSelected ? 'ring-2 ring-[#a855f7] bg-white/5' : ''}`}
                             >
-                                <div className={`aspect-[4/5] w-full relative overflow-hidden ${style.preview}`}>
-                                    <div className={style.previewContainerClass || 'w-full h-full relative'}>
-                                        {style.previewContent}
+                                {isSelected && (
+                                    <div className="absolute top-4 right-4 z-20">
+                                        <div className="bg-[#a855f7] text-white rounded-full p-1 shadow-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                                        </div>
                                     </div>
-                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                                )}
+                                <div className={`h-40 md:h-64 w-full relative overflow-hidden ${style.preview}`}>
+                                    {style.previewContent}
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                                         <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setSelectedStyle(style.id);
-                                            }}
-                                            className="bg-[#8b5cf6] text-white px-6 py-3 rounded-lg font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform"
+                                            onClick={(e) => handlePreview(e, style.id)}
+                                            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-[#a855f7] hover:border-[#a855f7] transition-all text-sm font-bold text-white shadow-xl"
                                         >
-                                            Selecionar
+                                            <Eye className="w-5 h-5" />
+                                            <span>Ver Preview</span>
                                         </button>
                                     </div>
                                 </div>
-                                <div className="p-4 flex justify-between items-center bg-[#24242c] border-t border-white/5">
-                                    <span className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-slate-300'}`}>{style.tag}</span>
-                                    {isSelected && <CheckCircle2 className="text-[#8b5cf6] w-5 h-5" />}
+                                <div className="p-6 flex-1 flex flex-col justify-center border-t border-white/5 bg-[#1e1525]">
+                                    <h3 className="text-xl font-bold text-white mb-2">{style.title}</h3>
+                                    <p className="text-slate-400 text-sm line-clamp-2">{style.description}</p>
                                 </div>
                             </div>
                         );
                     })}
-
-                    <div className="cursor-pointer group relative flex flex-col rounded-xl overflow-hidden bg-[#1a1a20] border border-dashed border-white/20 hover:border-[#8b5cf6] transition-all duration-300">
-                        <div className="aspect-[4/5] w-full bg-[#24242c]/50 relative flex flex-col items-center justify-center text-center p-6">
-                            <div className="w-16 h-16 rounded-full bg-[#1a1a20] border border-white/10 flex items-center justify-center mb-4 group-hover:bg-[#8b5cf6]/20 group-hover:border-[#8b5cf6]/50 transition-colors">
-                                <Plus className="text-slate-400 w-8 h-8 group-hover:text-[#8b5cf6] transition-colors" />
-                            </div>
-                            <p className="text-white font-semibold text-lg">Personalizado</p>
-                            <p className="text-slate-400 text-sm mt-2">Faça upload do seu próprio estilo</p>
-                        </div>
-                        <div className="p-4 flex justify-between items-center bg-[#24242c] border-t border-white/5">
-                            <span className="text-sm font-semibold text-slate-300">Upload</span>
-                            <Upload className="text-slate-400 w-4 h-4" />
-                        </div>
-                    </div>
                 </div>
             </div>
 
-            <div className="mt-8 pt-8 border-t border-white/5 flex justify-end">
+            <div className="w-full flex justify-between items-center border-t border-white/10 pt-8 mt-2">
                 <button
+                    type="button"
+                    onClick={onBack}
+                    className="flex items-center justify-center rounded-xl h-12 px-6 bg-transparent text-slate-400 hover:text-white text-base font-bold transition-colors cursor-pointer"
+                >
+                    Voltar
+                </button>
+                <button
+                    type="button"
                     onClick={() => onGenerate(selectedStyle)}
                     disabled={isLoading}
-                    className="px-8 py-4 rounded-xl bg-[#8b5cf6] hover:bg-[#7c3aed] text-white text-base font-bold transition-all flex items-center gap-2 shadow-lg shadow-[#8b5cf6]/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    className="flex items-center justify-center gap-2 rounded-xl h-12 px-8 bg-[#7f0df2] hover:bg-[#922cee] disabled:opacity-50 disabled:cursor-not-allowed text-white text-base font-bold shadow-[0_0_20px_rgba(127,13,242,0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer"
                 >
-                    {isLoading ? 'Gerando post...' : 'Continuar'}
-                    {!isLoading && <ArrowRight className="w-5 h-5" />}
+                    {isLoading ? 'Gerando...' : 'Próximo Passo'}
+                    {!isLoading && <Sparkles size={18} />}
                 </button>
             </div>
+
+            <TemplatePreviewModal
+                isOpen={!!previewTemplateId}
+                onClose={() => setPreviewTemplateId(null)}
+                template={templateToPreview ? {
+                    id: templateToPreview.id,
+                    title: templateToPreview.title,
+                    description: templateToPreview.description,
+                    tag: templateToPreview.tag,
+                    preview: templateToPreview.preview,
+                    previewContent: templateToPreview.fullContent
+                } : null}
+                onSelect={(id) => setSelectedStyle(id)}
+            />
         </div>
     );
 }

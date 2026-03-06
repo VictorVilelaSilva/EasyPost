@@ -1,32 +1,26 @@
 'use client';
 
-import React from 'react';
 import { useCarouselWorkflow } from '@/hooks/useCarouselWorkflow';
 import { useStepNavigation } from './hooks/useStepNavigation';
 import LoadingCard from './components/LoadingCard';
 import SkeletonImages from './components/SkeletonImages';
 import StepProgress from './components/steps/StepProgress';
-import Step1Configuration from './components/steps/Step1Configuration';
+import Step2TemplateSelection from './components/steps/Step2TemplateSelection';
 import Step2FontSelection from './components/steps/Step2FontSelection';
 import Step3ImageConfig from './components/steps/Step3ImageConfig';
-import Step4VisualStyle from './components/steps/Step4VisualStyle';
 import Step5Preview from './components/steps/Step5Preview';
+import Step1Configuration from './components/steps/Step1Configuration';
 
 export default function CreatePage() {
     const workflow = useCarouselWorkflow();
     const {
-        niche, topics, selectedTopic, carouselData, images,
-        showConfig, platform, objective, slideCount,
-        isGeneratingTopics, isGeneratingText, isGeneratingImages,
-        setNiche, setPlatform, setObjective, setSlideCount,
-        handleGenerateTopics, handleSelectTopic, handleGenerateImages,
+        niche, selectedTopic, carouselData, images,
+        platform, slideCount,
+        isGeneratingText, isGeneratingImages,
+        setPlatform, handleGenerateImages,
     } = workflow;
 
-    const nav = useStepNavigation({
-        carouselData, isGeneratingText,
-        images, isGeneratingImages,
-        handleSelectTopic, selectedTopic, niche,
-    });
+    const nav = useStepNavigation();
 
     return (
         <main
@@ -45,74 +39,80 @@ export default function CreatePage() {
                 </p>
             </div>
 
-            <section className="w-full max-w-[840px] flex flex-col gap-8 pb-32">
-                <StepProgress
-                    currentStep={nav.currentStep}
-                    isGeneratingImages={isGeneratingImages}
-                    onBack={nav.goBack}
-                />
+            <section className="w-full flex flex-col items-center gap-8 pb-32">
+                <div className="w-full max-w-[840px]">
+                    <StepProgress currentStep={nav.currentStep} />
+                </div>
 
-                {nav.currentStep === 1 && !isGeneratingText && (
-                    <Step1Configuration
-                        platform={platform} setPlatform={setPlatform}
-                        manualTopic={nav.manualTopic} setManualTopic={nav.setManualTopic}
-                        niche={niche} setNiche={setNiche}
-                        isGeneratingTopics={isGeneratingTopics}
-                        handleGenerateTopics={() => handleGenerateTopics({ preventDefault: () => { } } as React.SyntheticEvent)}
-                        topics={topics} isGeneratingText={isGeneratingText}
-                        objective={objective} setObjective={setObjective}
-                        slideCount={slideCount} setSlideCount={setSlideCount}
-                        onSubmitGeneration={nav.onSubmitGeneration}
-                    />
+                {nav.currentStep === 1 && (
+                    <div className="w-full max-w-[840px]">
+                        <Step1Configuration
+                            platform={platform} setPlatform={setPlatform}
+                            onComplete={nav.onSubmitGeneration}
+                            onBack={nav.goBack}
+                        />
+                    </div>
                 )}
 
                 {isGeneratingText && (
-                    <div className="glass-panel rounded-xl p-8 border border-white/5 shadow-2xl animate-fade-in mt-8" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
+                    <div className="w-full max-w-[840px] glass-panel rounded-xl p-8 border border-white/5 shadow-2xl animate-fade-in" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
                         <LoadingCard message="Criando roteiro e legenda perfeitos baseados no seu tema..." color="primary" />
                     </div>
                 )}
 
-                {nav.currentStep === 2 && carouselData && !isGeneratingText && (
-                    <Step2FontSelection
-                        platform={platform}
-                        carouselData={carouselData}
-                        selectedFont={nav.selectedFont}
-                        setSelectedFont={nav.setSelectedFont}
-                        onContinue={() => nav.goToStep(3)}
-                    />
+                {nav.currentStep === 2 && (
+                    <div className="w-full max-w-[1200px]">
+                        <Step2TemplateSelection
+                            onContinue={nav.onTemplateSelected}
+                            onBack={nav.goBack}
+                        />
+                    </div>
                 )}
 
-                {nav.currentStep === 3 && showConfig && carouselData && selectedTopic && (
-                    <Step3ImageConfig
-                        selectedTopic={selectedTopic}
-                        selectedFont={nav.selectedFont}
-                        onContinue={nav.onImageConfigDone}
-                    />
+                {nav.currentStep === 3 && (
+                    <div className="w-full max-w-[1200px]">
+                        <Step2FontSelection
+                            platform={platform}
+                            carouselData={carouselData}
+                            selectedFont={nav.selectedFont}
+                            setSelectedFont={nav.setSelectedFont}
+                            onContinue={() => nav.goToStep(4)}
+                            onBack={nav.goBack}
+                        />
+                    </div>
                 )}
 
-                {nav.currentStep === 4 && nav.partialImageConfig && !isGeneratingImages && (
-                    <Step4VisualStyle
-                        partialImageConfig={nav.partialImageConfig}
-                        handleGenerateImages={handleGenerateImages}
-                        isGeneratingImages={isGeneratingImages}
-                    />
+                {nav.currentStep === 4 && (
+                    <div className="w-full max-w-[1024px]">
+                        <Step3ImageConfig
+                            selectedTopic={selectedTopic ?? ''}
+                            selectedFont={nav.selectedFont}
+                            onContinue={(config) => {
+                                nav.goToStep(5);
+                                handleGenerateImages({ ...config, visualStyle: nav.selectedTemplate });
+                            }}
+                            onBack={nav.goBack}
+                        />
+                    </div>
                 )}
 
                 {isGeneratingImages && (
-                    <div className="glass-panel rounded-xl p-8 border border-white/5 shadow-2xl animate-fade-in mt-8" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
+                    <div className="w-full max-w-[840px] glass-panel rounded-xl p-8 border border-white/5 shadow-2xl animate-fade-in" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
                         <LoadingCard message={`Renderizando sua obra prima com ${slideCount} slides! Quase lá...`} color="accent" />
                         <SkeletonImages count={slideCount} />
                     </div>
                 )}
 
                 {nav.currentStep === 5 && !isGeneratingImages && carouselData && images && images.length > 0 && (
-                    <Step5Preview
-                        carouselData={carouselData}
-                        selectedTopic={selectedTopic}
-                        manualTopic={nav.manualTopic}
-                        niche={niche}
-                        images={images}
-                    />
+                    <div className="w-full max-w-[840px]">
+                        <Step5Preview
+                            carouselData={carouselData}
+                            selectedTopic={selectedTopic}
+                            manualTopic={nav.manualTopic}
+                            niche={niche}
+                            images={images}
+                        />
+                    </div>
                 )}
             </section>
         </main>

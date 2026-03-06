@@ -13,22 +13,24 @@ const FontSelectionStep = dynamic(() => import('../FontSelectionStep'), {
 });
 
 interface Props {
-    platform: Platform;
-    carouselData: CarouselData;
+    platform: Platform | null;
+    carouselData: CarouselData | null;
     selectedFont: string;
     setSelectedFont: (v: string) => void;
     onContinue: () => void;
+    onBack: () => void;
 }
 
-export default function Step2FontSelection({ platform, carouselData, selectedFont, setSelectedFont, onContinue }: Props) {
+export default function Step2FontSelection({ platform, carouselData, selectedFont, setSelectedFont, onContinue, onBack }: Props) {
     return (
-        <div className="glass-panel rounded-xl p-8 border border-white/5 shadow-2xl animate-fade-in mt-8" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
+        <div className="w-full animate-fade-in mt-4">
             <FontSelectionStep
                 platform={platform}
                 carouselData={carouselData}
                 value={selectedFont}
                 onChange={setSelectedFont}
                 onContinue={onContinue}
+                onBack={onBack}
             />
         </div>
     );

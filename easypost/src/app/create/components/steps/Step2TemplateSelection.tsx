@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import { Loader2 } from 'lucide-react';
-import { ImageConfig } from '@/types';
 
 const VisualStyleGallery = dynamic(() => import('../VisualStyleGallery'), {
     loading: () => (
@@ -13,18 +12,16 @@ const VisualStyleGallery = dynamic(() => import('../VisualStyleGallery'), {
 });
 
 interface Props {
-    partialImageConfig: Omit<ImageConfig, 'visualStyle'>;
-    handleGenerateImages: (config: ImageConfig) => void;
-    isGeneratingImages: boolean;
+    onContinue: (selectedTemplate: string) => void;
     onBack?: () => void;
 }
 
-export default function Step4VisualStyle({ partialImageConfig, handleGenerateImages, isGeneratingImages, onBack }: Props) {
+export default function Step2TemplateSelection({ onContinue, onBack }: Props) {
     return (
         <div className="glass-panel rounded-xl p-0 overflow-hidden border border-white/5 shadow-2xl animate-fade-in mt-8" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
             <VisualStyleGallery
-                onGenerate={(visualStyle: string) => handleGenerateImages({ ...partialImageConfig, visualStyle })}
-                isLoading={isGeneratingImages}
+                onGenerate={onContinue}
+                isLoading={false}
                 onBack={onBack}
             />
         </div>
