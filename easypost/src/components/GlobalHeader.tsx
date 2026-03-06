@@ -62,10 +62,10 @@ export default function GlobalHeader() {
                         </>
                     ) : (
                         <>
-                            <Link href="/login" className="hidden sm:block text-sm font-semibold text-slate-300 hover:text-white px-4 py-2">
+                            <Link href="/login" className="text-sm font-semibold text-slate-300 hover:text-white px-3 sm:px-4 py-2 whitespace-nowrap">
                                 Entrar
                             </Link>
-                            <Link href="/create" className="bg-purple hover:bg-purple/90 text-white px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg shadow-purple/25 hover:scale-105 active:scale-95">
+                            <Link href="/create" className="bg-purple hover:bg-purple/90 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg shadow-purple/25 hover:scale-105 active:scale-95 whitespace-nowrap">
                                 Começar grátis
                             </Link>
                         </>

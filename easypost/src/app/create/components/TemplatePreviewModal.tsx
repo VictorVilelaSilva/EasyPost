@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Template {
@@ -21,9 +22,9 @@ interface TemplatePreviewModalProps {
 const ANIM_DURATION = 450;
 
 const POSITIONS = {
-    'left': { transform: 'translateX(-60%) scale(0.75) rotate(-6deg)', opacity: 0.6 },
+    'left': { transform: 'translateX(-60%) scale(0.75) rotate(-6deg)', opacity: 1 },
     'center': { transform: 'scale(1.05)', opacity: 1 },
-    'right': { transform: 'translateX(60%) scale(0.75) rotate(6deg)', opacity: 0.6 },
+    'right': { transform: 'translateX(60%) scale(0.75) rotate(6deg)', opacity: 1 },
 } as const;
 
 type Position = keyof typeof POSITIONS;
@@ -117,32 +118,34 @@ export default function TemplatePreviewModal({ isOpen, onClose, templates, initi
         }
     }
 
-    return (
+    if (typeof document === 'undefined') return null;
+
+    return createPortal(
         <>
             <style jsx global>{`
                 @keyframes c-center-to-left {
                     from { transform: scale(1.05); opacity: 1; }
-                    to   { transform: translateX(-60%) scale(0.75) rotate(-6deg); opacity: 0.6; }
+                    to   { transform: translateX(-60%) scale(0.75) rotate(-6deg); opacity: 1; }
                 }
                 @keyframes c-right-to-center {
-                    from { transform: translateX(60%) scale(0.75) rotate(6deg); opacity: 0.6; }
+                    from { transform: translateX(60%) scale(0.75) rotate(6deg); opacity: 1; }
                     to   { transform: scale(1.05); opacity: 1; }
                 }
                 @keyframes c-enter-right {
                     from { transform: translateX(130%) scale(0.6) rotate(12deg); opacity: 0; }
-                    to   { transform: translateX(60%) scale(0.75) rotate(6deg); opacity: 0.6; }
+                    to   { transform: translateX(60%) scale(0.75) rotate(6deg); opacity: 1; }
                 }
                 @keyframes c-center-to-right {
                     from { transform: scale(1.05); opacity: 1; }
-                    to   { transform: translateX(60%) scale(0.75) rotate(6deg); opacity: 0.6; }
+                    to   { transform: translateX(60%) scale(0.75) rotate(6deg); opacity: 1; }
                 }
                 @keyframes c-left-to-center {
-                    from { transform: translateX(-60%) scale(0.75) rotate(-6deg); opacity: 0.6; }
+                    from { transform: translateX(-60%) scale(0.75) rotate(-6deg); opacity: 1; }
                     to   { transform: scale(1.05); opacity: 1; }
                 }
                 @keyframes c-enter-left {
                     from { transform: translateX(-130%) scale(0.6) rotate(-12deg); opacity: 0; }
-                    to   { transform: translateX(-60%) scale(0.75) rotate(-6deg); opacity: 0.6; }
+                    to   { transform: translateX(-60%) scale(0.75) rotate(-6deg); opacity: 1; }
                 }
                 .animate-c-center-to-left { animation: c-center-to-left 450ms cubic-bezier(0.4, 0, 0.2, 1) both; }
                 .animate-c-right-to-center { animation: c-right-to-center 450ms cubic-bezier(0.4, 0, 0.2, 1) both; }
@@ -194,10 +197,9 @@ export default function TemplatePreviewModal({ isOpen, onClose, templates, initi
                                 const pos = POSITIONS[targetPosition];
                                 return (
                                     <div
-                                        key={`${keyPrefix}-${templateIdx}`}
-                                        className={`absolute inset-0 m-auto w-[280px] h-[420px] md:w-[360px] md:h-[540px] bg-white dark:bg-[#2a2233] rounded-xl overflow-hidden flex-col ${
-                                            isCenter ? 'border-2 border-[#7f0df2]/30 shadow-[0_20px_50px_rgba(0,0,0,0.3)]' : 'border border-[#7f0df2]/10 shadow-xl'
-                                        } ${animClass} ${hideMobile ? 'hidden md:flex' : 'flex'}`}
+                                        key={`${keyPrefix}-${targetPosition}-${templateIdx}`}
+                                        className={`absolute inset-0 m-auto w-[280px] h-[420px] md:w-[360px] md:h-[540px] bg-white dark:bg-[#2a2233] rounded-xl overflow-hidden flex-col ${isCenter ? 'border-2 border-[#7f0df2]/30 shadow-[0_20px_50px_rgba(0,0,0,0.3)]' : 'border border-[#7f0df2]/10 shadow-xl'
+                                            } ${animClass} ${hideMobile ? 'hidden md:flex' : 'flex'}`}
                                         style={{
                                             transform: pos.transform,
                                             opacity: pos.opacity,
@@ -233,11 +235,10 @@ export default function TemplatePreviewModal({ isOpen, onClose, templates, initi
                                             if (i > currentIndex) goNext();
                                             else goPrev();
                                         }}
-                                        className={`rounded-full transition-all duration-300 cursor-pointer ${
-                                            i === currentIndex
-                                                ? 'w-8 h-2 bg-[#7f0df2]'
-                                                : 'w-2 h-2 bg-[#7f0df2]/30 hover:bg-[#7f0df2]/50'
-                                        }`}
+                                        className={`rounded-full transition-all duration-300 cursor-pointer ${i === currentIndex
+                                            ? 'w-8 h-2 bg-[#7f0df2]'
+                                            : 'w-2 h-2 bg-[#7f0df2]/30 hover:bg-[#7f0df2]/50'
+                                            }`}
                                     />
                                 ))}
                             </div>
@@ -259,6 +260,7 @@ export default function TemplatePreviewModal({ isOpen, onClose, templates, initi
                     </div>
                 </div>
             </div>
-        </>
+        </>,
+        document.body
     );
 }
