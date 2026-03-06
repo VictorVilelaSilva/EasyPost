@@ -35,3 +35,27 @@ export interface PostConfig {
     objective: PostObjective;
     slideCount: number;
 }
+
+export interface DesignSystem {
+    background: {
+        type: 'solid' | 'gradient' | 'pattern';
+        primaryColor: string;
+        secondaryColor: string;
+        gradientDirection: string;
+    };
+    coverSlide: {
+        backgroundDescription: string;
+        badgeColor: string;
+        decorativeElement: string;
+    };
+    contentSlide: {
+        backgroundDescription: string;
+    };
+    ctaSlide: {
+        backgroundDescription: string;
+    };
+    accent: string;
+    textColor: string;
+    decorativeStyle: string;
+    moodKeywords: string[];
+}

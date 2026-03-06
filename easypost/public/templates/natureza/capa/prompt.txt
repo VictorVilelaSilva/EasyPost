@@ -1,0 +1,19 @@
+Cores e Fundo:
+
+- Fundo: A cor de fundo é um tom de creme ou bege bem claro, com uma textura sutil que lembra papel de alta gramatura ou papel artístico.
+
+- Paleta: O esquema de cores é restrito a tons de verde escuro sobre o fundo claro, criando um contraste sofisticado e legível.
+
+Tipografia (Texto)
+
+- "testando": É a palavra central, escrita em letras minúsculas. A fonte é uma serifada robusta (estilo slab serif ou uma moderna com serifas bem marcadas), na cor verde musgo escuro.
+
+- "edição de texto": Localizada logo abaixo da palavra principal, em um tamanho menor. Está escrita em itálico, com uma fonte serifada mais clássica e leve, mantendo a mesma cor verde.
+
+Elementos Gráficos
+
+- Linhas de Divisão: Existem duas linhas horizontais finas, uma no topo e outra na base da imagem. Ambas terminam com uma pequena ponta de seta voltada para a direita, reforçando o aspecto de design editorial ou de marca.
+
+- Ícone: No canto inferior direito, há um pequeno ícone de brilho ou faísca (quatro pontas) em um tom de branco ou creme muito claro, quase sumindo no fundo, o que adiciona um toque sutil de acabamento
+
+- tamanho: proporção 4:5 1080 x 1350 px

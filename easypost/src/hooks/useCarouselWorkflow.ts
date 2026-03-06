@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CarouselData, ImageConfig, Platform, PostObjective } from '../types';
+import { CarouselData, ImageConfig, DesignSystem, Platform, PostObjective } from '../types';
 import { useAuth } from '@/contexts/AuthContext';
 import { incrementRequestCount } from '@/lib/userService';
 
@@ -118,7 +118,8 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         setShowConfig(false);
 
         try {
-            const resImages = await fetch('/api/generate-images', {
+            // Step 1: Generate unified design system
+            const resDesignSystem = await fetch('/api/generate-design-system', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -127,7 +128,25 @@ export function useCarouselWorkflow(): CarouselWorkflow {
                     colorPalette: config.colorPalette,
                     brandColors: config.brandColors,
                     audience: config.audience,
-                    customPrompt: config.customPrompt,
+                    platform,
+                }),
+            });
+            const designSystem: DesignSystem = await resDesignSystem.json();
+
+            if (!designSystem.background) {
+                throw new Error('Falha ao gerar design system');
+            }
+
+            // Step 2: Generate images using design system + text overlay
+            const resImages = await fetch('/api/generate-images', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    slides: carouselData.slides,
+                    designSystem,
+                    platform,
+                    brandColors: config.brandColors,
+                    fontFamily: config.fontFamily || 'Inter',
                 }),
             });
             const dataImages = await resImages.json();
