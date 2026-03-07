@@ -131,6 +131,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
                     audience: config.audience,
                     platform,
                     topicContext: config.customPrompt || '',
+                    imageStyles: config.imageStyles,
                 }),
             });
             const designSystem: DesignSystem = await resDesignSystem.json();
@@ -220,6 +221,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
                     audience: config.audience,
                     platform,
                     topicContext: topic,
+                    imageStyles: config.imageStyles,
                 }),
             });
             const designSystem: DesignSystem = await resDesignSystem.json();

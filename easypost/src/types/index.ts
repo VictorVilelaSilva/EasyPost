@@ -26,6 +26,7 @@ export interface ImageConfig {
     fontFamily?: string;
     handle?: string;
     slideCount?: number;
+    imageStyles?: string[];
 }
 
 export type Platform = 'instagram' | 'linkedin';

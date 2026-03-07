@@ -22,7 +22,7 @@ const PALETTE_MAP: Record<string, string> = {
 
 export async function POST(req: NextRequest) {
     try {
-        const { slides, visualStyle, colorPalette, brandColors, audience, platform, topicContext } = await req.json();
+        const { slides, visualStyle, colorPalette, brandColors, audience, platform, topicContext, imageStyles } = await req.json();
 
         if (visualStyle === 'natureza') {
             const base = path.join(process.cwd(), 'public', 'templates', 'natureza');
@@ -79,6 +79,11 @@ export async function POST(req: NextRequest) {
             ? `Contexto do conteudo: ${topicContext}.`
             : '';
 
+        const imageStylesArray: string[] = imageStyles || [];
+        const stylesDesc = imageStylesArray.length > 0
+            ? `ESTILOS VISUAIS OBRIGATORIOS: ${imageStylesArray.join(' + ')}. O design deve refletir claramente esses estilos na composicao, texturas, elementos decorativos e atmosfera geral.`
+            : '';
+
         const slidesSummary = slides.map((s: { slideType: string }, i: number) =>
             `Slide ${i + 1}: tipo ${s.slideType}`
         ).join(', ');
@@ -90,6 +95,7 @@ Preciso que voce crie um DESIGN SYSTEM unificado para um carrossel com ${slides.
 CONTEXTO:
 ${styleDesc ? `Estilo visual: ${styleDesc}` : ''}
 ${brandDesc || (paletteDesc ? `Paleta: ${paletteDesc}` : '')}
+${stylesDesc}
 ${audienceDesc}
 ${topicDesc}
 
