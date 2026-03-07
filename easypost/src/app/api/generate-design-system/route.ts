@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
+import fs from 'fs';
+import path from 'path';
 
 const STYLE_MAP: Record<string, string> = {
-    minimalist: 'Ultra-clean minimalist. White space, thin lines, flat colors, no textures.',
-    luxury: 'Luxurious premium. Rich deep colors, gold/silver accents, elegant feel.',
-    corporate: 'Professional corporate. Blue tones, sharp edges, trustworthy, polished.',
-    'clean-tech': 'Modern tech. Sleek gradients, glassmorphism, futuristic, neon accents.',
-    creative: 'Bold creative. Vibrant colors, artistic flair, dynamic, hand-drawn elements.',
-    neon: 'Neon glow. Dark background, vivid neon lights (pink, cyan, purple), cyberpunk.',
-};
+    // IDs emitidos por VisualStyleGallery
+    'ai-generated': 'Crie um estilo visual único, criativo e autoral baseado inteiramente no conteúdo e público-alvo fornecidos. Surpreenda com uma identidade visual original.',
+    'upload': '',
+    'tech-start': 'Minimalista tech. Interface limpa e moderna, tipografia bold em fundo escuro (slate-900), gradientes sutis índigo/violeta, elementos geométricos precisos e amplo espaço negativo.',
+    'developer-pro': 'Dark code editor. Fundo carbono escuro (#0d1117), tipografia monospace, acentos em verde terminal (#22c55e) e cyan (#22d3ee), dots coloridos no topo simulando janela de terminal.',
+}
 
 const PALETTE_MAP: Record<string, string> = {
     dark: 'Dark gradient (deep navy #0f172a to black). White/light gray text.',
@@ -21,7 +22,39 @@ const PALETTE_MAP: Record<string, string> = {
 
 export async function POST(req: NextRequest) {
     try {
-        const { slides, visualStyle, colorPalette, brandColors, audience, platform } = await req.json();
+        const { slides, visualStyle, colorPalette, brandColors, audience, platform, topicContext } = await req.json();
+
+        if (visualStyle === 'natureza') {
+            const base = path.join(process.cwd(), 'public', 'templates', 'natureza');
+            const capaPrompt = fs.readFileSync(path.join(base, 'capa', 'prompt.txt'), 'utf-8');
+            const conteudoPrompt = fs.readFileSync(path.join(base, 'conteudo', 'prompt.txt'), 'utf-8');
+            const finalPrompt = fs.readFileSync(path.join(base, 'final', 'prompt.txt'), 'utf-8');
+
+            return NextResponse.json({
+                background: {
+                    type: 'solid',
+                    primaryColor: '#f0ece0',
+                    secondaryColor: '#f0ece0',
+                    gradientDirection: 'none',
+                },
+                coverSlide: {
+                    backgroundDescription: capaPrompt,
+                    badgeColor: '#2d4a1e',
+                    decorativeElement: 'Linhas horizontais finas com ponta de seta à direita no topo e na base, ícone de faísca de 4 pontas no canto inferior direito em creme claro',
+                },
+                contentSlide: {
+                    backgroundDescription: conteudoPrompt,
+                },
+                ctaSlide: {
+                    backgroundDescription: finalPrompt,
+                },
+                accent: '#2d4a1e',
+                textColor: '#2d4a1e',
+                decorativeStyle: 'Linhas horizontais finas terminando em ponta de seta à direita, ícone de faísca sutil no canto inferior direito',
+                moodKeywords: ['editorial', 'natural', 'orgânico', 'minimalista', 'refinado'],
+                templateId: 'natureza',
+            }, { status: 200 });
+        }
 
         const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
         if (!apiKey) {
@@ -38,8 +71,12 @@ export async function POST(req: NextRequest) {
             ? `CORES DA MARCA (OBRIGATORIO): ${brandColorsArray.join(', ')}. Use a primeira como cor principal, a segunda como contraste, demais como acentos.`
             : '';
 
-        const audienceDesc = (audience?.age || audience?.interests)
-            ? `Publico-Alvo: ${audience.age ? `Idade ${audience.age}` : ''}${audience.age && audience.interests ? ', ' : ''}${audience.interests ? `interessado em ${audience.interests}` : ''}.`
+        const audienceDesc = audience?.interests
+            ? `Publico-Alvo: interessado em ${audience.interests}.`
+            : '';
+
+        const topicDesc = topicContext
+            ? `Contexto do conteudo: ${topicContext}.`
             : '';
 
         const slidesSummary = slides.map((s: { slideType: string }, i: number) =>
@@ -54,6 +91,7 @@ CONTEXTO:
 ${styleDesc ? `Estilo visual: ${styleDesc}` : ''}
 ${brandDesc || (paletteDesc ? `Paleta: ${paletteDesc}` : '')}
 ${audienceDesc}
+${topicDesc}
 
 Retorne APENAS um JSON valido (sem markdown, sem code blocks) com esta estrutura exata:
 {

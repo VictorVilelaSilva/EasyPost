@@ -6,18 +6,17 @@ import LoadingCard from './components/LoadingCard';
 import SkeletonImages from './components/SkeletonImages';
 import StepProgress from './components/steps/StepProgress';
 import Step2TemplateSelection from './components/steps/Step2TemplateSelection';
-import Step2FontSelection from './components/steps/Step2FontSelection';
 import Step3ImageConfig from './components/steps/Step3ImageConfig';
-import Step5Preview from './components/steps/Step5Preview';
+import Step5CanvasEditor from './components/steps/Step5CanvasEditor';
 import Step1Configuration from './components/steps/Step1Configuration';
 
 export default function CreatePage() {
     const workflow = useCarouselWorkflow();
     const {
-        niche, selectedTopic, carouselData, images,
+        selectedTopic, carouselData, backgrounds,
         platform, slideCount,
         isGeneratingText, isGeneratingImages,
-        setPlatform, handleGenerateImages,
+        setPlatform, handleGenerateAll,
     } = workflow;
 
     const nav = useStepNavigation();
@@ -70,26 +69,13 @@ export default function CreatePage() {
                 )}
 
                 {nav.currentStep === 3 && (
-                    <div className="w-full max-w-[1200px]">
-                        <Step2FontSelection
-                            platform={platform}
-                            carouselData={carouselData}
-                            selectedFont={nav.selectedFont}
-                            setSelectedFont={nav.setSelectedFont}
-                            onContinue={() => nav.goToStep(4)}
-                            onBack={nav.goBack}
-                        />
-                    </div>
-                )}
-
-                {nav.currentStep === 4 && (
                     <div className="w-full max-w-[1024px]">
                         <Step3ImageConfig
                             selectedTopic={selectedTopic ?? ''}
                             selectedFont={nav.selectedFont}
                             onContinue={(config) => {
-                                nav.goToStep(5);
-                                handleGenerateImages({ ...config, visualStyle: nav.selectedTemplate });
+                                nav.goToStep(4);
+                                handleGenerateAll({ ...config, visualStyle: nav.selectedTemplate });
                             }}
                             onBack={nav.goBack}
                         />
@@ -103,14 +89,14 @@ export default function CreatePage() {
                     </div>
                 )}
 
-                {nav.currentStep === 5 && !isGeneratingImages && carouselData && images && images.length > 0 && (
-                    <div className="w-full max-w-[840px]">
-                        <Step5Preview
+                {nav.currentStep === 4 && !isGeneratingImages && backgrounds && (
+                    <div className="w-full max-w-[1200px]">
+                        <Step5CanvasEditor
+                            backgrounds={backgrounds}
                             carouselData={carouselData}
-                            selectedTopic={selectedTopic}
-                            manualTopic={nav.manualTopic}
-                            niche={niche}
-                            images={images}
+                            platform={platform}
+                            selectedFont={nav.selectedFont}
+                            onBack={nav.goBack}
                         />
                     </div>
                 )}

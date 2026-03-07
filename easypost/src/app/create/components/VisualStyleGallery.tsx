@@ -1,10 +1,61 @@
 'use client';
 
 import { useState } from 'react';
-import { Sparkles, Upload, MonitorSmartphone, Terminal, Eye } from 'lucide-react';
+import { Sparkles, Upload, MonitorSmartphone, Terminal, Eye, Leaf } from 'lucide-react';
+import type { ReactNode } from 'react';
+
+interface ModalTemplate {
+    id: string;
+    title: string;
+    description: string;
+    tag: string;
+    preview: string;
+    previewContent: ReactNode;
+}
+
+const NATUREZA_PREVIEW_SLIDES: ModalTemplate[] = [
+    {
+        id: 'natureza',
+        title: 'Natureza — Capa',
+        description: 'Slide de abertura do carrossel',
+        tag: 'Natureza',
+        preview: 'bg-[#f0ece0]',
+        previewContent: <img src="/templates/natureza/capa/capa.png" alt="Capa" className="w-full h-full object-cover" />,
+    },
+    {
+        id: 'natureza',
+        title: 'Natureza — Conteúdo',
+        description: 'Slides intermediários de conteúdo',
+        tag: 'Natureza',
+        preview: 'bg-[#f0ece0]',
+        previewContent: <img src="/templates/natureza/conteudo/conteudo.png" alt="Conteúdo" className="w-full h-full object-cover" />,
+    },
+    {
+        id: 'natureza',
+        title: 'Natureza — Final',
+        description: 'Slide de encerramento com chamada para ação',
+        tag: 'Natureza',
+        preview: 'bg-[#f0ece0]',
+        previewContent: <img src="/templates/natureza/final/final.png" alt="Final" className="w-full h-full object-cover" />,
+    },
+];
 import TemplatePreviewModal from './TemplatePreviewModal';
 
 const VISUAL_STYLES = [
+    {
+        id: 'natureza',
+        title: 'Natureza',
+        description: 'Design editorial com paleta creme e tipografia verde musgo. Elegante e atemporal.',
+        icon: Leaf,
+        tag: 'Editorial',
+        preview: 'bg-[#f0ece0]',
+        previewContent: (
+            <img src="/templates/natureza/capa/capa.png" alt="Template Natureza" className="w-full h-full object-cover" />
+        ),
+        fullContent: (
+            <img src="/templates/natureza/capa/capa.png" alt="Template Natureza" className="w-full h-full object-cover" />
+        ),
+    },
     {
         id: 'tech-start',
         title: 'Tech Start',
@@ -79,9 +130,22 @@ interface Props {
 export default function VisualStyleGallery({ onGenerate, isLoading, onBack }: Props) {
     const [selectedStyle, setSelectedStyle] = useState('tech-start');
     const [previewTemplateId, setPreviewTemplateId] = useState<string | null>(null);
+    const [previewModalTemplates, setPreviewModalTemplates] = useState<ModalTemplate[]>([]);
 
     const handlePreview = (e: React.MouseEvent, id: string) => {
         e.stopPropagation();
+        if (id === 'natureza') {
+            setPreviewModalTemplates(NATUREZA_PREVIEW_SLIDES);
+        } else {
+            setPreviewModalTemplates(VISUAL_STYLES.map(s => ({
+                id: s.id,
+                title: s.title,
+                description: s.description,
+                tag: s.tag,
+                preview: s.preview,
+                previewContent: s.fullContent,
+            })));
+        }
         setPreviewTemplateId(id);
     };
 
@@ -193,14 +257,7 @@ export default function VisualStyleGallery({ onGenerate, isLoading, onBack }: Pr
             <TemplatePreviewModal
                 isOpen={!!previewTemplateId}
                 onClose={() => setPreviewTemplateId(null)}
-                templates={VISUAL_STYLES.map(s => ({
-                    id: s.id,
-                    title: s.title,
-                    description: s.description,
-                    tag: s.tag,
-                    preview: s.preview,
-                    previewContent: s.fullContent
-                }))}
+                templates={previewModalTemplates}
                 initialTemplateId={previewTemplateId}
                 onSelect={(id) => setSelectedStyle(id)}
             />

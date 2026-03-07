@@ -24,6 +24,8 @@ export interface ImageConfig {
     };
     customPrompt: string;
     fontFamily?: string;
+    handle?: string;
+    slideCount?: number;
 }
 
 export type Platform = 'instagram' | 'linkedin';
@@ -34,6 +36,25 @@ export interface PostConfig {
     platform: Platform;
     objective: PostObjective;
     slideCount: number;
+}
+
+export interface SlideBackgrounds {
+    cover: string[];    // base64 images (1 for templates, 3 for AI)
+    content: string[];
+    cta: string[];
+}
+
+export interface TextBlock {
+    id: string;
+    text: string;
+    xPercent: number;   // 0–100, relative to canvas width
+    yPercent: number;   // 0–100, relative to canvas height
+    fontSize: number;   // in display-canvas px (screen size)
+    color: string;      // hex
+    fontFamily: string;
+    bold: boolean;
+    italic: boolean;
+    textAlign?: 'left' | 'center' | 'right';
 }
 
 export interface DesignSystem {
@@ -58,4 +79,5 @@ export interface DesignSystem {
     textColor: string;
     decorativeStyle: string;
     moodKeywords: string[];
+    templateId?: string;
 }

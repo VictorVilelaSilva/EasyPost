@@ -1,34 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Sparkles, Layers, Terminal, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Layers, Terminal, RefreshCw, CheckCircle2, Loader2 } from 'lucide-react';
 import { ImageConfig as ImageConfigType } from '@/types';
 
-const NICHE_OPTIONS = [
-    { value: 'saude', label: 'Saúde & Bem-estar' },
-    { value: 'tecnologia', label: 'Tecnologia' },
-    { value: 'financas', label: 'Finanças' },
-    { value: 'marketing', label: 'Marketing Digital' },
-    { value: 'educacao', label: 'Educação' },
-    { value: 'empreendedorismo', label: 'Empreendedorismo' },
-    { value: 'lifestyle', label: 'Lifestyle' },
-    { value: 'fitness', label: 'Fitness & Esporte' },
-];
-
-const ALL_SUGGESTIONS = [
-    { id: 1, title: 'Mitos do Setor', description: 'Uma análise técnica sobre falácias comuns e como evitá-las no cotidiano.' },
-    { id: 2, title: 'Guia Rápido', description: 'Protocolos eficientes para resultados de performance consistentes.' },
-    { id: 3, title: '5 Erros Comuns', description: 'Pequenos deslizes que sabotam os resultados de longo prazo.' },
-    { id: 4, title: 'Tendências 2024', description: 'O que a ciência moderna diz sobre otimização e alto desempenho.' },
-    { id: 5, title: 'Leitura de Dados', description: 'Decodificando as métricas que realmente importam para o seu nicho.' },
-    { id: 6, title: 'Fundamentos Sólidos', description: 'A base que poucos dominam e o impacto direto nos seus resultados.' },
-    { id: 7, title: 'Case de Sucesso', description: 'Como os maiores nomes do setor chegaram onde estão hoje.' },
-    { id: 8, title: 'Desmistificando', description: 'Quebrando os mitos mais populares com dados e evidências concretas.' },
-    { id: 9, title: 'Estratégia Avançada', description: 'Técnicas utilizadas por profissionais de alto nível para escalar resultados.' },
-    { id: 10, title: 'Futuro do Setor', description: 'O que esperar dos próximos anos e como se posicionar com antecedência.' },
-    { id: 11, title: 'Primeiros Passos', description: 'O caminho mais direto para quem está começando do zero agora.' },
-    { id: 12, title: 'Produtividade Real', description: 'Sistemas práticos que eliminam o ruído e geram tração de verdade.' },
-];
+interface Suggestion {
+    id: number;
+    title: string;
+    description: string;
+}
 
 interface Props {
     topic: string;
@@ -39,33 +19,50 @@ interface Props {
 
 export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack }: Props) {
     const [topicContext, setTopicContext] = useState(topic || '');
-    const [niche, setNiche] = useState('saude');
-    const [selectedSuggestionId, setSelectedSuggestionId] = useState(1);
+    const [handle, setHandle] = useState('');
+    const [niche, setNiche] = useState('');
+    const [selectedSuggestionId, setSelectedSuggestionId] = useState<number | null>(null);
     const [slideCount, setSlideCount] = useState(5);
-    const [suggestionSet, setSuggestionSet] = useState(0);
+    const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+    const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
 
-    const visibleSuggestions = ALL_SUGGESTIONS.slice(suggestionSet * 6, suggestionSet * 6 + 6);
-
-    const handleRecalculate = () => {
-        const nextSet = (suggestionSet + 1) % 2;
-        setSuggestionSet(nextSet);
-        setSelectedSuggestionId(ALL_SUGGESTIONS[nextSet * 6].id);
+    const handleGenerateSuggestions = async () => {
+        if (!niche.trim()) return;
+        setIsLoadingSuggestions(true);
+        setSelectedSuggestionId(null);
+        try {
+            const res = await fetch('/api/generate-suggestions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ niche }),
+            });
+            const data = await res.json();
+            if (data.suggestions) {
+                setSuggestions(data.suggestions);
+            } else {
+                alert(data.error || 'Falha ao gerar sugestões');
+            }
+        } catch {
+            alert('Erro de conexão ao gerar sugestões');
+        }
+        setIsLoadingSuggestions(false);
     };
 
     const handleContinue = () => {
-        const selected = ALL_SUGGESTIONS.find(s => s.id === selectedSuggestionId);
         onContinue({
             colorPalette: 'dark',
             brandColors: { colors: [] },
-            audience: { age: String(slideCount), interests: niche },
-            customPrompt: topicContext || (selected?.title ?? ''),
+            audience: { age: '', interests: niche },
+            customPrompt: topicContext,
             fontFamily,
+            handle: handle.trim() ? (handle.trim().startsWith('@') ? handle.trim() : `@${handle.trim()}`) : undefined,
+            slideCount,
         });
     };
 
-    const col1 = visibleSuggestions.slice(0, 2);
-    const col2 = visibleSuggestions.slice(2, 4);
-    const col3 = visibleSuggestions.slice(4, 6);
+    const col1 = suggestions.slice(0, 2);
+    const col2 = suggestions.slice(2, 4);
+    const col3 = suggestions.slice(4, 6);
 
     return (
         <div className="w-full flex flex-col gap-8 mt-8 mb-8 animate-reveal" style={{ fontFamily: 'var(--font-display)' }}>
@@ -111,28 +108,41 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
                             <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
                                 Nicho Operacional
                             </label>
-                            <div className="relative">
-                                <select
-                                    value={niche}
-                                    onChange={(e) => setNiche(e.target.value)}
-                                    className="w-full h-14 px-5 rounded-lg text-slate-100 appearance-none transition-all outline-none cursor-pointer"
-                                    style={{
-                                        background: 'rgba(0,0,0,0.4)',
-                                        border: '1px solid rgba(255,255,255,0.1)',
-                                        fontFamily: 'var(--font-body)',
-                                    }}
-                                    onFocus={(e) => { e.currentTarget.style.borderColor = '#a855f7'; e.currentTarget.style.boxShadow = '0 0 0 1px #a855f7'; }}
-                                    onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none'; }}
-                                >
-                                    {NICHE_OPTIONS.map((opt) => (
-                                        <option key={opt.value} value={opt.value} style={{ background: '#0f0a1a' }}>
-                                            {opt.label}
-                                        </option>
-                                    ))}
-                                </select>
-                                <svg className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
-                            </div>
+                            <input
+                                type="text"
+                                value={niche}
+                                onChange={(e) => setNiche(e.target.value)}
+                                placeholder="Ex: Marketing Digital, Fitness, Finanças..."
+                                className="w-full h-14 px-5 rounded-lg text-slate-100 transition-all outline-none"
+                                style={{
+                                    background: 'rgba(0,0,0,0.4)',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    fontFamily: 'var(--font-body)',
+                                }}
+                                onFocus={(e) => { e.currentTarget.style.borderColor = '#a855f7'; e.currentTarget.style.boxShadow = '0 0 0 1px #a855f7'; }}
+                                onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none'; }}
+                            />
                         </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
+                            Seu @usuario (opcional)
+                        </label>
+                        <input
+                            type="text"
+                            value={handle}
+                            onChange={(e) => setHandle(e.target.value)}
+                            placeholder="@meuperfil"
+                            className="w-full md:w-1/2 h-14 px-5 rounded-lg text-slate-100 transition-all outline-none"
+                            style={{
+                                background: 'rgba(0,0,0,0.4)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                fontFamily: 'var(--font-body)',
+                            }}
+                            onFocus={(e) => { e.currentTarget.style.borderColor = '#a855f7'; e.currentTarget.style.boxShadow = '0 0 0 1px #a855f7'; }}
+                            onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none'; }}
+                        />
                     </div>
                 </div>
             </section>
@@ -148,62 +158,80 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
                     </div>
                     <button
                         type="button"
-                        onClick={handleRecalculate}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#a855f7] text-xs font-bold uppercase tracking-widest transition-all hover:bg-[#a855f7]/10 cursor-pointer"
-                        style={{ border: '1px solid rgba(168,85,247,0.3)' }}
+                        onClick={handleGenerateSuggestions}
+                        disabled={!niche.trim() || isLoadingSuggestions}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#a855f7]/10"
+                        style={{ color: '#a855f7', border: '1px solid rgba(168,85,247,0.3)' }}
                     >
-                        <RefreshCw size={14} />
-                        Recalcular Ideias
+                        {isLoadingSuggestions
+                            ? <Loader2 size={14} className="animate-spin" />
+                            : <RefreshCw size={14} />
+                        }
+                        {isLoadingSuggestions ? 'Buscando...' : suggestions.length > 0 ? 'Recalcular' : 'Gerar Sugestões'}
                     </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
-                    {[col1, col2, col3].map((col, colIdx) => (
-                        <div key={colIdx} className="flex flex-col gap-5">
-                            {col.map((suggestion) => {
-                                const isSelected = selectedSuggestionId === suggestion.id;
-                                return (
-                                    <div
-                                        key={suggestion.id}
-                                        onClick={() => setSelectedSuggestionId(suggestion.id)}
-                                        className="relative rounded-xl p-6 cursor-pointer transition-all duration-300 group"
-                                        style={{
-                                            background: isSelected ? 'rgba(168,85,247,0.1)' : 'rgba(8, 5, 16, 0.5)',
-                                            backdropFilter: 'blur(12px)',
-                                            border: isSelected ? '2px solid #a855f7' : '1px solid rgba(255,255,255,0.05)',
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            if (!isSelected) e.currentTarget.style.borderColor = 'rgba(168,85,247,0.4)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
-                                        }}
-                                    >
-                                        {isSelected && (
-                                            <div className="flex justify-between items-start mb-4">
-                                                <div className="w-8 h-8 rounded-lg bg-[#a855f7] flex items-center justify-center">
-                                                    <CheckCircle2 size={16} className="text-white" />
-                                                </div>
-                                                <span className="text-[10px] font-mono font-bold text-[#a855f7] uppercase tracking-widest">
-                                                    Selecionado
-                                                </span>
-                                            </div>
-                                        )}
-                                        <h3
-                                            className="text-base font-bold text-white mb-2 transition-colors"
-                                            style={{ color: !isSelected ? undefined : '#ffffff' }}
+                {isLoadingSuggestions && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                            <div
+                                key={i}
+                                className="rounded-xl p-6 animate-pulse"
+                                style={{ background: 'rgba(8,5,16,0.5)', border: '1px solid rgba(255,255,255,0.05)', minHeight: '110px' }}
+                            >
+                                <div className="h-4 w-2/3 rounded mb-3" style={{ background: 'rgba(168,85,247,0.15)' }} />
+                                <div className="h-3 w-full rounded mb-2" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                                <div className="h-3 w-4/5 rounded" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {!isLoadingSuggestions && suggestions.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+                        {[col1, col2, col3].map((col, colIdx) => (
+                            <div key={colIdx} className="flex flex-col gap-5">
+                                {col.map((suggestion) => {
+                                    const isSelected = selectedSuggestionId === suggestion.id;
+                                    return (
+                                        <div
+                                            key={suggestion.id}
+                                            onClick={() => {
+                                                setSelectedSuggestionId(suggestion.id);
+                                                setTopicContext(suggestion.title);
+                                            }}
+                                            className="relative rounded-xl p-6 cursor-pointer transition-all duration-300"
+                                            style={{
+                                                background: isSelected ? 'rgba(168,85,247,0.1)' : 'rgba(8, 5, 16, 0.5)',
+                                                backdropFilter: 'blur(12px)',
+                                                border: isSelected ? '2px solid #a855f7' : '1px solid rgba(255,255,255,0.05)',
+                                                minHeight: '110px',
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                if (!isSelected) e.currentTarget.style.borderColor = 'rgba(168,85,247,0.4)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
+                                            }}
                                         >
-                                            {suggestion.title}
-                                        </h3>
-                                        <p className="text-sm leading-relaxed" style={{ color: isSelected ? 'rgba(255,255,255,0.7)' : 'rgba(148,163,184,1)' }}>
-                                            {suggestion.description}
-                                        </p>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    ))}
-                </div>
+                                            {isSelected && (
+                                                <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-[#a855f7] flex items-center justify-center">
+                                                    <CheckCircle2 size={14} className="text-white" />
+                                                </div>
+                                            )}
+                                            <h3 className="text-base font-bold text-white mb-2">
+                                                {suggestion.title}
+                                            </h3>
+                                            <p className="text-sm leading-relaxed" style={{ color: isSelected ? 'rgba(255,255,255,0.7)' : 'rgba(148,163,184,1)' }}>
+                                                {suggestion.description}
+                                            </p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ))}
+                    </div>
+                )}
             </section>
 
             {/* Section 3: Slide Count */}

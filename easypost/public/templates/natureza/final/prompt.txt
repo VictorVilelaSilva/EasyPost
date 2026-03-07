@@ -1,0 +1,15 @@
+Cores e Fundo:
+
+- Fundo: Tom de creme ou bege bem claro, com textura sutil que lembra papel de alta gramatura ou papel artístico.
+
+- Paleta: Restrita a tons de verde escuro sobre o fundo claro, criando contraste sofisticado e legível.
+
+Elementos Gráficos:
+
+- Linhas de Divisão: Duas linhas horizontais finas, uma no topo e outra na base da imagem. Ambas terminam com uma pequena ponta de seta voltada para a direita, em verde escuro.
+
+- Ícone: No canto inferior direito, há um pequeno ícone de brilho ou faísca (quatro pontas) em tom de branco ou creme muito claro, quase se fundindo ao fundo.
+
+- A área esquerda e central deve ter bom contraste e espaço limpo para texto sobreposto de chamada para ação.
+
+- tamanho: proporção 4:5 1080 x 1350 px

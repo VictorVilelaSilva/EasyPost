@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CarouselData, ImageConfig, DesignSystem, Platform, PostObjective } from '../types';
+import { CarouselData, ImageConfig, DesignSystem, Platform, PostObjective, SlideBackgrounds } from '../types';
 import { useAuth } from '@/contexts/AuthContext';
 import { incrementRequestCount } from '@/lib/userService';
 
@@ -10,7 +10,7 @@ interface CarouselWorkflowState {
     topics: string[];
     selectedTopic: string | null;
     carouselData: CarouselData | null;
-    images: string[] | null;
+    backgrounds: SlideBackgrounds | null;
     showConfig: boolean;
     platform: Platform;
     objective: PostObjective;
@@ -28,6 +28,7 @@ interface CarouselWorkflowActions {
     handleGenerateTopics: (e: React.FormEvent) => Promise<void>;
     handleSelectTopic: (topic: string) => Promise<void>;
     handleGenerateImages: (config: ImageConfig) => Promise<void>;
+    handleGenerateAll: (config: ImageConfig) => Promise<void>;
 }
 
 export type CarouselWorkflow = CarouselWorkflowState & CarouselWorkflowActions;
@@ -38,7 +39,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
     const [topics, setTopics] = useState<string[]>([]);
     const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
     const [carouselData, setCarouselData] = useState<CarouselData | null>(null);
-    const [images, setImages] = useState<string[] | null>(null);
+    const [backgrounds, setBackgrounds] = useState<SlideBackgrounds | null>(null);
     const [showConfig, setShowConfig] = useState(false);
 
     const [platform, setPlatform] = useState<Platform>('instagram');
@@ -57,7 +58,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         setTopics([]);
         setSelectedTopic(null);
         setCarouselData(null);
-        setImages(null);
+        setBackgrounds(null);
         setShowConfig(false);
 
         try {
@@ -83,7 +84,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         setSelectedTopic(topic);
         setIsGeneratingText(true);
         setCarouselData(null);
-        setImages(null);
+        setBackgrounds(null);
         setShowConfig(false);
 
         try {
@@ -114,7 +115,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         if (!carouselData) return;
 
         setIsGeneratingImages(true);
-        setImages(null);
+        setBackgrounds(null);
         setShowConfig(false);
 
         try {
@@ -129,6 +130,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
                     brandColors: config.brandColors,
                     audience: config.audience,
                     platform,
+                    topicContext: config.customPrompt || '',
                 }),
             });
             const designSystem: DesignSystem = await resDesignSystem.json();
@@ -147,15 +149,16 @@ export function useCarouselWorkflow(): CarouselWorkflow {
                     platform,
                     brandColors: config.brandColors,
                     fontFamily: config.fontFamily || 'Inter',
+                    handle: config.handle || '',
                 }),
             });
             const dataImages = await resImages.json();
 
-            if (!dataImages.images) {
-                throw new Error(dataImages.error || 'Falha ao gerar imagens');
+            if (!dataImages.backgrounds) {
+                throw new Error(dataImages.error || 'Falha ao gerar fundos');
             }
 
-            setImages(dataImages.images);
+            setBackgrounds(dataImages.backgrounds);
             if (user) {
                 await incrementRequestCount(user.uid);
             }
@@ -171,12 +174,96 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         setIsGeneratingImages(false);
     };
 
+    const handleGenerateAll = async (config: ImageConfig) => {
+        const topic = config.customPrompt || '';
+        const nicheVal = config.audience?.interests || '';
+        const count = config.slideCount ?? slideCount;
+
+        setIsGeneratingText(true);
+        setCarouselData(null);
+        setBackgrounds(null);
+
+        let carousel: CarouselData | null = null;
+
+        try {
+            const resText = await fetch('/api/generate-carousel', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ topic, niche: nicheVal, platform, objective, slideCount: count }),
+            });
+            const dataText = await resText.json();
+
+            if (!dataText.slides || !dataText.caption) {
+                throw new Error(dataText.error || 'Falha ao gerar texto do carrossel');
+            }
+            carousel = dataText;
+            setCarouselData(carousel);
+        } catch (e: unknown) {
+            console.error(e);
+            alert(e instanceof Error ? e.message : 'Erro ao gerar texto do carrossel');
+            setIsGeneratingText(false);
+            return;
+        }
+
+        setIsGeneratingText(false);
+        setIsGeneratingImages(true);
+
+        try {
+            const resDesignSystem = await fetch('/api/generate-design-system', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    slides: carousel!.slides,
+                    visualStyle: config.visualStyle,
+                    colorPalette: config.colorPalette,
+                    brandColors: config.brandColors,
+                    audience: config.audience,
+                    platform,
+                    topicContext: topic,
+                }),
+            });
+            const designSystem: DesignSystem = await resDesignSystem.json();
+
+            if (!designSystem.background) {
+                throw new Error('Falha ao gerar design system');
+            }
+
+            const resImages = await fetch('/api/generate-images', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    slides: carousel!.slides,
+                    designSystem,
+                    platform,
+                    brandColors: config.brandColors,
+                    fontFamily: config.fontFamily || 'Inter',
+                    handle: config.handle || '',
+                }),
+            });
+            const dataImages = await resImages.json();
+
+            if (!dataImages.backgrounds) {
+                throw new Error(dataImages.error || 'Falha ao gerar fundos');
+            }
+
+            setBackgrounds(dataImages.backgrounds);
+            if (user) {
+                await incrementRequestCount(user.uid);
+            }
+        } catch (e: unknown) {
+            console.error(e);
+            alert(e instanceof Error ? e.message : 'Erro ao gerar imagens');
+        }
+
+        setIsGeneratingImages(false);
+    };
+
     return {
         niche,
         topics,
         selectedTopic,
         carouselData,
-        images,
+        backgrounds,
         showConfig,
         platform,
         objective,
@@ -191,5 +278,6 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         handleGenerateTopics,
         handleSelectTopic,
         handleGenerateImages,
+        handleGenerateAll,
     };
 }
