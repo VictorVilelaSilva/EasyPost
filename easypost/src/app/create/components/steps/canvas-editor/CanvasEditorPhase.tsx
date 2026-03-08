@@ -1,13 +1,13 @@
 'use client';
 
-import { Sparkles, Download, ArrowLeft, Heart, MessageCircle, Send, Bookmark, MoreHorizontal, SlidersHorizontal } from 'lucide-react';
+import { Sparkles, Download, ArrowLeft, Heart, MessageCircle, Send, Bookmark, MoreHorizontal, SlidersHorizontal, Eye } from 'lucide-react';
 import { CanvasEditorProps } from './types';
 import { CANVAS_W, CANVAS_H_INSTAGRAM, CANVAS_H_LINKEDIN } from './constants';
 import { DraggableTextBlock } from './DraggableTextBlock';
 import { PropertiesPanel } from './PropertiesPanel';
 import { useCanvasLogic } from './useCanvasLogic';
 
-export function CanvasEditorPhase({ slides, platform, caption, onUpdateSlide, onBack }: CanvasEditorProps) {
+export function CanvasEditorPhase({ slides, platform, caption, onUpdateSlide, onBack, onGoToPreview, onFusedImagesChange }: CanvasEditorProps) {
     const canvasH = platform === 'instagram' ? CANVAS_H_INSTAGRAM : CANVAS_H_LINKEDIN;
 
     const {
@@ -28,7 +28,7 @@ export function CanvasEditorPhase({ slides, platform, caption, onUpdateSlide, on
         handleFuseAll,
         handleDownload,
         currentSlide,
-    } = useCanvasLogic(slides, platform, caption, onUpdateSlide);
+    } = useCanvasLogic(slides, platform, caption, onUpdateSlide, onFusedImagesChange);
 
     const slideTypeLabels: Record<string, string> = { cover: 'Capa', content: 'Conteudo', cta: 'CTA' };
 
@@ -296,15 +296,28 @@ export function CanvasEditorPhase({ slides, platform, caption, onUpdateSlide, on
                     </button>
 
                     {allFused && (
-                        <button
-                            type="button"
-                            onClick={handleDownload}
-                            disabled={isDownloading}
-                            className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-white/8 border border-white/15 hover:bg-white/12 transition-all cursor-pointer"
-                        >
-                            <Download size={16} />
-                            {isDownloading ? 'Baixando...' : 'Baixar'}
-                        </button>
+                        <>
+                            <button
+                                type="button"
+                                onClick={handleDownload}
+                                disabled={isDownloading}
+                                className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-white/8 border border-white/15 hover:bg-white/12 transition-all cursor-pointer"
+                            >
+                                <Download size={16} />
+                                {isDownloading ? 'Baixando...' : 'Baixar'}
+                            </button>
+                            {onGoToPreview && (
+                                <button
+                                    type="button"
+                                    onClick={() => onGoToPreview(fusedImages.filter(Boolean) as string[])}
+                                    className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-[#7f0df2]/80 border border-[#7f0df2]/40 hover:bg-[#7f0df2] transition-all cursor-pointer"
+                                    style={{ boxShadow: '0 0 15px rgba(127,13,242,0.3)' }}
+                                >
+                                    <Eye size={16} />
+                                    Ver Preview
+                                </button>
+                            )}
+                        </>
                     )}
                     <button
                         type="button"

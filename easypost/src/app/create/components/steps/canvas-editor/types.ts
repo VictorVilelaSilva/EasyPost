@@ -37,4 +37,6 @@ export interface CanvasEditorProps {
     caption: string;
     onUpdateSlide: (index: number, patch: Partial<SlideState>) => void;
     onBack: () => void;
+    onGoToPreview?: (fusedImages: string[]) => void;
+    onFusedImagesChange?: (images: (string | null)[]) => void;
 }

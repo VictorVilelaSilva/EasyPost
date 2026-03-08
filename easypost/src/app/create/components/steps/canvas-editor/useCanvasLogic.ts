@@ -9,7 +9,8 @@ export function useCanvasLogic(
     slides: SlideState[],
     platform: Platform,
     caption: string,
-    onUpdateSlide: (index: number, patch: Partial<SlideState>) => void
+    onUpdateSlide: (index: number, patch: Partial<SlideState>) => void,
+    onFusedImagesChange?: (images: (string | null)[]) => void,
 ) {
     const [activeSlide, setActiveSlide] = useState(0);
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
@@ -106,6 +107,7 @@ export function useCanvasLogic(
             }
         }
         setFusedImages(results);
+        onFusedImagesChange?.(results);
         setAllFused(results.every(r => r !== null));
         setIsFusing(false);
     };
