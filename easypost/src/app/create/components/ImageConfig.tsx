@@ -97,6 +97,8 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
         });
     };
 
+    const isValid = topicContext.trim().length > 0 && niche.trim().length > 0;
+
     const col1 = suggestions.slice(0, 2);
     const col2 = suggestions.slice(2, 4);
     const col3 = suggestions.slice(4, 6);
@@ -139,7 +141,9 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="flex flex-col gap-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">Contexto do Post</label>
+                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
+                                Contexto do Post <span className="text-[#a855f7]">*</span>
+                            </label>
                             <input
                                 type="text"
                                 value={topicContext}
@@ -152,7 +156,9 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
                             />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">Nicho Operacional</label>
+                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
+                                Nicho Operacional <span className="text-[#a855f7]">*</span>
+                            </label>
                             <input
                                 type="text"
                                 value={niche}
@@ -463,7 +469,8 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
                 <button
                     type="button"
                     onClick={handleContinue}
-                    className="flex items-center justify-center gap-2 rounded-xl h-12 px-8 bg-[#7f0df2] hover:bg-[#922cee] text-white text-base font-bold shadow-[0_0_20px_rgba(127,13,242,0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                    disabled={!isValid}
+                    className="flex items-center justify-center gap-2 rounded-xl h-12 px-8 bg-[#7f0df2] hover:bg-[#922cee] disabled:opacity-50 disabled:cursor-not-allowed text-white text-base font-bold shadow-[0_0_20px_rgba(127,13,242,0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer"
                     style={{ fontFamily: 'var(--font-display)' }}
                 >
                     Proximo Passo

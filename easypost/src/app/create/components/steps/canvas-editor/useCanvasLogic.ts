@@ -17,6 +17,7 @@ export function useCanvasLogic(
     const [fusedImages, setFusedImages] = useState<(string | null)[]>(slides.map(() => null));
     const [isDownloading, setIsDownloading] = useState(false);
     const [allFused, setAllFused] = useState(false);
+    const [aiMode, setAiMode] = useState<'auto' | 'manual'>('auto');
 
     const canvasRef = useRef<HTMLDivElement>(null);
     const dragState = useRef<{
@@ -95,6 +96,7 @@ export function useCanvasLogic(
                         backgroundBase64: slides[i].backgroundBase64,
                         textBlocks: slides[i].textBlocks,
                         platform,
+                        mode: aiMode,
                     }),
                 });
                 const data = await res.json();
@@ -137,6 +139,8 @@ export function useCanvasLogic(
         fusedImages,
         isDownloading,
         allFused,
+        aiMode,
+        setAiMode,
         canvasRef,
         updateBlock,
         handleDragStart,

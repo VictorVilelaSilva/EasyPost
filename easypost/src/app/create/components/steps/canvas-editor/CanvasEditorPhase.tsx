@@ -1,6 +1,6 @@
 'use client';
 
-import { Sparkles, Download, ArrowLeft, Heart, MessageCircle, Send, Bookmark, MoreHorizontal } from 'lucide-react';
+import { Sparkles, Download, ArrowLeft, Heart, MessageCircle, Send, Bookmark, MoreHorizontal, SlidersHorizontal } from 'lucide-react';
 import { CanvasEditorProps } from './types';
 import { CANVAS_W, CANVAS_H_INSTAGRAM, CANVAS_H_LINKEDIN } from './constants';
 import { DraggableTextBlock } from './DraggableTextBlock';
@@ -20,6 +20,8 @@ export function CanvasEditorPhase({ slides, platform, caption, onUpdateSlide, on
         fusedImages,
         isDownloading,
         allFused,
+        aiMode,
+        setAiMode,
         canvasRef,
         updateBlock,
         handleDragStart,
@@ -229,6 +231,14 @@ export function CanvasEditorPhase({ slides, platform, caption, onUpdateSlide, on
                     className="w-[280px] flex flex-col z-40 overflow-y-auto custom-scrollbar shrink-0"
                     style={{ background: 'rgba(22,16,29,0.6)', backdropFilter: 'blur(16px)', borderLeft: '1px solid rgba(127,13,242,0.1)' }}
                 >
+                    {aiMode === 'auto' && (
+                        <div className="mx-4 mt-4 px-3 py-2.5 rounded-xl bg-[#7f0df2]/10 border border-[#7f0df2]/20">
+                            <p className="text-[11px] text-purple-300 leading-relaxed">
+                                <Sparkles size={12} className="inline mr-1.5 -mt-0.5" />
+                                A IA vai decidir o melhor estilo visual para o texto
+                            </p>
+                        </div>
+                    )}
                     <PropertiesPanel block={selectedBlock} onChange={updateBlock} />
                 </aside>
             </main>
@@ -269,7 +279,22 @@ export function CanvasEditorPhase({ slides, platform, caption, onUpdateSlide, on
                     </div>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex items-center gap-3">
+                    {/* Toggle IA Criativa / Meu Estilo */}
+                    <button
+                        type="button"
+                        onClick={() => setAiMode(prev => prev === 'auto' ? 'manual' : 'auto')}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border"
+                        style={{
+                            background: aiMode === 'auto' ? 'rgba(127,13,242,0.15)' : 'rgba(255,255,255,0.05)',
+                            borderColor: aiMode === 'auto' ? 'rgba(127,13,242,0.3)' : 'rgba(255,255,255,0.1)',
+                            color: aiMode === 'auto' ? '#c084fc' : '#94a3b8',
+                        }}
+                    >
+                        {aiMode === 'auto' ? <Sparkles size={14} /> : <SlidersHorizontal size={14} />}
+                        {aiMode === 'auto' ? 'IA Criativa' : 'Meu Estilo'}
+                    </button>
+
                     {allFused && (
                         <button
                             type="button"
