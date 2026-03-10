@@ -1,24 +1,31 @@
 import { GoogleGenAI, Type } from "@google/genai";
+import { useContentConfig } from "@/contexts/ContentConfigContext";
 
 export async function POST(req: Request) {
-    try {
-        const { topic, niche } = await req.json();
+  try {
+    const { topic, niche } = await req.json();
+    const { platform, theme, objective, language, slides } = useContentConfig();
+    if (!topic || !niche) {
+      return new Response(
+        JSON.stringify({ error: "Tópico e nicho são obrigatórios" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+    }
 
-        if (!topic || !niche) {
-            return new Response(JSON.stringify({ error: "Tópico e nicho são obrigatórios" }), {
-                status: 400,
-                headers: { "Content-Type": "application/json" },
-            });
-        }
+    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+    if (!apiKey) {
+      return new Response(
+        JSON.stringify({ error: "Chave da API não encontrada" }),
+        { status: 500 },
+      );
+    }
 
-        const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-        if (!apiKey) {
-            return new Response(JSON.stringify({ error: "Chave da API não encontrada" }), { status: 500 });
-        }
+    const ai = new GoogleGenAI({ apiKey });
 
-        const ai = new GoogleGenAI({ apiKey });
-
-        const prompt = `Você é um estrategista de conteúdo e copywriter expert em Instagram para o mercado brasileiro.
+    const prompt = `Você é um estrategista de conteúdo e copywriter expert em Instagram para o mercado brasileiro.
             Tópico: "${topic}"
             Nicho: "${niche}"
 
@@ -50,53 +57,59 @@ export async function POST(req: Request) {
 
             Para a 'caption', escreva uma legenda envolvente para Instagram incluindo emojis e exatamente 7 hashtags relevantes em português.`;
 
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema: {
-                    type: Type.OBJECT,
-                    properties: {
-                        slides: {
-                            type: Type.ARRAY,
-                            description: "Exatamente 5 slides",
-                            items: {
-                                type: Type.OBJECT,
-                                properties: {
-                                    slideType: { type: Type.STRING, description: "Tipo do slide: cover, content, ou cta" },
-                                    title: { type: Type.STRING, description: "Título do slide" },
-                                    content: { type: Type.STRING, description: "Texto principal do slide" }
-                                },
-                                required: ["slideType", "title", "content"]
-                            }
-                        },
-                        caption: {
-                            type: Type.STRING,
-                            description: "Legenda do Instagram com hashtags"
-                        }
-                    },
-                    required: ["slides", "caption"]
-                }
-            }
-        });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            slides: {
+              type: Type.ARRAY,
+              description: "Exatamente 5 slides",
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  slideType: {
+                    type: Type.STRING,
+                    description: "Tipo do slide: cover, content, ou cta",
+                  },
+                  title: { type: Type.STRING, description: "Título do slide" },
+                  content: {
+                    type: Type.STRING,
+                    description: "Texto principal do slide",
+                  },
+                },
+                required: ["slideType", "title", "content"],
+              },
+            },
+            caption: {
+              type: Type.STRING,
+              description: "Legenda do Instagram com hashtags",
+            },
+          },
+          required: ["slides", "caption"],
+        },
+      },
+    });
 
-        const jsonString = response.text;
-        if (!jsonString) {
-            throw new Error("Resposta vazia do Gemini");
-        }
-
-        const object = JSON.parse(jsonString);
-
-        return new Response(JSON.stringify(object), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-        });
-    } catch (error) {
-        console.error("Erro ao gerar carrossel:", error);
-        return new Response(JSON.stringify({ error: "Falha ao gerar carrossel" }), {
-            status: 500,
-            headers: { "Content-Type": "application/json" },
-        });
+    const jsonString = response.text;
+    if (!jsonString) {
+      throw new Error("Resposta vazia do Gemini");
     }
+
+    const object = JSON.parse(jsonString);
+
+    return new Response(JSON.stringify(object), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Erro ao gerar carrossel:", error);
+    return new Response(JSON.stringify({ error: "Falha ao gerar carrossel" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }

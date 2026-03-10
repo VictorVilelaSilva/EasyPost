@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Sora, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
-
+import { ContentConfigProvider } from "@/contexts/ContentConfigContext";
 const sora = Sora({
   variable: "--font-sora",
   subsets: ["latin"],
@@ -17,26 +17,29 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: "EasyPost — Gerador de Carrossel para Instagram com IA",
-  description: "Gere carrosséis incríveis para Instagram com IA. Digite seu nicho, escolha um tema e receba 5 slides prontos para postar com legenda em segundos.",
-  metadataBase: new URL('https://easypost.app'),
+  description:
+    "Gere carrosséis incríveis para Instagram com IA. Digite seu nicho, escolha um tema e receba 5 slides prontos para postar com legenda em segundos.",
+  metadataBase: new URL("https://easypost.app"),
   alternates: {
-    canonical: '/',
+    canonical: "/",
   },
   openGraph: {
-    title: 'EasyPost — Carrosséis para Instagram com IA',
-    description: 'Crie carrosséis profissionais para Instagram em segundos. IA gera imagens, textos e legendas para seu nicho.',
-    url: 'https://easypost.app',
-    siteName: 'EasyPost',
-    locale: 'pt_BR',
-    type: 'website',
+    title: "EasyPost — Carrosséis para Instagram com IA",
+    description:
+      "Crie carrosséis profissionais para Instagram em segundos. IA gera imagens, textos e legendas para seu nicho.",
+    url: "https://easypost.app",
+    siteName: "EasyPost",
+    locale: "pt_BR",
+    type: "website",
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'EasyPost — Carrosséis para Instagram com IA',
-    description: 'Crie carrosséis profissionais para Instagram em segundos com IA.',
+    card: "summary_large_image",
+    title: "EasyPost — Carrosséis para Instagram com IA",
+    description:
+      "Crie carrosséis profissionais para Instagram em segundos com IA.",
   },
   other: {
-    'theme-color': '#0d1117',
+    "theme-color": "#0d1117",
   },
 };
 
@@ -47,14 +50,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`${sora.variable} ${spaceGrotesk.variable} antialiased`}
-      >
-        {/* Animated gradient mesh background */}
-        <div className="gradient-mesh" aria-hidden="true" />
-        {/* Grain overlay */}
-        <div className="grain-overlay" aria-hidden="true" />
-        <AuthProvider>{children}</AuthProvider>
+      <body className={`${sora.variable} ${spaceGrotesk.variable} antialiased`}>
+        <ContentConfigProvider>
+          {/* Animated gradient mesh background */}
+          <div className="gradient-mesh" aria-hidden="true" />
+          {/* Grain overlay */}
+          <div className="grain-overlay" aria-hidden="true" />
+          <AuthProvider>{children}</AuthProvider>
+        </ContentConfigProvider>
       </body>
     </html>
   );
