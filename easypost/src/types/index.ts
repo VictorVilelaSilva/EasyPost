@@ -9,24 +9,14 @@ export interface CarouselData {
     caption: string;
 }
 
-export interface BrandColors {
-    colors: string[];        // Array of hex colors
-    logoDataUrl?: string;    // Base64 data URL of uploaded logo
-}
-
 export interface ImageConfig {
-    visualStyle: string;
-    colorPalette: string;
-    brandColors: BrandColors;
     audience: {
         age: string;
         interests: string;
     };
     customPrompt: string;
-    fontFamily?: string;
     handle?: string;
     slideCount?: number;
-    imageStyles?: string[];
 }
 
 export type Platform = 'instagram' | 'linkedin';
@@ -39,8 +29,9 @@ export interface PostConfig {
     slideCount: number;
 }
 
+// Legacy - kept for reference only
 export interface SlideBackgrounds {
-    cover: string[];    // base64 images (1 for templates, 3 for AI)
+    cover: string[];
     content: string[];
     cta: string[];
 }

@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Sparkles, Layers, Terminal, RefreshCw, CheckCircle2, Loader2, Palette, Brush, Plus, X } from 'lucide-react';
+import { Sparkles, Layers, Terminal, RefreshCw, CheckCircle2, Loader2 } from 'lucide-react';
 import { ImageConfig as ImageConfigType } from '@/types';
-import ColorPickerPopover from '@/components/ColorPickerPopover';
 
 interface Suggestion {
     id: number;
@@ -11,23 +10,13 @@ interface Suggestion {
     description: string;
 }
 
-const IMAGE_STYLES = [
-    { id: 'esportivo', label: 'Esportivo', icon: '⚡', desc: 'Energia e dinamismo' },
-    { id: 'minimalista', label: 'Minimalista', icon: '◻', desc: 'Limpo e elegante' },
-    { id: 'tech', label: 'Tech', icon: '⬡', desc: 'Futurista e digital' },
-    { id: 'natural', label: 'Natural', icon: '🌿', desc: 'Organico e suave' },
-    { id: 'cyberpunk', label: 'Cyberpunk', icon: '◈', desc: 'Neon e distopico' },
-    { id: 'profissional', label: 'Profissional', icon: '◆', desc: 'Corporativo e serio' },
-];
-
 interface Props {
     topic: string;
-    fontFamily: string;
-    onContinue: (config: Omit<ImageConfigType, 'visualStyle'>) => void;
+    onContinue: (config: ImageConfigType) => void;
     onBack: () => void;
 }
 
-export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack }: Props) {
+export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
     const [topicContext, setTopicContext] = useState(topic || '');
     const [handle, setHandle] = useState('');
     const [niche, setNiche] = useState('');
@@ -35,32 +24,6 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
     const [slideCount, setSlideCount] = useState(5);
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
     const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
-
-    // Palette colors (max 3)
-    const [brandColors, setBrandColors] = useState<string[]>([]);
-    const [pickerOpen, setPickerOpen] = useState(false);
-    const [pickerColor, setPickerColor] = useState('#7F0DF2');
-
-    // Image styles (max 2)
-    const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
-
-    const addColor = () => {
-        if (brandColors.length >= 3) return;
-        setBrandColors(prev => [...prev, pickerColor]);
-        setPickerOpen(false);
-    };
-
-    const removeColor = (index: number) => {
-        setBrandColors(prev => prev.filter((_, i) => i !== index));
-    };
-
-    const toggleStyle = (id: string) => {
-        setSelectedStyles(prev => {
-            if (prev.includes(id)) return prev.filter(s => s !== id);
-            if (prev.length >= 2) return prev;
-            return [...prev, id];
-        });
-    };
 
     const handleGenerateSuggestions = async () => {
         if (!niche.trim()) return;
@@ -86,14 +49,10 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
 
     const handleContinue = () => {
         onContinue({
-            colorPalette: brandColors.length > 0 ? 'custom' : 'dark',
-            brandColors: { colors: brandColors },
             audience: { age: '', interests: niche },
             customPrompt: topicContext,
-            fontFamily,
             handle: handle.trim() ? (handle.trim().startsWith('@') ? handle.trim() : `@${handle.trim()}`) : undefined,
             slideCount,
-            imageStyles: selectedStyles.length > 0 ? selectedStyles : undefined,
         });
     };
 
@@ -188,132 +147,7 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
                 </div>
             </section>
 
-            {/* Section 2: Paleta de Cores */}
-            <section className="relative overflow-hidden rounded-xl p-8 group" style={sectionStyle}>
-                <div className="absolute top-0 left-0 w-1 h-full bg-[#a855f7]/40 group-hover:bg-[#a855f7] transition-colors rounded-l-xl" />
-                <div className="flex flex-col gap-6 pl-2">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-[#a855f7]/10">
-                                <Palette size={18} className="text-[#a855f7]" />
-                            </div>
-                            <div>
-                                <h2 className="text-xl font-bold text-white">Paleta de Cores</h2>
-                                <p className="text-[11px] text-slate-500 mt-0.5">Adicione ate 3 cores para guiar a identidade visual</p>
-                            </div>
-                        </div>
-                        {brandColors.length > 0 && (
-                            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-tight">
-                                {brandColors.length}/3 cores
-                            </span>
-                        )}
-                    </div>
-
-                    <div className="flex items-center gap-4 flex-wrap">
-                        {brandColors.map((color, i) => (
-                            <div key={i} className="relative group/swatch">
-                                <div
-                                    className="size-14 rounded-xl border-2 border-white/10 shadow-lg transition-transform hover:scale-105"
-                                    style={{ background: color, boxShadow: `0 4px 20px ${color}40` }}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => removeColor(i)}
-                                    className="absolute -top-2 -right-2 size-5 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover/swatch:opacity-100 transition-opacity cursor-pointer"
-                                >
-                                    <X size={10} />
-                                </button>
-                                <span className="block text-center text-[9px] font-mono text-slate-500 mt-1.5">{color}</span>
-                            </div>
-                        ))}
-
-                        {brandColors.length < 3 && (
-                            <div className="relative">
-                                <button
-                                    type="button"
-                                    onClick={() => setPickerOpen(v => !v)}
-                                    className="size-14 rounded-xl border-2 border-dashed border-white/20 flex items-center justify-center text-slate-500 hover:text-white hover:border-[#a855f7]/50 transition-all cursor-pointer"
-                                >
-                                    <Plus size={20} />
-                                </button>
-                                {pickerOpen && (
-                                    <ColorPickerPopover
-                                        color={pickerColor}
-                                        onChange={(c) => {
-                                            setPickerColor(c);
-                                            setBrandColors(prev => {
-                                                if (prev.length >= 3) return prev;
-                                                return [...prev, c];
-                                            });
-                                            setPickerOpen(false);
-                                        }}
-                                        onClose={() => setPickerOpen(false)}
-                                        position="above-right"
-                                    />
-                                )}
-                            </div>
-                        )}
-
-                        {brandColors.length === 0 && (
-                            <p className="text-sm text-slate-600 italic ml-2">Nenhuma cor adicionada — a IA escolhera automaticamente</p>
-                        )}
-                    </div>
-                </div>
-            </section>
-
-            {/* Section 3: Estilo Visual */}
-            <section className="relative overflow-hidden rounded-xl p-8 group" style={sectionStyle}>
-                <div className="absolute top-0 left-0 w-1 h-full bg-[#a855f7]/40 group-hover:bg-[#a855f7] transition-colors rounded-l-xl" />
-                <div className="flex flex-col gap-6 pl-2">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-[#a855f7]/10">
-                                <Brush size={18} className="text-[#a855f7]" />
-                            </div>
-                            <div>
-                                <h2 className="text-xl font-bold text-white">Estilo Visual</h2>
-                                <p className="text-[11px] text-slate-500 mt-0.5">Selecione ate 2 estilos para combinar</p>
-                            </div>
-                        </div>
-                        {selectedStyles.length > 0 && (
-                            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-tight">
-                                {selectedStyles.length}/2 selecionados
-                            </span>
-                        )}
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {IMAGE_STYLES.map(style => {
-                            const isSelected = selectedStyles.includes(style.id);
-                            const isDisabled = !isSelected && selectedStyles.length >= 2;
-                            return (
-                                <button
-                                    key={style.id}
-                                    type="button"
-                                    onClick={() => !isDisabled && toggleStyle(style.id)}
-                                    className={`relative rounded-xl p-5 text-left transition-all duration-200 cursor-pointer ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}
-                                    style={{
-                                        background: isSelected ? 'rgba(168,85,247,0.12)' : 'rgba(0,0,0,0.3)',
-                                        border: isSelected ? '2px solid #a855f7' : '1px solid rgba(255,255,255,0.08)',
-                                        boxShadow: isSelected ? '0 0 20px rgba(168,85,247,0.2)' : 'none',
-                                    }}
-                                >
-                                    {isSelected && (
-                                        <div className="absolute top-3 right-3 size-5 rounded-full bg-[#a855f7] flex items-center justify-center">
-                                            <CheckCircle2 size={12} className="text-white" />
-                                        </div>
-                                    )}
-                                    <span className="text-2xl mb-2 block">{style.icon}</span>
-                                    <span className="text-sm font-bold text-white block">{style.label}</span>
-                                    <span className="text-[11px] text-slate-500 block mt-0.5">{style.desc}</span>
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            </section>
-
-            {/* Section 4: AI Suggestions */}
+            {/* Section 2: AI Suggestions */}
             <section className="flex flex-col gap-5">
                 <div className="flex justify-between items-center px-1">
                     <div className="flex items-center gap-3">
@@ -396,7 +230,7 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
                 )}
             </section>
 
-            {/* Section 5: Slide Count */}
+            {/* Section 3: Slide Count */}
             <section className="relative overflow-hidden rounded-xl p-8 group" style={sectionStyle}>
                 <div className="absolute top-0 left-0 w-1 h-full bg-[#a855f7]/40 group-hover:bg-[#a855f7] transition-colors rounded-l-xl" />
                 <div className="flex flex-col gap-8 pl-2">
@@ -473,7 +307,7 @@ export default function ImageConfigPanel({ topic, fontFamily, onContinue, onBack
                     className="flex items-center justify-center gap-2 rounded-xl h-12 px-8 bg-[#7f0df2] hover:bg-[#922cee] disabled:opacity-50 disabled:cursor-not-allowed text-white text-base font-bold shadow-[0_0_20px_rgba(127,13,242,0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer"
                     style={{ fontFamily: 'var(--font-display)' }}
                 >
-                    Proximo Passo
+                    Gerar Carrossel
                     <Sparkles size={18} />
                 </button>
             </div>

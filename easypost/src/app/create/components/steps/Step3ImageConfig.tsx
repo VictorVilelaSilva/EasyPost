@@ -14,17 +14,15 @@ const ImageConfigPanel = dynamic(() => import('../ImageConfig'), {
 
 interface Props {
     selectedTopic: string;
-    selectedFont: string;
-    onContinue: (config: Omit<ImageConfig, 'visualStyle'>) => void;
+    onContinue: (config: ImageConfig) => void;
     onBack: () => void;
 }
 
-export default function Step3ImageConfig({ selectedTopic, selectedFont, onContinue, onBack }: Props) {
+export default function Step3ImageConfig({ selectedTopic, onContinue, onBack }: Props) {
     return (
         <div className="glass-panel rounded-xl p-0 overflow-hidden border border-white/5 shadow-2xl animate-fade-in mt-8" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
             <ImageConfigPanel
                 topic={selectedTopic}
-                fontFamily={selectedFont}
                 onContinue={onContinue}
                 onBack={onBack}
             />

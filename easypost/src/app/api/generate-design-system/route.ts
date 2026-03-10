@@ -1,60 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
-import fs from 'fs';
-import path from 'path';
-
-const STYLE_MAP: Record<string, string> = {
-    // IDs emitidos por VisualStyleGallery
-    'ai-generated': 'Crie um estilo visual único, criativo e autoral baseado inteiramente no conteúdo e público-alvo fornecidos. Surpreenda com uma identidade visual original.',
-    'upload': '',
-    'tech-start': 'Minimalista tech. Interface limpa e moderna, tipografia bold em fundo escuro (slate-900), gradientes sutis índigo/violeta, elementos geométricos precisos e amplo espaço negativo.',
-    'developer-pro': 'Dark code editor. Fundo carbono escuro (#0d1117), tipografia monospace, acentos em verde terminal (#22c55e) e cyan (#22d3ee), dots coloridos no topo simulando janela de terminal.',
-}
-
-const PALETTE_MAP: Record<string, string> = {
-    dark: 'Dark gradient (deep navy #0f172a to black). White/light gray text.',
-    light: 'Clean light/white background (#f8fafc). Dark navy text (#1e293b).',
-    blue: 'Deep navy (#1e3a5f) with electric blue accents (#2563eb, #60a5fa). White text.',
-    green: 'Dark emerald (#064e3b), mint/teal accents (#059669, #34d399). White text.',
-    warm: 'Deep orange-brown (#7c2d12), vibrant orange accents (#ea580c, #fb923c). Cream text.',
-    purple: 'Deep violet (#3b0764), lavender accents (#7c3aed, #a78bfa). White text.',
-};
 
 export async function POST(req: NextRequest) {
     try {
-        const { slides, visualStyle, colorPalette, brandColors, audience, platform, topicContext, imageStyles } = await req.json();
-
-        if (visualStyle === 'natureza') {
-            const base = path.join(process.cwd(), 'public', 'templates', 'natureza');
-            const capaPrompt = fs.readFileSync(path.join(base, 'capa', 'prompt.txt'), 'utf-8');
-            const conteudoPrompt = fs.readFileSync(path.join(base, 'conteudo', 'prompt.txt'), 'utf-8');
-            const finalPrompt = fs.readFileSync(path.join(base, 'final', 'prompt.txt'), 'utf-8');
-
-            return NextResponse.json({
-                background: {
-                    type: 'solid',
-                    primaryColor: '#f0ece0',
-                    secondaryColor: '#f0ece0',
-                    gradientDirection: 'none',
-                },
-                coverSlide: {
-                    backgroundDescription: capaPrompt,
-                    badgeColor: '#2d4a1e',
-                    decorativeElement: 'Linhas horizontais finas com ponta de seta à direita no topo e na base, ícone de faísca de 4 pontas no canto inferior direito em creme claro',
-                },
-                contentSlide: {
-                    backgroundDescription: conteudoPrompt,
-                },
-                ctaSlide: {
-                    backgroundDescription: finalPrompt,
-                },
-                accent: '#2d4a1e',
-                textColor: '#2d4a1e',
-                decorativeStyle: 'Linhas horizontais finas terminando em ponta de seta à direita, ícone de faísca sutil no canto inferior direito',
-                moodKeywords: ['editorial', 'natural', 'orgânico', 'minimalista', 'refinado'],
-                templateId: 'natureza',
-            }, { status: 200 });
-        }
+        const { slides, audience, platform, topicContext } = await req.json();
 
         const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
         if (!apiKey) {
@@ -63,25 +12,12 @@ export async function POST(req: NextRequest) {
 
         const ai = new GoogleGenAI({ apiKey });
 
-        const styleDesc = STYLE_MAP[visualStyle] || '';
-        const paletteDesc = PALETTE_MAP[colorPalette] || '';
-        const brandColorsArray: string[] = brandColors?.colors || [];
-
-        const brandDesc = brandColorsArray.length > 0
-            ? `CORES DA MARCA (OBRIGATORIO): ${brandColorsArray.join(', ')}. Use a primeira como cor principal, a segunda como contraste, demais como acentos.`
-            : '';
-
         const audienceDesc = audience?.interests
             ? `Publico-Alvo: interessado em ${audience.interests}.`
             : '';
 
         const topicDesc = topicContext
             ? `Contexto do conteudo: ${topicContext}.`
-            : '';
-
-        const imageStylesArray: string[] = imageStyles || [];
-        const stylesDesc = imageStylesArray.length > 0
-            ? `ESTILOS VISUAIS OBRIGATORIOS: ${imageStylesArray.join(' + ')}. O design deve refletir claramente esses estilos na composicao, texturas, elementos decorativos e atmosfera geral.`
             : '';
 
         const slidesSummary = slides.map((s: { slideType: string }, i: number) =>
@@ -93,11 +29,10 @@ export async function POST(req: NextRequest) {
 Preciso que voce crie um DESIGN SYSTEM unificado para um carrossel com ${slides.length} slides (${slidesSummary}).
 
 CONTEXTO:
-${styleDesc ? `Estilo visual: ${styleDesc}` : ''}
-${brandDesc || (paletteDesc ? `Paleta: ${paletteDesc}` : '')}
-${stylesDesc}
 ${audienceDesc}
 ${topicDesc}
+
+Crie um estilo visual unico, criativo e autoral baseado inteiramente no conteudo e publico-alvo fornecidos. Surpreenda com uma identidade visual original e coerente.
 
 Retorne APENAS um JSON valido (sem markdown, sem code blocks) com esta estrutura exata:
 {
@@ -128,7 +63,6 @@ REGRAS:
 - As cores devem ser coerentes entre si e formar uma identidade visual unica.
 - Os fundos devem ser descritos como composicoes visuais SEM nenhum texto.
 - O estilo decorativo deve ser consistente em todos os slides.
-- Se cores da marca foram fornecidas, use-as como base obrigatoria.
 - Retorne SOMENTE o JSON, nada mais.`;
 
         const response = await ai.models.generateContent({
@@ -137,8 +71,6 @@ REGRAS:
         });
 
         const text = (response.text || '').trim();
-
-        // Parse JSON - strip markdown code blocks if present
         const jsonStr = text.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '');
         const designSystem = JSON.parse(jsonStr);
 
