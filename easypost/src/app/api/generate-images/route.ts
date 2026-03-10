@@ -82,12 +82,20 @@ async function generateSlideImage(
     platform: Platform,
     handle: string,
     ai: GoogleGenAI,
+    referenceImageBase64?: string,
 ): Promise<string> {
     const prompt = buildSlidePrompt(slide, slideNumber, totalSlides, platform, handle);
 
+    const contents = referenceImageBase64
+        ? [
+            { inlineData: { mimeType: 'image/png', data: referenceImageBase64 } },
+            { text: `Use a imagem acima como referencia visual. O slide que voce vai gerar agora DEVE seguir exatamente o mesmo estilo, paleta de cores, tipografia e identidade visual da capa.\n\n${prompt}` },
+        ]
+        : prompt;
+
     const response = await ai.models.generateContent({
         model: "gemini-3-pro-image-preview",
-        contents: prompt,
+        contents,
         config: {
             aspectRatio: platform === 'instagram' ? '4:5' : '1:1',
         } as unknown as Record<string, unknown>
@@ -122,12 +130,21 @@ export async function POST(req: NextRequest) {
 
         const ai = new GoogleGenAI({ apiKey });
 
-        // Generate 1 complete image per slide in parallel (text + background combined)
-        const images = await Promise.all(
-            slides.map((slide: SlideData, index: number) =>
-                generateSlideImage(slide, index + 1, slides.length, platform as Platform, handle, ai)
-            )
+        // 1) Generate cover slide first to establish visual identity
+        const coverImage = await generateSlideImage(
+            slides[0], 1, slides.length, platform as Platform, handle, ai
         );
+
+        // 2) Generate remaining slides in parallel, using cover as visual reference
+        const remainingImages = slides.length > 1
+            ? await Promise.all(
+                slides.slice(1).map((slide: SlideData, index: number) =>
+                    generateSlideImage(slide, index + 2, slides.length, platform as Platform, handle, ai, coverImage)
+                )
+            )
+            : [];
+
+        const images = [coverImage, ...remainingImages];
 
         return NextResponse.json({ images }, { status: 200 });
 
