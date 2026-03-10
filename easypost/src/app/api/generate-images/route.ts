@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from "@google/genai";
-import { SlideData, Platform, DesignSystem } from '@/types';
+import { SlideData, Platform } from '@/types';
 
 export const maxDuration = 120;
 
 function buildSlidePrompt(
     slide: SlideData,
-    designSystem: DesignSystem,
+    slideNumber: number,
+    totalSlides: number,
     platform: Platform,
     handle: string,
 ): string {
@@ -14,79 +15,75 @@ function buildSlidePrompt(
         ? '4:5 portrait, 1080x1350px'
         : '1:1 square, 1080x1080px';
 
-    const designContext = `VISUAL STYLE:
-- Primary color: ${designSystem.background.primaryColor}
-- Secondary color: ${designSystem.background.secondaryColor}
-- Accent color: ${designSystem.accent}
-- Text color: ${designSystem.textColor}
-- Decorative style: ${designSystem.decorativeStyle}
-- Mood: ${designSystem.moodKeywords.join(', ')}`;
-
-    const handleLine = handle ? `\nHandle/Username: "${handle}"` : '';
+    const platformLabel = platform === 'instagram' ? 'Instagram' : 'LinkedIn';
+    const handleLine = handle ? `\n\n[Handle/Username]\n"${handle}"` : '';
 
     if (slide.slideType === 'cover') {
-        return `Generate a complete, ready-to-post cover slide for a ${platform === 'instagram' ? 'Instagram' : 'LinkedIn'} carousel (${dimensions}).
+        return `Vamos criar o slide ${slideNumber} de um carrossel para ${platformLabel} (${dimensions}).
 
-${designContext}
-Background visual: ${designSystem.coverSlide.backgroundDescription}
-Decorative element: ${designSystem.coverSlide.decorativeElement}
+            Esse slide e a CAPA. Ele precisa fazer a pessoa parar o scroll e querer continuar vendo os proximos ${totalSlides - 1} slides.
 
-TEXT TO RENDER (render exactly these words with beautiful, legible typography):
-Title: "${slide.title}"
-${slide.content ? `Subtitle: "${slide.content}"` : ''}${handleLine}
+            [Titulo do Slide - Grande e Destaque]
+            "${slide.title}"
+            ${slide.content ? `
+            [Subtitulo ou Texto de Apoio]
+            "${slide.content}"` : ''}${handleLine}
 
-LAYOUT: Large, impactful title centered or upper area. Subtitle as elegant smaller text below. Strong visual background that frames the text beautifully.
-
-REQUIREMENTS:
-- Text must be clearly readable with excellent contrast against the background
-- Professional social media quality, polished and modern
-- No extra UI elements, no watermarks, no placeholder boxes`;
+            Direcao visual:
+            - Gere a imagem final completa, pronta para postagem, com o texto incorporado na arte.
+            - O titulo deve dominar a peca e ficar legivel em tela de celular.
+            - Use ilustracoes, simbolos ou elementos visuais coerentes com a dor ou beneficio principal do slide.
+            - Nao adicione marcas d'agua, molduras de interface ou elementos extras sem funcao.`;
     }
 
     if (slide.slideType === 'cta') {
-        return `Generate a complete, ready-to-post CTA (call-to-action) slide for a ${platform === 'instagram' ? 'Instagram' : 'LinkedIn'} carousel (${dimensions}).
+        return `Agora vamos para o slide ${slideNumber} com os seguintes elementos:
 
-${designContext}
-Background visual: ${designSystem.ctaSlide.backgroundDescription}
+                [Titulo do Slide - Grande e Destaque]
+                "${slide.title}"
 
-TEXT TO RENDER (render exactly these words with beautiful, legible typography):
-Title (main CTA): "${slide.title}"
-${slide.content ? `Supporting text: "${slide.content}"` : ''}${handleLine}
+                [Corpo do Texto - Chamadas diretas]
+                ${slide.content || ''}${handleLine}
 
-LAYOUT: Action-focused design. Title as the bold, compelling main call-to-action. Supporting text below. Handle/username prominently displayed if provided.
+                Esse e o slide final de CTA do carrossel para ${platformLabel} (${dimensions}).
 
-REQUIREMENTS:
-- Text must be clearly readable with excellent contrast
-- High-energy, action-driving visual composition
-- No extra UI elements, no watermarks`;
+                Direcao visual:
+                - Gere a imagem final completa, pronta para postagem, com o texto incorporado na arte.
+                - O layout deve ser limpo, objetivo e orientado para acao.
+                - Crie uma composicao energica com foco em salvar, comentar e compartilhar.
+                - Nao adicione marcas d'agua, elementos de UI falsos ou ruido visual desnecessario.`;
     }
 
-    // content slide
-    return `Generate a complete, ready-to-post content slide for a ${platform === 'instagram' ? 'Instagram' : 'LinkedIn'} carousel (${dimensions}).
+    return `Agora vamos para o slide ${slideNumber} de conteudo com os seguintes elementos:
 
-${designContext}
-Background visual: ${designSystem.contentSlide.backgroundDescription}
+                [Titulo do Slide - Grande e Destaque]
+                "${slide.title}"
 
-TEXT TO RENDER (render exactly these words with beautiful, legible typography):
-Title/Header: "${slide.title}"
-${slide.content ? `Body text: "${slide.content}"` : ''}${handleLine}
+                [Corpo do Texto - Pontos curtos]
+                ${slide.content || ''}${handleLine}
 
-LAYOUT: Clear header with the title at top. Readable body text content below, well-structured with good whitespace. Clean, information-focused layout.
+                Esse e um slide de conteudo do carrossel para ${platformLabel} (${dimensions}).
 
-REQUIREMENTS:
-- Text must be clearly readable with excellent contrast
-- Clean and professional social media quality
-- No extra UI elements, no watermarks`;
+                Direcao visual:
+                - Gere a imagem final completa, pronta para postagem, com o texto incorporado na arte.
+                - O titulo deve ficar em grande destaque.
+                - O corpo deve ser organizado em blocos curtos, escaneaveis e bem distribuidos no layout.
+                - Quando houver lista, use apoio visual com icones simples e relevantes.
+                - Se houver uma frase de fechamento no fim do conteudo, trate-a como destaque visual de rodape.
+                - Use recursos graficos que reforcem a explicacao, como comparacoes simples, diagramas leves ou elementos tematicos.
+                - O design precisa parecer editorial, moderno, premium e muito legivel no mobile.
+                - Nao adicione marcas d'agua, elementos de interface falsos ou enfeites desnecessarios.`;
 }
 
 async function generateSlideImage(
     slide: SlideData,
-    designSystem: DesignSystem,
+    slideNumber: number,
+    totalSlides: number,
     platform: Platform,
     handle: string,
     ai: GoogleGenAI,
 ): Promise<string> {
-    const prompt = buildSlidePrompt(slide, designSystem, platform, handle);
+    const prompt = buildSlidePrompt(slide, slideNumber, totalSlides, platform, handle);
 
     const response = await ai.models.generateContent({
         model: "gemini-3-pro-image-preview",
@@ -112,13 +109,10 @@ async function generateSlideImage(
 
 export async function POST(req: NextRequest) {
     try {
-        const { slides, designSystem, platform = 'instagram', handle = '' } = await req.json();
+        const { slides, platform = 'instagram', handle = '' } = await req.json();
 
         if (!slides || !Array.isArray(slides) || slides.length === 0) {
             return NextResponse.json({ error: "Array de slides e obrigatorio" }, { status: 400 });
-        }
-        if (!designSystem) {
-            return NextResponse.json({ error: "Design system e obrigatorio" }, { status: 400 });
         }
 
         const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
@@ -130,8 +124,8 @@ export async function POST(req: NextRequest) {
 
         // Generate 1 complete image per slide in parallel (text + background combined)
         const images = await Promise.all(
-            slides.map((slide: SlideData) =>
-                generateSlideImage(slide, designSystem, platform as Platform, handle, ai)
+            slides.map((slide: SlideData, index: number) =>
+                generateSlideImage(slide, index + 1, slides.length, platform as Platform, handle, ai)
             )
         );
 

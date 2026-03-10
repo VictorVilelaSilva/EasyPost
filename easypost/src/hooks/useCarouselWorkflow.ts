@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CarouselData, ImageConfig, DesignSystem, Platform, PostObjective } from '../types';
+import { CarouselData, ImageConfig, Platform, PostObjective } from '../types';
 import { useAuth } from '@/contexts/AuthContext';
 import { incrementRequestCount } from '@/lib/userService';
 
@@ -72,30 +72,11 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         setIsGeneratingImages(true);
 
         try {
-            // Generate design system (auto-style based on content)
-            const resDesignSystem = await fetch('/api/generate-design-system', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    slides: carousel!.slides,
-                    audience: config.audience,
-                    platform,
-                    topicContext: topic,
-                }),
-            });
-            const designSystem: DesignSystem = await resDesignSystem.json();
-
-            if (!designSystem.background) {
-                throw new Error('Falha ao gerar design system');
-            }
-
-            // Generate complete slide images with text embedded
             const resImages = await fetch('/api/generate-images', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     slides: carousel!.slides,
-                    designSystem,
                     platform,
                     handle: config.handle || '',
                 }),

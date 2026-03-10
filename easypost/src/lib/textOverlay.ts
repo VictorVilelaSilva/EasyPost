@@ -137,25 +137,25 @@ export function buildTextSVG(
     slide: SlideData,
     platform: Platform,
     fontFamily: string,
-    designSystemColors?: { badgeColor?: string; textColor?: string; accent?: string }
+    styleOverrides?: { badgeColor?: string; textColor?: string; accent?: string }
 ): Buffer {
     const layout = LAYOUT_PRESETS[platform];
     const { width, height } = layout;
     const slideLayout = layout[slide.slideType];
 
-    // Override colors from design system if provided
-    if (designSystemColors) {
-        if (slideLayout.badge && designSystemColors.badgeColor) {
-            slideLayout.badge.bgColor = designSystemColors.badgeColor;
+    // Override default colors when custom style values are provided.
+    if (styleOverrides) {
+        if (slideLayout.badge && styleOverrides.badgeColor) {
+            slideLayout.badge.bgColor = styleOverrides.badgeColor;
         }
-        if (slideLayout.title && designSystemColors.textColor) {
-            // title color stays white on badges, subtitle gets design system color
+        if (slideLayout.title && styleOverrides.textColor) {
+            // Title color stays white on badges; subtitle/actions can inherit custom accent colors.
         }
-        if (slideLayout.subtitle && designSystemColors.badgeColor) {
-            slideLayout.subtitle.color = designSystemColors.badgeColor;
+        if (slideLayout.subtitle && styleOverrides.badgeColor) {
+            slideLayout.subtitle.color = styleOverrides.badgeColor;
         }
-        if (slideLayout.actions && designSystemColors.badgeColor) {
-            slideLayout.actions.color = designSystemColors.badgeColor;
+        if (slideLayout.actions && styleOverrides.badgeColor) {
+            slideLayout.actions.color = styleOverrides.badgeColor;
         }
     }
 
@@ -208,10 +208,10 @@ export async function overlayTextOnImage(
     slide: SlideData,
     platform: Platform,
     fontFamily: string,
-    designSystemColors?: { badgeColor?: string; textColor?: string; accent?: string }
+    styleOverrides?: { badgeColor?: string; textColor?: string; accent?: string }
 ): Promise<string> {
     const imageBuffer = Buffer.from(imageBase64, 'base64');
-    const svgBuffer = buildTextSVG(slide, platform, fontFamily, designSystemColors);
+    const svgBuffer = buildTextSVG(slide, platform, fontFamily, styleOverrides);
     const layout = LAYOUT_PRESETS[platform];
 
     const result = await sharp(imageBuffer)

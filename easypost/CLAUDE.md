@@ -45,8 +45,7 @@ All routes use `@google/genai` with model `gemini-3-pro-image-preview`:
 |---|---|
 | `generate-topics` | Returns topic suggestions for a niche |
 | `generate-carousel` | Generates slide text + caption |
-| `generate-design-system` | Creates a `DesignSystem` object (colors, mood, layout descriptions) |
-| `generate-images` | Generates 3 background image variants per slide type (cover/content/cta) in parallel; falls back to static files for template `natureza` |
+| `generate-images` | Generates one complete image per slide with text already rendered |
 | `generate-suggestions` | Generates text suggestions |
 | `fuse-slide` | Composites text blocks onto a background image via Gemini image editing; supports `auto` (AI Criativa) and `manual` (Meu Estilo) modes |
 | `create-payment-intent` | Stripe payment intent |
@@ -64,7 +63,7 @@ All routes use `@google/genai` with model `gemini-3-pro-image-preview`:
 
 ### Core Types (`src/types/index.ts`)
 
-Key interfaces: `SlideData`, `CarouselData`, `ImageConfig`, `DesignSystem`, `TextBlock`, `SlideBackgrounds`, `BrandColors`
+Key interfaces: `SlideData`, `CarouselData`, `ImageConfig`, `TextBlock`, `SlideBackgrounds`, `BrandColors`
 
 `SlideBackgrounds` stores 3 base64 variants each for `cover`, `content`, and `cta` slide types.
 
@@ -75,7 +74,7 @@ Key interfaces: `SlideData`, `CarouselData`, `ImageConfig`, `DesignSystem`, `Tex
 - `src/lib/userService.ts` — `createUserIfNotExists`, `incrementRequestCount`, `markAsPaid`, `getUserData`
 - After successful image generation, `incrementRequestCount` is called
 
-### Design System (globals.css)
+### Tema Global (globals.css)
 
 Tailwind v4 — no config file, uses `@import "tailwindcss"`. Dark cinematic theme:
 - CSS variables: `--color-surface`, `--color-text`, `--color-text-muted`
@@ -85,4 +84,4 @@ Tailwind v4 — no config file, uses `@import "tailwindcss"`. Dark cinematic the
 
 ### Static Templates
 
-Template images live in `public/templates/{templateId}/` with subdirs `capa/`, `conteudo/`, `final/`. The `natureza` template is the only one currently using static files instead of AI generation. When `designSystem.templateId` matches a static template, `generate-images` reads from the filesystem instead of calling Gemini.
+Template images live in `public/templates/{templateId}/` with subdirs `capa/`, `conteudo/`, `final/`. O fluxo atual de geração de imagens não depende mais de uma etapa intermediária de estilo.

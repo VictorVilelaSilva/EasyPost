@@ -38,27 +38,27 @@ export async function POST(req: Request) {
             Tópico: "${topic}"
             Nicho: "${niche}"
 
-            Objetivo: Criar o roteiro de um carrossel de ${totalSlides} slides para ${platformLabel}.
+            Objetivo: Criar o roteiro de um carrossel de ${totalSlides} slides para ${platformLabel} altamente engajador, com conteúdo direto e escaneável.
             ${objectiveInstructions ? `OBJETIVO DO POST: ${objectiveInstructions}` : ''}
 
             IMPORTANTE: Todo o conteúdo DEVE ser escrito em Português do Brasil.
 
             ESTRUTURA OBRIGATÓRIA DOS SLIDES:
 
-            Slide 1 — CAPA (Gancho que para o scroll):
+            Slide 1 — CAPA (Gancho para prender a atenção):
             - slideType: "cover"
-            - title: Uma pergunta provocativa ou afirmação impactante que gere curiosidade (máx 50 chars). Exemplo: "ISSO VALE A PENA?", "PARE DE FAZER ISSO"
-            - content: Um subtítulo curto complementando o gancho (máx 60 chars)
+            - title: Título em Grande Destaque (pergunta provocativa ou afirmação impactante sobre a dor/solução do nicho). Exemplo: "Na minha máquina funciona! 🥲 Como acabar com esse pesadelo"
+            - content: Subtítulo ou breve texto complementando o gancho inicial.
 
-            Slides 2 a ${totalSlides - 1} — CONTEÚDO (Valor educativo, total de ${contentSlides} slides):
+            Slides 2 a ${totalSlides - 1} — CONTEÚDO (Desenvolvimento, total de ${contentSlides} slides):
             - slideType: "content"
-            - title: Um subtítulo curto do bloco de conteúdo (máx 40 chars)
-            - content: Texto educativo mais longo explicando o ponto, como se fosse um parágrafo de um post informativo. Pode ter de 150 a 300 caracteres. Use linguagem direta, conversacional.
+            - title: Título do Slide (Grande e Destaque, focando no ponto principal ou benefício).
+            - content: Corpo do texto em pontos curtos, claros e diretos. Use emojis no início de cada ponto (ex: 📦 Ponto 1... \\n ⚡ Ponto 2...). Termine o texto com uma frase curta de "Texto de Destaque/Resumo no rodapé" para fechar a ideia do slide.
 
             Slide ${totalSlides} — CTA (Chamada para Ação):
             - slideType: "cta"
-            - title: "GOSTOU DO CONTEÚDO?" ou variação
-            - content: "❤️ CURTA | 💬 COMENTE | ✈️ COMPARTILHE | 📌 SALVE"
+            - title: Uma pergunta ou afirmação conectando o tema à ação desejada. Ex: "E você, ainda sofre com [problema]? 👇"
+            - content: Chamadas diretas em formato de lista com emojis. Ex: "💾 Salve para não esquecer... | ✈️ Compartilhe com... | 💬 Comente: qual o seu maior desafio com..."
 
             Para a 'caption', escreva ${captionLabel}.`;
 
