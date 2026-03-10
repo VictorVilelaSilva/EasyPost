@@ -12,6 +12,11 @@ import {
     Instagram,
     Linkedin,
     ZoomIn,
+    MoreHorizontal,
+    Heart,
+    MessageCircle,
+    Send,
+    Bookmark,
 } from 'lucide-react';
 import { Platform } from '@/types';
 import { usePreviewLogic } from './usePreviewLogic';
@@ -143,76 +148,124 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                         </button>
                     )}
 
-                    {/* Main Slide Container */}
-                    <div
-                        className="relative overflow-hidden rounded-2xl group cursor-pointer"
-                        style={{
-                            aspectRatio,
-                            maxHeight: 'calc(100vh - 280px)',
-                            maxWidth: platform === 'instagram' ? '340px' : '500px',
-                            width: '100%',
-                            boxShadow: '0 40px 100px rgba(0,0,0,0.7), 0 0 60px rgba(127,13,242,0.15)',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                        }}
-                        onClick={() => setIsZoomed(true)}
-                    >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={images[activeIndex]}
-                            alt={`Slide ${activeIndex + 1}`}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                        />
-
-                        {/* AI Editing Banner (when active) */}
-                        {isEditing && editingIndex === activeIndex ? (
-                            <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-[#7f0df2]/30">
-                                <span className="w-2 h-2 rounded-full bg-[#7f0df2] animate-pulse" />
-                                <span className="text-xs font-medium text-purple-300">Editando com IA...</span>
-                            </div>
-                        ) : (
-                            <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10">
-                                <Sparkles size={10} className="text-[#7f0df2]" />
-                                <span className="text-xs font-medium text-slate-300">IA Gerada</span>
-                            </div>
-                        )}
-
-                        {/* Slide label badge - bottom left */}
-                        <div className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-md border border-white/10">
-                            <span className="text-xs font-bold text-white">
-                                {activeIndex + 1}/{images.length} — {slideTypeLabels[slideTypes[activeIndex]] ?? slideTypes[activeIndex]}
-                            </span>
-                        </div>
-
-                        {/* Hover overlay with actions */}
-                        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
-                            <button
-                                type="button"
-                                onClick={(e) => { e.stopPropagation(); openEditModal(activeIndex); }}
-                                disabled={isEditing}
-                                className="flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black font-semibold hover:bg-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
-                            >
-                                <Pencil size={16} />
-                                <span>Editar Slide</span>
-                                <Sparkles size={12} className="text-[#7f0df2]" />
-                            </button>
-                            <button
-                                type="button"
-                                onClick={(e) => { e.stopPropagation(); setIsZoomed(true); }}
-                                className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-colors cursor-pointer"
-                            >
-                                <ZoomIn size={18} />
-                            </button>
-                        </div>
-
-                        {/* Loading overlay */}
-                        {isEditing && editingIndex === activeIndex && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-                                <div className="flex items-center gap-3 text-white">
-                                    <span className="animate-spin text-2xl text-[#7f0df2]">⟳</span>
-                                    <span className="font-semibold">Editando com IA...</span>
+                    {/* Main Slide Mockup Container */}
+                    <div className="flex-1 flex items-center justify-center z-10 w-full px-4">
+                        <div
+                            className="w-full bg-black/60 rounded-[32px] p-4 border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.8)] relative flex flex-col"
+                            style={{
+                                maxWidth: platform === 'instagram' ? '380px' : '500px',
+                                maxHeight: 'calc(100vh - 240px)',
+                            }}
+                        >
+                            {/* Mockup header */}
+                            <div className="flex-none flex items-center justify-between mb-3 px-1">
+                                <div className="flex items-center gap-2.5">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-[2px]">
+                                        <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
+                                            <span className="text-[9px] text-purple-300 font-bold"> IA </span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold text-white leading-none mb-0.5" style={{ fontFamily: 'var(--font-display)' }}>seu_perfil</p>
+                                        <p className="text-[9px] text-slate-500 leading-none">
+                                            {platform === 'linkedin' ? 'Agora mesmo • 🌍' : 'Áudio Original'}
+                                        </p>
+                                    </div>
                                 </div>
+                                <MoreHorizontal size={16} className="text-slate-400" />
                             </div>
-                        )}
+
+                            {/* Slide Container (Original Main Slide logic) */}
+                            <div
+                                className="relative overflow-hidden rounded-xl group cursor-pointer border border-white/10"
+                                style={{
+                                    aspectRatio,
+                                    width: '100%',
+                                }}
+                                onClick={() => setIsZoomed(true)}
+                            >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                    src={images[activeIndex]}
+                                    alt={`Slide ${activeIndex + 1}`}
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                                />
+
+                                {/* AI Editing Banner */}
+                                {isEditing && editingIndex === activeIndex ? (
+                                    <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-[#7f0df2]/30">
+                                        <span className="w-2 h-2 rounded-full bg-[#7f0df2] animate-pulse" />
+                                        <span className="text-xs font-medium text-purple-300">Editando com IA...</span>
+                                    </div>
+                                ) : (
+                                    <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10">
+                                        <Sparkles size={10} className="text-[#7f0df2]" />
+                                        <span className="text-xs font-medium text-slate-300">IA Gerada</span>
+                                    </div>
+                                )}
+
+                                {/* Slide label badge */}
+                                <div className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-md border border-white/10">
+                                    <span className="text-xs font-bold text-white">
+                                        {activeIndex + 1}/{images.length} — {slideTypeLabels[slideTypes[activeIndex]] ?? slideTypes[activeIndex]}
+                                    </span>
+                                </div>
+
+                                {/* Hover overlay actions */}
+                                <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                                    <button
+                                        type="button"
+                                        onClick={(e) => { e.stopPropagation(); openEditModal(activeIndex); }}
+                                        disabled={isEditing}
+                                        className="flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black font-semibold hover:bg-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
+                                    >
+                                        <Pencil size={16} />
+                                        <span>Editar Slide</span>
+                                        <Sparkles size={12} className="text-[#7f0df2]" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={(e) => { e.stopPropagation(); setIsZoomed(true); }}
+                                        className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-colors cursor-pointer"
+                                    >
+                                        <ZoomIn size={18} />
+                                    </button>
+                                </div>
+
+                                {/* Loading overlay */}
+                                {isEditing && editingIndex === activeIndex && (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                                        <div className="flex items-center gap-3 text-white">
+                                            <span className="animate-spin text-2xl text-[#7f0df2]">⟳</span>
+                                            <span className="font-semibold">Editando com IA...</span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Engagement row */}
+                            <div className="flex-none mt-4 px-1">
+                                {platform === 'linkedin' ? (
+                                    <div className="flex items-center justify-between border-t border-white/8 pt-3">
+                                        {[Heart, MessageCircle, Send].map((Icon, i) => (
+                                            <div key={i} className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors">
+                                                <Icon size={16} />
+                                                <span className="text-[11px] font-bold"> {['Gostei', 'Comentar', 'Enviar'][i]} </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-between pb-1">
+                                        <div className="flex items-center gap-4">
+                                            <Heart size={20} className="text-white hover:text-red-500 transition-colors" />
+                                            <MessageCircle size={20} className="text-white hover:text-slate-300 transition-colors" />
+                                            <Send size={20} className="text-white hover:text-slate-300 transition-colors" />
+                                        </div>
+                                        <Bookmark size={20} className="text-white hover:text-slate-300 transition-colors" />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
