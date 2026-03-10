@@ -149,30 +149,31 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                     )}
 
                     {/* Main Slide Mockup Container */}
-                    <div className="flex-1 flex items-center justify-center z-10 w-full px-4">
+                    <div className="flex-1 flex items-center justify-center z-10 w-full px-4 sm:px-8 py-2 min-h-0">
                         <div
-                            className="w-full bg-black/60 rounded-[32px] p-4 border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.8)] relative flex flex-col"
+                            className="w-full bg-black/60 rounded-[24px] sm:rounded-[32px] md:rounded-[40px] p-4 md:p-5 lg:p-6 border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.8)] relative flex flex-col mx-auto transition-all duration-300"
                             style={{
-                                maxWidth: platform === 'instagram' ? '380px' : '500px',
-                                maxHeight: 'calc(100vh - 240px)',
+                                maxWidth: platform === 'instagram' 
+                                    ? 'clamp(280px, calc((100vh - 300px) * 0.8), 540px)' 
+                                    : 'clamp(280px, calc(100vh - 300px), 700px)',
                             }}
                         >
                             {/* Mockup header */}
                             <div className="flex-none flex items-center justify-between mb-3 px-1">
-                                <div className="flex items-center gap-2.5">
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-[2px]">
+                                <div className="flex items-center gap-2.5 sm:gap-3">
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-[2px]">
                                         <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
-                                            <span className="text-[9px] text-purple-300 font-bold"> IA </span>
+                                            <span className="text-[9px] sm:text-[10px] text-purple-300 font-bold"> IA </span>
                                         </div>
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold text-white leading-none mb-0.5" style={{ fontFamily: 'var(--font-display)' }}>seu_perfil</p>
-                                        <p className="text-[9px] text-slate-500 leading-none">
+                                        <p className="text-xs sm:text-sm font-bold text-white leading-none mb-1" style={{ fontFamily: 'var(--font-display)' }}>seu_perfil</p>
+                                        <p className="text-[10px] sm:text-xs text-slate-500 leading-none">
                                             {platform === 'linkedin' ? 'Agora mesmo • 🌍' : 'Áudio Original'}
                                         </p>
                                     </div>
                                 </div>
-                                <MoreHorizontal size={16} className="text-slate-400" />
+                                <MoreHorizontal size={20} className="text-slate-400" />
                             </div>
 
                             {/* Slide Container (Original Main Slide logic) */}
@@ -205,8 +206,8 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                                 )}
 
                                 {/* Slide label badge */}
-                                <div className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-md border border-white/10">
-                                    <span className="text-xs font-bold text-white">
+                                <div className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-black/50 backdrop-blur-md border border-white/10 shadow-lg">
+                                    <span className="text-xs sm:text-sm font-bold text-white shadow-black/50 drop-shadow-md">
                                         {activeIndex + 1}/{images.length} — {slideTypeLabels[slideTypes[activeIndex]] ?? slideTypes[activeIndex]}
                                     </span>
                                 </div>
@@ -248,20 +249,20 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                                 {platform === 'linkedin' ? (
                                     <div className="flex items-center justify-between border-t border-white/8 pt-3">
                                         {[Heart, MessageCircle, Send].map((Icon, i) => (
-                                            <div key={i} className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors">
-                                                <Icon size={16} />
-                                                <span className="text-[11px] font-bold"> {['Gostei', 'Comentar', 'Enviar'][i]} </span>
+                                            <div key={i} className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors cursor-pointer">
+                                                <Icon size={18} />
+                                                <span className="text-xs sm:text-sm font-bold"> {['Gostei', 'Comentar', 'Enviar'][i]} </span>
                                             </div>
                                         ))}
                                     </div>
                                 ) : (
                                     <div className="flex items-center justify-between pb-1">
                                         <div className="flex items-center gap-4">
-                                            <Heart size={20} className="text-white hover:text-red-500 transition-colors" />
-                                            <MessageCircle size={20} className="text-white hover:text-slate-300 transition-colors" />
-                                            <Send size={20} className="text-white hover:text-slate-300 transition-colors" />
+                                            <Heart size={24} className="text-white hover:text-red-500 transition-colors cursor-pointer" />
+                                            <MessageCircle size={24} className="text-white hover:text-slate-300 transition-colors cursor-pointer" />
+                                            <Send size={24} className="text-white hover:text-slate-300 transition-colors cursor-pointer" />
                                         </div>
-                                        <Bookmark size={20} className="text-white hover:text-slate-300 transition-colors" />
+                                        <Bookmark size={24} className="text-white hover:text-slate-300 transition-colors cursor-pointer" />
                                     </div>
                                 )}
                             </div>
@@ -280,7 +281,8 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                                     onClick={() => setActiveIndex(i)}
                                     className="block rounded-xl overflow-hidden transition-all cursor-pointer"
                                     style={{
-                                        width: 88,
+                                        width: 'max(9vw, 80px)',
+                                        maxWidth: 120,
                                         aspectRatio,
                                         border: activeIndex === i ? '2px solid #7f0df2' : '1px solid rgba(255,255,255,0.1)',
                                         opacity: activeIndex === i ? 1 : 0.6,

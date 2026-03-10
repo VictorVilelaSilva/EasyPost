@@ -20,6 +20,7 @@ interface CarouselWorkflowActions {
     setObjective: (objective: PostObjective) => void;
     setSlideCount: (count: number) => void;
     setSlideImages: (images: string[] | null) => void;
+    setCarouselData: (data: CarouselData | null) => void;
     handleGenerateAll: (config: ImageConfig) => Promise<void>;
 }
 
@@ -112,6 +113,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         setObjective,
         setSlideCount,
         setSlideImages,
+        setCarouselData,
         handleGenerateAll,
     };
 }

@@ -16,15 +16,43 @@ export default function CreatePage() {
         platform, slideCount,
         isGeneratingText, isGeneratingImages,
         setPlatform, handleGenerateAll, setSlideImages,
+        setCarouselData,
     } = workflow;
 
     const nav = useStepNavigation();
+
+    // Debug helper to skip to preview
+    const handleMockPreview = () => {
+        const mockImages = ['/1.jpg', '/2.jpg', '/3.jpg'];
+        setSlideImages(mockImages);
+        // We need some fake carousel data for the preview labels
+        const mockCarousel = {
+            slides: [
+                { slideType: 'cover', title: 'Mock 1', content: '' },
+                { slideType: 'content', title: 'Mock 2', content: '' },
+                { slideType: 'cta', title: 'Mock 3', content: '' },
+            ],
+            caption: 'Mock Caption'
+        };
+        setCarouselData(mockCarousel);
+        nav.goToStep(3);
+    };
 
     return (
         <main
             className="min-h-screen flex flex-col items-center px-4 py-8"
             style={{ fontFamily: 'var(--font-body)' }}
         >
+            {/* Dev bypass button */}
+            {process.env.NODE_ENV === 'development' && (
+                <button
+                    onClick={handleMockPreview}
+                    className="fixed bottom-4 right-4 z-[9999] bg-red-600 text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-red-700 transition-colors"
+                >
+                    DEBUG: Mock Preview
+                </button>
+            )}
+
             <div className="text-center mb-10 animate-reveal">
                 <h1
                     className="text-3xl sm:text-4xl font-bold mb-3"
