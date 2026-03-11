@@ -163,18 +163,15 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
 
                             {/* Slide Container (Original Main Slide logic) */}
                             <div
-                                className="relative overflow-hidden rounded-xl group cursor-pointer border border-white/10"
-                                style={{
-                                    aspectRatio,
-                                    width: '100%',
-                                }}
+                                className="relative overflow-hidden rounded-xl group cursor-pointer border border-white/10 flex items-center justify-center bg-black"
+                                style={{ width: '100%' }}
                                 onClick={() => setIsZoomed(true)}
                             >
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                     src={images[activeIndex]}
                                     alt={`Slide ${activeIndex + 1}`}
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                                    className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-[1.03]"
                                 />
 
                                 {/* AI Editing Banner */}
@@ -264,11 +261,11 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                                 <button
                                     type="button"
                                     onClick={() => setActiveIndex(i)}
-                                    className="block rounded-xl overflow-hidden transition-all cursor-pointer"
+                                    className="rounded-xl overflow-hidden transition-all cursor-pointer bg-black/40 flex items-center justify-center"
                                     style={{
                                         width: 'max(9vw, 80px)',
                                         maxWidth: 120,
-                                        aspectRatio,
+                                        aspectRatio: '1/1',
                                         border: activeIndex === i ? '2px solid #7f0df2' : '1px solid rgba(255,255,255,0.1)',
                                         opacity: activeIndex === i ? 1 : 0.6,
                                         boxShadow: activeIndex === i ? '0 0 15px rgba(127,13,242,0.5)' : 'none',
@@ -281,7 +278,7 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                                     {/* Slide number */}
                                     <div className="absolute bottom-1.5 left-2 text-[10px] font-bold text-white z-20">{i + 1}</div>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img src={img} alt={`Slide ${i + 1}`} className="w-full h-full object-cover" />
+                                    <img src={img} alt={`Slide ${i + 1}`} className="w-full h-full object-contain" />
                                 </button>
 
                                 {/* Hover actions */}
@@ -370,7 +367,7 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
             {/* Zoom modal */}
             {isZoomed && (
                 <div
-                    className="fixed inset-0 z-[100] flex items-center justify-center p-8 bg-black/80 backdrop-blur-sm"
+                    className="fixed inset-0 z-100 flex items-center justify-center p-8 bg-black/80 backdrop-blur-sm"
                     onClick={() => setIsZoomed(false)}
                 >
                     {/* eslint-disable-next-line @next/next/no-img-element */}

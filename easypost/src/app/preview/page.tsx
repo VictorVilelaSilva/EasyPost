@@ -162,9 +162,9 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
 
                 {/* ── iPhone Frame ── */}
                 <div
-                    className="relative z-10"
+                    className="relative z-10 transition-all duration-300"
                     style={{
-                        width: 'clamp(240px, 26vw, 320px)',
+                        width: 'clamp(280px, min(45vw, calc((100vh - 240px) * 0.8)), 600px)',
                         background: 'linear-gradient(160deg, #281d38 0%, #18102a 55%, #201630 100%)',
                         borderRadius: 48,
                         padding: 10,
@@ -179,7 +179,7 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
                     }}
                 >
                     {/* Volume buttons (left side) */}
-                    {[72, 112].map((top, i) => (
+                    {['22%', '34%'].map((top, i) => (
                         <div
                             key={i}
                             className="absolute"
@@ -198,7 +198,7 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
                         className="absolute"
                         style={{
                             right: -3,
-                            top: 96,
+                            top: '30%',
                             width: 3,
                             height: 52,
                             background: 'linear-gradient(to left, #160e24, #2d1f45)',
@@ -213,11 +213,11 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
                         <div
                             style={{
                                 position: 'absolute',
-                                top: 10,
+                                top: 'clamp(10px, 2%, 14px)',
                                 left: '50%',
                                 transform: 'translateX(-50%)',
-                                width: 88,
-                                height: 26,
+                                width: 'clamp(88px, 25%, 120px)',
+                                height: 'clamp(26px, 6%, 32px)',
                                 background: '#000',
                                 borderRadius: 20,
                                 zIndex: 20,
@@ -227,41 +227,41 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
                         />
 
                         {/* Status bar space */}
-                        <div style={{ height: 50 }} />
+                        <div style={{ height: 'clamp(44px, 10%, 56px)' }} />
 
                         {/* Instagram post chrome */}
-                        <div style={{ padding: '0 10px 6px' }} className="flex items-center justify-between">
+                        <div style={{ padding: 'clamp(4px, 2%, 8px) clamp(10px, 3%, 16px)' }} className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 {/* Avatar — gradient ring */}
                                 <div
                                     className="p-[1.5px] rounded-full flex-none"
                                     style={{ background: 'linear-gradient(135deg, #f58529, #dd2a7b, #8134af, #515bd4)' }}
                                 >
-                                    <div className="rounded-full bg-black flex items-center justify-center" style={{ width: 28, height: 28 }}>
-                                        <span style={{ fontSize: 8, color: '#c084fc', fontWeight: 700 }}>IA</span>
+                                    <div className="rounded-full bg-black flex items-center justify-center w-[28px] h-[28px] sm:w-[32px] sm:h-[32px] md:w-[36px] md:h-[36px]">
+                                        <span className="text-[8px] sm:text-[9px] md:text-[10px] text-purple-300 font-bold">IA</span>
                                     </div>
                                 </div>
                                 <div>
-                                    <p className="leading-none text-white font-bold" style={{ fontFamily: 'var(--font-display)', fontSize: 11, marginBottom: 2 }}>
+                                    <p className="leading-none text-white font-bold text-[11px] sm:text-[13px] md:text-[14px] mb-[2px]" style={{ fontFamily: 'var(--font-display)' }}>
                                         seu_perfil
                                     </p>
-                                    <p className="leading-none text-slate-600" style={{ fontSize: 9 }}>Áudio original</p>
+                                    <p className="leading-none text-slate-600 text-[9px] sm:text-[11px] md:text-[12px]">Áudio original</p>
                                 </div>
                             </div>
-                            <MoreHorizontal size={14} className="text-slate-600" />
+                            <MoreHorizontal className="text-slate-600 w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
                         </div>
 
-                        {/* Slide image — 4:5 */}
+                        {/* Slide image */}
                         <div
-                            className="relative cursor-pointer group"
-                            style={{ aspectRatio: '4/5', width: '100%', overflow: 'hidden' }}
+                            className="relative cursor-pointer group flex items-center justify-center bg-black"
+                            style={{ width: '100%', overflow: 'hidden' }}
                             onClick={() => setIsZoomed(true)}
                         >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={images[activeIndex]}
                                 alt={`Slide ${activeIndex + 1}`}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                                className="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]"
                             />
 
                             {/* Progress dots */}
@@ -311,18 +311,18 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
                         </div>
 
                         {/* Engagement row */}
-                        <div style={{ padding: '8px 12px 4px' }} className="flex items-center justify-between">
+                        <div style={{ padding: 'clamp(8px, 3%, 14px) clamp(12px, 4%, 16px) clamp(4px, 2%, 8px)' }} className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
-                                <Heart size={20} className="text-white cursor-pointer hover:text-red-400 transition-colors" />
-                                <MessageCircle size={20} className="text-white cursor-pointer hover:text-slate-300 transition-colors" />
-                                <Send size={20} className="text-white cursor-pointer hover:text-slate-300 transition-colors" />
+                                <Heart className="text-white cursor-pointer hover:text-red-400 transition-colors w-5 h-5 sm:w-6 sm:h-6" />
+                                <MessageCircle className="text-white cursor-pointer hover:text-slate-300 transition-colors w-5 h-5 sm:w-6 sm:h-6" />
+                                <Send className="text-white cursor-pointer hover:text-slate-300 transition-colors w-5 h-5 sm:w-6 sm:h-6" />
                             </div>
-                            <Bookmark size={20} className="text-white cursor-pointer hover:text-slate-300 transition-colors" />
+                            <Bookmark className="text-white cursor-pointer hover:text-slate-300 transition-colors w-5 h-5 sm:w-6 sm:h-6" />
                         </div>
 
                         {/* Home indicator */}
-                        <div style={{ paddingBottom: 8, paddingTop: 6 }} className="flex justify-center">
-                            <div style={{ width: 90, height: 4, background: 'rgba(255,255,255,0.25)', borderRadius: 2 }} />
+                        <div style={{ paddingBottom: 'clamp(8px, 3%, 12px)', paddingTop: 'clamp(6px, 2%, 10px)' }} className="flex justify-center">
+                            <div style={{ width: 'clamp(90px, 35%, 120px)', height: 'clamp(4px, 1%, 5px)', background: 'rgba(255,255,255,0.25)', borderRadius: 4 }} />
                         </div>
                     </div>
                 </div>
@@ -428,11 +428,11 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
                             >
                                 {/* Thumbnail */}
                                 <div
-                                    className="flex-none overflow-hidden rounded-lg"
-                                    style={{ width: 40, aspectRatio: '4/5' }}
+                                    className="flex-none overflow-hidden rounded-lg bg-black flex items-center justify-center"
+                                    style={{ width: 40, aspectRatio: '1/1' }}
                                 >
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img src={img} alt={`Slide ${i + 1}`} className="w-full h-full object-cover" />
+                                    <img src={img} alt={`Slide ${i + 1}`} className="w-full h-full object-contain" />
                                 </div>
 
                                 <div className="flex-1 min-w-0">
@@ -603,7 +603,7 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
             {/* Zoom modal */}
             {isZoomed && (
                 <div
-                    className="fixed inset-0 z-[100] flex items-center justify-center p-8 cursor-pointer"
+                    className="fixed inset-0 z-100 flex items-center justify-center p-8 cursor-pointer"
                     style={{ background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(8px)' }}
                     onClick={() => setIsZoomed(false)}
                 >
