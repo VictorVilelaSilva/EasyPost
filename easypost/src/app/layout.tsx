@@ -41,6 +41,7 @@ export const metadata: Metadata = {
 };
 
 import GlobalHeader from "@/components/GlobalHeader";
+import { PreviewProvider } from "@/contexts/PreviewContext";
 
 export default function RootLayout({
   children,
@@ -58,8 +59,10 @@ export default function RootLayout({
         {/* Grain overlay */}
         <div className="grain-overlay" aria-hidden="true" />
         <AuthProvider>
-          <GlobalHeader />
-          {children}
+          <PreviewProvider>
+            <GlobalHeader />
+            {children}
+          </PreviewProvider>
         </AuthProvider>
       </body>
     </html>

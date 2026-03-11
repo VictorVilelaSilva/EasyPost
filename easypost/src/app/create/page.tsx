@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { useCarouselWorkflow } from '@/hooks/useCarouselWorkflow';
 import { useStepNavigation } from './hooks/useStepNavigation';
 import LoadingCard from './components/LoadingCard';
@@ -7,9 +9,13 @@ import SkeletonImages from './components/SkeletonImages';
 import StepProgress from './components/steps/StepProgress';
 import Step3ImageConfig from './components/steps/Step3ImageConfig';
 import Step1Configuration from './components/steps/Step1Configuration';
-import { PreviewPhase } from './components/steps/preview/PreviewPhase';
+import { usePreviewData } from '@/contexts/PreviewContext';
 
 export default function CreatePage() {
+    const router = useRouter();
+    const { setPreviewData } = usePreviewData();
+    const hasNavigated = useRef(false);
+
     const workflow = useCarouselWorkflow();
     const {
         carouselData, slideImages,
@@ -21,11 +27,37 @@ export default function CreatePage() {
 
     const nav = useStepNavigation();
 
+    // Navigate to standalone preview when images are ready
+    useEffect(() => {
+        if (
+            nav.currentStep === 3 &&
+            !isGeneratingImages &&
+            slideImages &&
+            carouselData &&
+            !hasNavigated.current
+        ) {
+            hasNavigated.current = true;
+            setPreviewData({
+                images: slideImages,
+                slideTypes: carouselData.slides.map(s => s.slideType),
+                caption: carouselData.caption,
+                platform,
+            });
+            setSlideImages(null);
+            router.push('/preview');
+        }
+    }, [nav.currentStep, isGeneratingImages, slideImages, carouselData, platform, setPreviewData, setSlideImages, router]);
+
+    // Reset navigation flag when going back to step 2
+    useEffect(() => {
+        if (nav.currentStep < 3) {
+            hasNavigated.current = false;
+        }
+    }, [nav.currentStep]);
+
     // Debug helper to skip to preview
     const handleMockPreview = () => {
         const mockImages = ['/1.jpg', '/2.jpg', '/3.jpg'];
-        setSlideImages(mockImages);
-        // We need some fake carousel data for the preview labels
         const mockCarousel = {
             slides: [
                 { slideType: 'cover', title: 'Mock 1', content: '' },
@@ -34,8 +66,13 @@ export default function CreatePage() {
             ],
             caption: 'Mock Caption'
         };
-        setCarouselData(mockCarousel);
-        nav.goToStep(3);
+        setPreviewData({
+            images: mockImages,
+            slideTypes: mockCarousel.slides.map(s => s.slideType),
+            caption: mockCarousel.caption,
+            platform,
+        });
+        router.push('/preview');
     };
 
     return (
@@ -104,20 +141,6 @@ export default function CreatePage() {
                         <LoadingCard message={`Renderizando sua obra prima com ${slideCount} slides! Quase lá...`} color="accent" />
                         <SkeletonImages count={slideCount} />
                     </div>
-                )}
-
-                {nav.currentStep === 3 && !isGeneratingImages && slideImages && carouselData && (
-                    <PreviewPhase
-                        fusedImages={slideImages}
-                        slideTypes={carouselData.slides.map(s => s.slideType)}
-                        caption={carouselData.caption}
-                        platform={platform}
-                        onBack={() => {
-                            nav.goToStep(2);
-                            setSlideImages(null);
-                        }}
-                        onImagesChange={setSlideImages}
-                    />
                 )}
             </section>
         </main>

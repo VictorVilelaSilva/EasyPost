@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { stripePromise } from '@/lib/stripe'
 import { useAuth } from '@/contexts/AuthContext'
-import { Logo } from '@/components/Logo'
 import { ArrowLeft, Check, Shield, Lock, CreditCard, Loader2 } from 'lucide-react'
 
 /* ─────────────────────────────────────────────
@@ -457,20 +456,13 @@ function CheckoutPageContent() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            {/* Header */}
-            <header
-                className="sticky top-0 z-40 w-full"
-                style={{
-                    background: 'rgba(10, 12, 20, 0.7)',
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
-                    borderBottom: '1px solid var(--color-border)',
-                }}
-            >
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+            {/* Content */}
+            <main className="flex-1 flex items-start justify-center pt-8 pb-16 px-4 sm:px-6 lg:px-8">
+                <div className="w-full max-w-5xl">
+                    {/* Back button */}
                     <button
                         onClick={() => router.back()}
-                        className="flex items-center gap-2 text-sm transition-colors cursor-pointer group"
+                        className="flex items-center gap-2 text-sm transition-colors cursor-pointer group mb-6"
                         style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-body)' }}
                     >
                         <ArrowLeft
@@ -479,13 +471,6 @@ function CheckoutPageContent() {
                         />
                         <span className="group-hover:underline">Voltar aos Planos</span>
                     </button>
-                    <Logo className="text-xl" />
-                </div>
-            </header>
-
-            {/* Content */}
-            <main className="flex-1 flex items-start justify-center pt-8 pb-16 px-4 sm:px-6 lg:px-8">
-                <div className="w-full max-w-5xl">
                     {clientSecret ? (
                         <Elements
                             stripe={stripePromise}

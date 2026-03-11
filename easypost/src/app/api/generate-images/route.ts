@@ -55,14 +55,14 @@ function buildSlidePrompt(
     }
 
     return `Agora vamos para o slide ${slideNumber} de conteudo com os seguintes elementos:
-
+                [Dimensão do Slide]
+                Esse e um slide de conteudo do carrossel para ${platformLabel} (${dimensions}).
                 [Titulo do Slide - Grande e Destaque]
                 "${slide.title}"
 
                 [Corpo do Texto - Pontos curtos]
                 ${slide.content || ''}${handleLine}
 
-                Esse e um slide de conteudo do carrossel para ${platformLabel} (${dimensions}).
 
                 Direcao visual:
                 - Gere a imagem final completa, pronta para postagem, com o texto incorporado na arte.

@@ -78,7 +78,7 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
 
     return (
         <div
-            className="fixed inset-0 z-50 flex flex-col text-slate-100 overflow-hidden"
+            className="min-h-screen flex flex-col text-slate-100 overflow-hidden"
             style={{
                 fontFamily: 'var(--font-body)',
                 backgroundColor: '#0a0614',
@@ -86,43 +86,28 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                 backgroundSize: '32px 32px',
             }}
         >
-            {/* ─── HEADER ─── */}
-            <header className="flex-none flex items-center justify-between px-6 py-4 bg-[#0a0614]/80 backdrop-blur-md border-b border-white/10 z-10">
-                {/* Left: Back button */}
-                <button
-                    type="button"
-                    onClick={onBack}
-                    className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-medium cursor-pointer"
-                >
-                    <ArrowLeft size={18} />
-                    Voltar ao Editor
-                </button>
-
-                {/* Center: Platform badge */}
-                <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10"
-                    style={{ boxShadow: '0 0 15px rgba(127,13,242,0.15)' }}
-                >
-                    <Sparkles size={14} className="text-[#7f0df2]" />
-                    <span className="text-xs font-bold tracking-wider uppercase text-slate-300">
-                        {platform === 'instagram' ? 'Instagram' : 'LinkedIn'}
-                    </span>
-                </div>
-
-                {/* Right: Branding */}
-                <div className="flex items-center gap-2 text-slate-100">
-                    <div className="size-6 text-[#7f0df2]">
-                        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor" />
-                        </svg>
-                    </div>
-                    <span className="font-bold text-base tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-                        EasyPost <span className="text-slate-500 font-normal text-sm uppercase tracking-widest">Preview</span>
-                    </span>
-                </div>
-            </header>
-
             {/* ─── MAIN ─── */}
             <main className="flex-1 flex flex-col relative min-h-0">
+                {/* Sub-header: back + platform badge */}
+                <div className="flex items-center justify-between px-6 py-3 border-b border-white/10">
+                    <button
+                        type="button"
+                        onClick={onBack}
+                        className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-medium cursor-pointer"
+                    >
+                        <ArrowLeft size={18} />
+                        Voltar ao Editor
+                    </button>
+
+                    <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10"
+                        style={{ boxShadow: '0 0 15px rgba(127,13,242,0.15)' }}
+                    >
+                        <Sparkles size={14} className="text-[#7f0df2]" />
+                        <span className="text-xs font-bold tracking-wider uppercase text-slate-300">
+                            {platform === 'instagram' ? 'Instagram' : 'LinkedIn'}
+                        </span>
+                    </div>
+                </div>
                 {/* Hero Area */}
                 <div className="flex-1 flex items-center justify-center relative p-6 overflow-hidden">
 
