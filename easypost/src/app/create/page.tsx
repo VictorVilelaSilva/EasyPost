@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useCarouselWorkflow } from '@/hooks/useCarouselWorkflow';
 import { useStepNavigation } from './hooks/useStepNavigation';
 import LoadingCard from './components/LoadingCard';
-import SkeletonImages from './components/SkeletonImages';
+import SkeletonPreview from './components/SkeletonPreview';
 import StepProgress from './components/steps/StepProgress';
 import Step3ImageConfig from './components/steps/Step3ImageConfig';
 import Step1Configuration from './components/steps/Step1Configuration';
@@ -137,9 +137,8 @@ export default function CreatePage() {
                 )}
 
                 {isGeneratingImages && (
-                    <div className="w-full max-w-[840px] glass-panel rounded-xl p-8 border border-white/5 shadow-2xl animate-fade-in" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
-                        <LoadingCard message={`Renderizando sua obra prima com ${slideCount} slides! Quase lá...`} color="accent" />
-                        <SkeletonImages count={slideCount} />
+                    <div className="w-full max-w-[1100px]">
+                        <SkeletonPreview />
                     </div>
                 )}
             </section>

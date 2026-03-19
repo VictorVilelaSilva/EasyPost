@@ -97,6 +97,7 @@ export async function POST(req: Request) {
         if (!jsonString) {
             throw new Error("Resposta vazia do Gemini");
         }
+        console.log("Resposta bruta do Gemini:", jsonString);
 
         const object = JSON.parse(jsonString);
 

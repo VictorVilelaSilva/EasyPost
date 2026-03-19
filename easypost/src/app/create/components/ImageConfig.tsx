@@ -58,10 +58,6 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
 
     const isValid = topicContext.trim().length > 0 && niche.trim().length > 0;
 
-    const col1 = suggestions.slice(0, 2);
-    const col2 = suggestions.slice(2, 4);
-    const col3 = suggestions.slice(4, 6);
-
     const sectionStyle = {
         background: 'rgba(8, 5, 16, 0.5)',
         backdropFilter: 'blur(12px)',
@@ -186,46 +182,41 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
                 )}
 
                 {!isLoadingSuggestions && suggestions.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
-                        {[col1, col2, col3].map((col, colIdx) => (
-                            <div key={colIdx} className="flex flex-col gap-5">
-                                {col.map((suggestion) => {
-                                    const isSelected = selectedSuggestionId === suggestion.id;
-                                    return (
-                                        <div
-                                            key={suggestion.id}
-                                            onClick={() => {
-                                                setSelectedSuggestionId(suggestion.id);
-                                                setTopicContext(suggestion.title);
-                                            }}
-                                            className="relative rounded-xl p-6 cursor-pointer transition-all duration-300"
-                                            style={{
-                                                background: isSelected ? 'rgba(168,85,247,0.1)' : 'rgba(8, 5, 16, 0.5)',
-                                                backdropFilter: 'blur(12px)',
-                                                border: isSelected ? '2px solid #a855f7' : '1px solid rgba(255,255,255,0.05)',
-                                                minHeight: '110px',
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                if (!isSelected) e.currentTarget.style.borderColor = 'rgba(168,85,247,0.4)';
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
-                                            }}
-                                        >
-                                            {isSelected && (
-                                                <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-[#a855f7] flex items-center justify-center">
-                                                    <CheckCircle2 size={14} className="text-white" />
-                                                </div>
-                                            )}
-                                            <h3 className="text-base font-bold text-white mb-2">{suggestion.title}</h3>
-                                            <p className="text-sm leading-relaxed" style={{ color: isSelected ? 'rgba(255,255,255,0.7)' : 'rgba(148,163,184,1)' }}>
-                                                {suggestion.description}
-                                            </p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        {suggestions.map((suggestion) => {
+                            const isSelected = selectedSuggestionId === suggestion.id;
+                            return (
+                                <div
+                                    key={suggestion.id}
+                                    onClick={() => {
+                                        setSelectedSuggestionId(suggestion.id);
+                                        setTopicContext(suggestion.title);
+                                    }}
+                                    className="relative rounded-xl p-6 cursor-pointer transition-all duration-300 flex flex-col"
+                                    style={{
+                                        background: isSelected ? 'rgba(168,85,247,0.1)' : 'rgba(8, 5, 16, 0.5)',
+                                        backdropFilter: 'blur(12px)',
+                                        border: isSelected ? '2px solid #a855f7' : '1px solid rgba(255,255,255,0.05)',
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        if (!isSelected) e.currentTarget.style.borderColor = 'rgba(168,85,247,0.4)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
+                                    }}
+                                >
+                                    {isSelected && (
+                                        <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-[#a855f7] flex items-center justify-center">
+                                            <CheckCircle2 size={14} className="text-white" />
                                         </div>
-                                    );
-                                })}
-                            </div>
-                        ))}
+                                    )}
+                                    <h3 className="text-base font-bold text-white mb-2 pr-6">{suggestion.title}</h3>
+                                    <p className="text-sm leading-relaxed" style={{ color: isSelected ? 'rgba(255,255,255,0.7)' : 'rgba(148,163,184,1)' }}>
+                                        {suggestion.description}
+                                    </p>
+                                </div>
+                            );
+                        })}
                     </div>
                 )}
             </section>
