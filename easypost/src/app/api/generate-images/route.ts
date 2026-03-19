@@ -18,61 +18,63 @@ function buildSlidePrompt(
     const platformLabel = platform === 'instagram' ? 'Instagram' : 'LinkedIn';
     const handleLine = handle ? `\n\n[Handle/Username]\n"${handle}"` : '';
 
+    const metaContext = `[CONTEXTO INTERNO - NAO RENDERIZAR COMO TEXTO NA IMAGEM]
+Plataforma: ${platformLabel}. Formato: ${dimensions}. Slide ${slideNumber} de ${totalSlides}.
+As informacoes acima sao apenas contexto para guiar o design. Elas NAO devem aparecer escritas na imagem em nenhuma hipotese.`;
+
     if (slide.slideType === 'cover') {
-        return `Vamos criar o slide ${slideNumber} de um carrossel para ${platformLabel} (${dimensions}).
+        return `${metaContext}
 
-            Esse slide e a CAPA. Ele precisa fazer a pessoa parar o scroll e querer continuar vendo os proximos ${totalSlides - 1} slides.
+            Crie o slide de CAPA de um carrossel. Este slide precisa fazer a pessoa parar o scroll e querer ver os proximos ${totalSlides - 1} slides.
 
-            [Titulo do Slide - Grande e Destaque]
+            [Titulo Principal]
             "${slide.title}"
             ${slide.content ? `
-            [Subtitulo ou Texto de Apoio]
+            [Subtitulo]
             "${slide.content}"` : ''}${handleLine}
 
             Direcao visual:
-            - Gere a imagem final completa, pronta para postagem, com o texto incorporado na arte.
+            - Gere a imagem final completa com o texto incorporado na arte.
             - O titulo deve dominar a peca e ficar legivel em tela de celular.
-            - Use ilustracoes, simbolos ou elementos visuais coerentes com a dor ou beneficio principal do slide.
-            - Nao adicione marcas d'agua, molduras de interface ou elementos extras sem funcao.`;
+            - Use ilustracoes ou elementos visuais coerentes com o tema.
+            - O UNICO texto que deve aparecer na imagem e o Titulo, Subtitulo e Handle listados acima. NENHUM outro texto, rodape, legenda, dimensao, nome de plataforma ou metadado deve ser renderizado.`;
     }
 
     if (slide.slideType === 'cta') {
-        return `Agora vamos para o slide ${slideNumber} com os seguintes elementos:
+        return `${metaContext}
 
-                [Titulo do Slide - Grande e Destaque]
+                Crie o slide final de CTA de um carrossel.
+
+                [Titulo Principal]
                 "${slide.title}"
 
-                [Corpo do Texto - Chamadas diretas]
+                [Chamada para Acao]
                 ${slide.content || ''}${handleLine}
 
-                Esse e o slide final de CTA do carrossel para ${platformLabel} (${dimensions}).
-
                 Direcao visual:
-                - Gere a imagem final completa, pronta para postagem, com o texto incorporado na arte.
-                - O layout deve ser limpo, objetivo e orientado para acao.
-                - Crie uma composicao energica com foco em salvar, comentar e compartilhar.
-                - Nao adicione marcas d'agua, elementos de UI falsos ou ruido visual desnecessario.`;
+                - Gere a imagem final completa com o texto incorporado na arte.
+                - Layout limpo, objetivo e orientado para acao.
+                - Composicao energica focada em engajamento.
+                - O UNICO texto que deve aparecer na imagem e o Titulo, Chamada para Acao e Handle listados acima. NENHUM outro texto, rodape, legenda, dimensao, nome de plataforma ou metadado deve ser renderizado.`;
     }
 
-    return `Agora vamos para o slide ${slideNumber} de conteudo com os seguintes elementos:
-                [Dimensão do Slide]
-                Esse e um slide de conteudo do carrossel para ${platformLabel} (${dimensions}).
-                [Titulo do Slide - Grande e Destaque]
+    return `${metaContext}
+
+                Crie o slide ${slideNumber} de conteudo de um carrossel.
+
+                [Titulo Principal]
                 "${slide.title}"
 
-                [Corpo do Texto - Pontos curtos]
+                [Corpo do Texto]
                 ${slide.content || ''}${handleLine}
 
-
                 Direcao visual:
-                - Gere a imagem final completa, pronta para postagem, com o texto incorporado na arte.
+                - Gere a imagem final completa com o texto incorporado na arte.
                 - O titulo deve ficar em grande destaque.
-                - O corpo deve ser organizado em blocos curtos, escaneaveis e bem distribuidos no layout.
+                - O corpo deve ser organizado em blocos curtos, escaneaveis e bem distribuidos.
                 - Quando houver lista, use apoio visual com icones simples e relevantes.
-                - Se houver uma frase de fechamento no fim do conteudo, trate-a como destaque visual de rodape.
-                - Use recursos graficos que reforcem a explicacao, como comparacoes simples, diagramas leves ou elementos tematicos.
-                - O design precisa parecer editorial, moderno, premium e muito legivel no mobile.
-                - Nao adicione marcas d'agua, elementos de interface falsos ou enfeites desnecessarios.`;
+                - Design editorial, moderno, premium e muito legivel no mobile.
+                - O UNICO texto que deve aparecer na imagem e o Titulo, Corpo do Texto e Handle listados acima. NENHUM outro texto, rodape, legenda, dimensao, nome de plataforma ou metadado deve ser renderizado.`;
 }
 
 async function generateSlideImage(

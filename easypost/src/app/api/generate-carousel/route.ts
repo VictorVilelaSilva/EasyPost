@@ -43,22 +43,24 @@ export async function POST(req: Request) {
 
             IMPORTANTE: Todo o conteúdo DEVE ser escrito em Português do Brasil.
 
+            REGRA CRITICA: O texto dos slides NAO pode conter emojis, icones, simbolos especiais ou caracteres graficos de nenhum tipo. Apenas texto puro com letras, numeros e pontuacao padrao. Essa regra e inegociavel e se aplica a TODOS os campos (title e content) de TODOS os slides.
+
             ESTRUTURA OBRIGATÓRIA DOS SLIDES:
 
             Slide 1 — CAPA (Gancho para prender a atenção):
             - slideType: "cover"
-            - title: Título em Grande Destaque (pergunta provocativa ou afirmação impactante sobre a dor/solução do nicho). Exemplo: "Na minha máquina funciona! 🥲 Como acabar com esse pesadelo"
+            - title: Título em Grande Destaque (pergunta provocativa ou afirmação impactante sobre a dor/solução do nicho). Exemplo: "Na minha máquina funciona! Como acabar com esse pesadelo"
             - content: Subtítulo ou breve texto complementando o gancho inicial.
 
             Slides 2 a ${totalSlides - 1} — CONTEÚDO (Desenvolvimento, total de ${contentSlides} slides):
             - slideType: "content"
             - title: Título do Slide (Grande e Destaque, focando no ponto principal ou benefício).
-            - content: Corpo do texto em pontos curtos, claros e diretos. Use emojis no início de cada ponto (ex: 📦 Ponto 1... \\n ⚡ Ponto 2...). Termine o texto com uma frase curta de "Texto de Destaque/Resumo no rodapé" para fechar a ideia do slide.
+            - content: Corpo do texto em pontos curtos, claros e diretos. Separe cada ponto com quebra de linha (\\n). Termine o texto com uma frase curta de destaque para fechar a ideia do slide.
 
             Slide ${totalSlides} — CTA (Chamada para Ação):
             - slideType: "cta"
-            - title: Uma pergunta ou afirmação conectando o tema à ação desejada. Ex: "E você, ainda sofre com [problema]? 👇"
-            - content: Chamadas diretas em formato de lista com emojis. Ex: "💾 Salve para não esquecer... | ✈️ Compartilhe com... | 💬 Comente: qual o seu maior desafio com..."
+            - title: Uma pergunta ou afirmação conectando o tema à ação desejada. Ex: "E voce, ainda sofre com [problema]?"
+            - content: Chamadas diretas em formato de lista. Ex: "Salve para nao esquecer... | Compartilhe com... | Comente: qual o seu maior desafio com..."
 
             Para a 'caption', escreva ${captionLabel}.`;
 
