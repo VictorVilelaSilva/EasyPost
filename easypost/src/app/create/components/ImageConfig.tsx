@@ -104,7 +104,7 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
                                 value={topicContext}
                                 onChange={(e) => setTopicContext(e.target.value)}
                                 placeholder="Ex: Estrategias de Growth para SaaS 2024"
-                                className="w-full h-14 px-5 rounded-lg text-slate-100 transition-all outline-none"
+                                className="w-full h-14 px-5 rounded-lg text-slate-100 placeholder:text-slate-500 transition-all outline-none"
                                 style={inputStyle}
                                 onFocus={handleInputFocus}
                                 onBlur={handleInputBlur}
@@ -119,11 +119,26 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
                                 value={niche}
                                 onChange={(e) => setNiche(e.target.value)}
                                 placeholder="Ex: Marketing Digital, Fitness, Financas..."
-                                className="w-full h-14 px-5 rounded-lg text-slate-100 transition-all outline-none"
+                                className="w-full h-14 px-5 rounded-lg text-slate-100 placeholder:text-slate-500 transition-all outline-none"
                                 style={inputStyle}
                                 onFocus={handleInputFocus}
                                 onBlur={handleInputBlur}
                             />
+                            <div className="flex justify-end mt-1">
+                                <button
+                                    type="button"
+                                    onClick={handleGenerateSuggestions}
+                                    disabled={!niche.trim() || isLoadingSuggestions}
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#a855f7]/10"
+                                    style={{ color: '#a855f7', border: '1px solid rgba(168,85,247,0.3)' }}
+                                >
+                                    {isLoadingSuggestions
+                                        ? <Loader2 size={12} className="animate-spin" />
+                                        : <RefreshCw size={12} />
+                                    }
+                                    {isLoadingSuggestions ? 'Buscando...' : suggestions.length > 0 ? 'Recalcular Sugestões' : 'Gerar Sugestões de Tópicos'}
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -134,7 +149,7 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
                             value={handle}
                             onChange={(e) => setHandle(e.target.value)}
                             placeholder="@meuperfil"
-                            className="w-full md:w-1/2 h-14 px-5 rounded-lg text-slate-100 transition-all outline-none"
+                            className="w-full md:w-1/2 h-14 px-5 rounded-lg text-slate-100 placeholder:text-slate-500 transition-all outline-none"
                             style={inputStyle}
                             onFocus={handleInputFocus}
                             onBlur={handleInputBlur}
@@ -144,26 +159,14 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
             </section>
 
             {/* Section 2: AI Suggestions */}
-            <section className="flex flex-col gap-5">
-                <div className="flex justify-between items-center px-1">
-                    <div className="flex items-center gap-3">
-                        <Sparkles size={18} className="text-[#a855f7]" />
-                        <h2 className="text-xl font-bold text-white">Sugestoes da IA</h2>
+            {(isLoadingSuggestions || suggestions.length > 0) && (
+                <section className="flex flex-col gap-5 pt-2">
+                    <div className="flex justify-between items-center px-1">
+                        <div className="flex items-center gap-3">
+                            <Sparkles size={18} className="text-[#a855f7]" />
+                            <h2 className="text-xl font-bold text-white">Ideias de Tópicos</h2>
+                        </div>
                     </div>
-                    <button
-                        type="button"
-                        onClick={handleGenerateSuggestions}
-                        disabled={!niche.trim() || isLoadingSuggestions}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#a855f7]/10"
-                        style={{ color: '#a855f7', border: '1px solid rgba(168,85,247,0.3)' }}
-                    >
-                        {isLoadingSuggestions
-                            ? <Loader2 size={14} className="animate-spin" />
-                            : <RefreshCw size={14} />
-                        }
-                        {isLoadingSuggestions ? 'Buscando...' : suggestions.length > 0 ? 'Recalcular' : 'Gerar Sugestoes'}
-                    </button>
-                </div>
 
                 {isLoadingSuggestions && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -220,6 +223,7 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
                     </div>
                 )}
             </section>
+            )}
 
             {/* Section 3: Slide Count */}
             <section className="relative overflow-hidden rounded-xl p-8 group" style={sectionStyle}>
@@ -287,7 +291,7 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
                 <button
                     type="button"
                     onClick={onBack}
-                    className="flex items-center justify-center rounded-xl h-12 px-6 bg-transparent text-slate-400 hover:text-white text-base font-bold transition-colors cursor-pointer"
+                    className="flex items-center justify-center rounded-xl h-12 px-6 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-200 hover:text-white text-base font-bold transition-all cursor-pointer"
                 >
                     Voltar
                 </button>

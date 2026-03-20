@@ -93,7 +93,7 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                     <button
                         type="button"
                         onClick={onBack}
-                        className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-medium cursor-pointer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-slate-200 hover:bg-white/10 hover:text-white transition-colors text-sm font-medium cursor-pointer"
                     >
                         <ArrowLeft size={18} />
                         Voltar ao Editor
@@ -144,7 +144,7 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                             }}
                         >
                             {/* Mockup header */}
-                            <div className="flex-none flex items-center justify-between mb-3 px-1">
+                            <div className="hidden sm:flex flex-none items-center justify-between mb-3 px-1">
                                 <div className="flex items-center gap-2.5 sm:gap-3">
                                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-[2px]">
                                         <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
@@ -201,6 +201,7 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                                         onClick={(e) => { e.stopPropagation(); openEditModal(activeIndex); }}
                                         disabled={isEditing}
                                         className="flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black font-semibold hover:bg-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
+                                        title="Escreva um novo prompt para a IA recriar este slide"
                                     >
                                         <Pencil size={16} />
                                         <span>Editar Slide</span>
@@ -227,7 +228,7 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                             </div>
 
                             {/* Engagement row */}
-                            <div className="flex-none mt-4 px-1">
+                            <div className="hidden sm:block flex-none mt-4 px-1">
                                 {platform === 'linkedin' ? (
                                     <div className="flex items-center justify-between border-t border-white/8 pt-3">
                                         {[Heart, MessageCircle, Send].map((Icon, i) => (
@@ -288,7 +289,7 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                                         onClick={() => openEditModal(i)}
                                         disabled={isEditing}
                                         className="p-1.5 rounded-full bg-white/20 hover:bg-[#7f0df2] text-white transition-colors cursor-pointer disabled:opacity-50"
-                                        title="Editar com IA"
+                                        title="Escreva um novo prompt para a IA recriar este slide"
                                     >
                                         <Pencil size={12} />
                                     </button>
@@ -321,7 +322,7 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
             </main>
 
             {/* ─── FOOTER ─── */}
-            <footer className="flex-none flex items-center justify-between px-8 py-4 bg-[#0a0614]/90 backdrop-blur-lg border-t border-white/10 z-10">
+            <footer className="flex-none flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 px-4 sm:px-8 py-4 bg-[#0a0614]/90 backdrop-blur-lg border-t border-white/10 z-10">
                 {/* Left: Social sharing */}
                 <div className="flex items-center gap-3">
                     <span className="text-xs font-bold tracking-wider uppercase text-slate-500 mr-1">Compartilhar</span>
@@ -346,7 +347,7 @@ export function PreviewPhase({ fusedImages, slideTypes, caption, platform, onBac
                     type="button"
                     onClick={handleDownload}
                     disabled={isDownloading}
-                    className="flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-white bg-[#7f0df2] hover:bg-[#7f0df2]/90 disabled:opacity-60 transition-all cursor-pointer"
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 rounded-xl font-bold text-white bg-[#7f0df2] hover:bg-[#7f0df2]/90 disabled:opacity-60 transition-all cursor-pointer"
                     style={{
                         fontFamily: 'var(--font-display)',
                         boxShadow: '0 0 20px rgba(127,13,242,0.4)',

@@ -120,14 +120,14 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
 
     return (
         <div
-            className="flex flex-col lg:flex-row"
+            className="flex flex-col lg:flex-row lg:h-[calc(100vh-80px)] lg:overflow-hidden"
             style={{ minHeight: 'calc(100vh - 80px)' }}
         >
             {/* ═══════════════════════════════════════
                 LEFT PANEL — Phone Mockup Stage
             ════════════════════════════════════════ */}
             <div
-                className="flex-1 flex flex-col items-center justify-center relative p-8 lg:p-16"
+                className="flex-1 flex flex-col items-center justify-center relative p-8 lg:p-16 lg:overflow-y-auto"
                 style={{
                     background: 'radial-gradient(ellipse 80% 70% at 50% 55%, rgba(127,13,242,0.07) 0%, transparent 65%)',
                 }}
@@ -381,7 +381,7 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
                 RIGHT PANEL — Control Deck
             ════════════════════════════════════════ */}
             <div
-                className="w-full lg:w-[360px] xl:w-[400px] flex flex-col border-t lg:border-t-0 lg:border-l"
+                className="w-full lg:w-[360px] xl:w-[400px] flex flex-col border-t lg:border-t-0 lg:border-l h-full"
                 style={{
                     borderColor: 'rgba(127,13,242,0.1)',
                     background: 'rgba(9,5,16,0.75)',

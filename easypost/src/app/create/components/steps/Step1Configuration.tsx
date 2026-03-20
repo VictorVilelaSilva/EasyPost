@@ -48,29 +48,20 @@ export default function Step1Configuration({ platform, setPlatform, onComplete, 
                         </button>
 
                         {/* LinkedIn */}
-                        <button
-                            type="button"
-                            onClick={() => setPlatform('linkedin')}
-                            className={`glass-card rounded-2xl p-6 flex flex-col items-center justify-center gap-6 aspect-[4/5] group transition-all duration-300 relative overflow-hidden ${platform === 'linkedin' ? 'selected border-2 border-[#7f0df2] shadow-[0_0_20px_rgba(127,13,242,0.3)]' : 'border border-[#7f0df2]/10 hover:border-[#7f0df2]/30 hover:bg-[#241930]/80'}`}
-                            style={{
-                                background: platform === 'linkedin' ? 'rgba(36, 25, 48, 0.8)' : 'rgba(22, 16, 29, 0.6)',
-                                backdropFilter: 'blur(12px)'
-                            }}
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-br from-[#0077b5]/10 to-[#0077b5]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className="relative z-10 w-20 h-20 rounded-2xl bg-[#0077b5] flex items-center justify-center shadow-lg shadow-[#0077b5]/30">
+                        <div className="glass-card opacity-50 pointer-events-none grayscale rounded-2xl p-6 flex flex-col items-center justify-center gap-6 aspect-[4/5] relative border border-[#7f0df2]/10" style={{ background: 'rgba(22, 16, 29, 0.6)', backdropFilter: 'blur(12px)' }}>
+                            <div className="relative z-10 w-20 h-20 rounded-2xl bg-[#0077b5] flex items-center justify-center">
                                 <Linkedin className="text-white" size={32} />
                             </div>
                             <div className="relative z-10 text-center">
                                 <h3 className="text-xl font-bold text-white mb-2">LinkedIn</h3>
                                 <p className="text-[11px] text-slate-400">Artigos & Posts</p>
                             </div>
-                            {platform === 'linkedin' && (
-                                <div className="absolute top-4 right-4 bg-[#7f0df2] text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-full flex items-center gap-1 z-10">
-                                    <CheckCircle2 size={12} /> Selecionado
+                            <div className="absolute inset-0 flex items-center justify-center z-20">
+                                <div className="bg-[#16101d]/90 border border-slate-700 backdrop-blur-sm px-3 py-1.5 rounded-full font-bold text-xs tracking-wide shadow-xl text-white">
+                                    Em breve
                                 </div>
-                            )}
-                        </button>
+                            </div>
+                        </div>
 
                         {/* X (Twitter) */}
                         <div className="glass-card opacity-50 pointer-events-none grayscale rounded-2xl p-6 flex flex-col items-center justify-center gap-6 aspect-[4/5] relative border border-[#7f0df2]/10" style={{ background: 'rgba(22, 16, 29, 0.6)', backdropFilter: 'blur(12px)' }}>
@@ -112,8 +103,7 @@ export default function Step1Configuration({ platform, setPlatform, onComplete, 
                     <button
                         type="button"
                         onClick={onBack}
-                        disabled={true} /* Botão 'Voltar' desabilitado na primeira step */
-                        className="flex items-center justify-center rounded-xl h-12 px-6 bg-transparent text-slate-500 disabled:opacity-40 disabled:cursor-not-allowed hover:text-white text-base font-bold transition-colors"
+                        className="flex items-center justify-center rounded-xl h-12 px-6 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed hover:text-white text-base font-bold transition-all"
                     >
                         Cancelar
                     </button>

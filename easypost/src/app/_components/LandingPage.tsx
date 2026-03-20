@@ -77,8 +77,8 @@ export default function LandingPage() {
                     y: backgroundY,
                     backgroundColor: '#000000',
                     backgroundImage: `
-                        radial-gradient(at 0% 0%, color-mix(in srgb, var(--color-purple) 12%, transparent) 0px, transparent 50%),
-                        radial-gradient(at 100% 100%, color-mix(in srgb, var(--color-purple-deep) 12%, transparent) 0px, transparent 50%)
+                        radial-gradient(at 0% 0%, color-mix(in srgb, var(--color-purple) 8%, transparent) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, color-mix(in srgb, var(--color-purple-deep) 8%, transparent) 0px, transparent 50%)
                     `
                 }}
             />
@@ -132,7 +132,7 @@ export default function LandingPage() {
                         style={{ y: heroRightY }}
                         className="relative group z-10"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-tr from-purple/30 to-purple-deep/30 blur-[100px] opacity-40 group-hover:opacity-70 transition-opacity duration-700"></div>
+                        <div className="absolute inset-0 bg-gradient-to-tr from-purple/20 to-purple-deep/20 blur-[100px] opacity-40 group-hover:opacity-70 transition-opacity duration-700"></div>
                         <div className="relative bg-[#0F0F0F]/60 border border-white/10 p-8 rounded-[2rem] shadow-2xl backdrop-blur-md">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="aspect-square bg-white/5 rounded-2xl flex items-center justify-center p-6 border border-white/5 hover:bg-white/10 transition-colors">
