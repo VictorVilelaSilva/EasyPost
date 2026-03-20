@@ -17,6 +17,7 @@ export interface ImageConfig {
     customPrompt: string;
     handle?: string;
     slideCount?: number;
+    color?: string;
 }
 
 export type Platform = 'instagram' | 'linkedin';
