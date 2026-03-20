@@ -20,12 +20,10 @@ interface Props {
 
 export default function Step3ImageConfig({ selectedTopic, onContinue, onBack }: Props) {
     return (
-        <div className="glass-panel rounded-xl p-0 overflow-hidden border border-white/5 shadow-2xl animate-fade-in mt-8" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
-            <ImageConfigPanel
-                topic={selectedTopic}
-                onContinue={onContinue}
-                onBack={onBack}
-            />
-        </div>
+        <ImageConfigPanel
+            topic={selectedTopic}
+            onContinue={onContinue}
+            onBack={onBack}
+        />
     );
 }

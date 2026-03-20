@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Sparkles, Layers, Terminal, RefreshCw, CheckCircle2, Loader2 } from 'lucide-react';
+import { Sparkles, Layers, Terminal, RefreshCw, CheckCircle2, Loader2, Wand2 } from 'lucide-react';
 import { ImageConfig as ImageConfigType } from '@/types';
 
 interface Suggestion {
@@ -58,277 +58,281 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
 
     const isValid = topicContext.trim().length > 0 && niche.trim().length > 0;
 
-    const sectionStyle = {
-        background: 'rgba(8, 5, 16, 0.5)',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255,255,255,0.05)',
+    // UI Styles
+    const containerStyle = {
+        background: 'rgba(22, 10, 38, 0.7)',
+        backdropFilter: 'blur(24px)',
+        border: '1px solid rgba(168, 85, 247, 0.12)',
+        boxShadow: '0 8px 40px rgba(127, 13, 242, 0.08), 0 2px 16px rgba(0,0,0,0.3)'
     };
 
     const inputStyle = {
-        background: 'rgba(0,0,0,0.4)',
-        border: '1px solid rgba(255,255,255,0.1)',
+        background: 'rgba(15, 8, 28, 0.6)',
+        border: '1px solid rgba(168, 85, 247, 0.08)',
         fontFamily: 'var(--font-body)',
     };
 
-    const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-        e.currentTarget.style.borderColor = '#a855f7';
-        e.currentTarget.style.boxShadow = '0 0 0 1px #a855f7';
+    const handleInputFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        e.currentTarget.style.background = 'rgba(25, 12, 42, 0.8)';
+        e.currentTarget.style.borderColor = 'rgba(168, 85, 247, 0.4)';
+        e.currentTarget.style.boxShadow = '0 0 15px rgba(168, 85, 247, 0.1)';
     };
 
-    const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+    const handleInputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        e.currentTarget.style.background = 'rgba(15, 8, 28, 0.6)';
+        e.currentTarget.style.borderColor = 'rgba(168, 85, 247, 0.08)';
         e.currentTarget.style.boxShadow = 'none';
     };
 
     return (
-        <div className="w-full flex flex-col gap-8 mt-8 mb-8 animate-reveal" style={{ fontFamily: 'var(--font-display)' }}>
+        <div className="w-full flex justify-center mt-2 animate-fade-in font-display">
+            <div className="w-full max-w-[840px] flex flex-col gap-6">
 
-            {/* Section 1: Topic Context */}
-            <section className="relative overflow-hidden rounded-xl p-8 group" style={sectionStyle}>
-                <div className="absolute top-0 left-0 w-1 h-full bg-[#a855f7]/40 group-hover:bg-[#a855f7] transition-colors rounded-l-xl" />
-                <div className="flex flex-col gap-7 pl-2">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-[#a855f7]/10">
-                            <Terminal size={18} className="text-[#a855f7]" />
-                        </div>
-                        <h2 className="text-xl font-bold text-white">Qual o tema de hoje?</h2>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="flex flex-col gap-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
-                                Contexto do Post <span className="text-[#a855f7]">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                value={topicContext}
-                                onChange={(e) => setTopicContext(e.target.value)}
-                                placeholder="Ex: Estrategias de Growth para SaaS 2024"
-                                className="w-full h-14 px-5 rounded-lg text-slate-100 placeholder:text-slate-500 transition-all outline-none"
-                                style={inputStyle}
-                                onFocus={handleInputFocus}
-                                onBlur={handleInputBlur}
-                            />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">
-                                Nicho Operacional <span className="text-[#a855f7]">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                value={niche}
-                                onChange={(e) => setNiche(e.target.value)}
-                                placeholder="Ex: Marketing Digital, Fitness, Financas..."
-                                className="w-full h-14 px-5 rounded-lg text-slate-100 placeholder:text-slate-500 transition-all outline-none"
-                                style={inputStyle}
-                                onFocus={handleInputFocus}
-                                onBlur={handleInputBlur}
-                            />
-                            <div className="flex justify-end mt-1">
-                                <button
-                                    type="button"
-                                    onClick={handleGenerateSuggestions}
-                                    disabled={!niche.trim() || isLoadingSuggestions}
-                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#a855f7]/10"
-                                    style={{ color: '#a855f7', border: '1px solid rgba(168,85,247,0.3)' }}
-                                >
-                                    {isLoadingSuggestions
-                                        ? <Loader2 size={12} className="animate-spin" />
-                                        : <RefreshCw size={12} />
-                                    }
-                                    {isLoadingSuggestions ? 'Buscando...' : suggestions.length > 0 ? 'Recalcular Sugestões' : 'Gerar Sugestões de Tópicos'}
-                                </button>
+                <section className="relative overflow-hidden rounded-[24px] p-6 sm:p-8 flex flex-col gap-8" style={containerStyle}>
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#a855f7] opacity-[0.03] blur-[100px] rounded-full pointer-events-none" />
+                    
+                    {/* Intelligence Feed (Grouped Inputs) */}
+                    <div className="flex flex-col gap-6 relative z-10">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-[#a855f7]/20 to-transparent flex items-center justify-center border border-[#a855f7]/10">
+                                <Terminal size={18} className="text-[#c08cf7]" />
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-bold text-white tracking-tight">Intelligence Feed</h2>
+                                <p className="text-xs text-slate-400 font-body">Defina as diretrizes para a IA</p>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">Seu @usuario (opcional)</label>
-                        <input
-                            type="text"
-                            value={handle}
-                            onChange={(e) => setHandle(e.target.value)}
-                            placeholder="@meuperfil"
-                            className="w-full md:w-1/2 h-14 px-5 rounded-lg text-slate-100 placeholder:text-slate-500 transition-all outline-none"
-                            style={inputStyle}
-                            onFocus={handleInputFocus}
-                            onBlur={handleInputBlur}
-                        />
-                    </div>
-                </div>
-            </section>
-
-            {/* Section 2: AI Suggestions */}
-            {(isLoadingSuggestions || suggestions.length > 0) && (
-                <section className="flex flex-col gap-5 pt-2">
-                    <div className="flex justify-between items-center px-1">
-                        <div className="flex items-center gap-3">
-                            <Sparkles size={18} className="text-[#a855f7]" />
-                            <h2 className="text-xl font-bold text-white">Ideias de Tópicos</h2>
-                        </div>
-                    </div>
-
-                {isLoadingSuggestions && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                        {Array.from({ length: 6 }).map((_, i) => (
-                            <div
-                                key={i}
-                                className="rounded-xl p-6 animate-pulse"
-                                style={{ background: 'rgba(8,5,16,0.5)', border: '1px solid rgba(255,255,255,0.05)', minHeight: '110px' }}
-                            >
-                                <div className="h-4 w-2/3 rounded mb-3" style={{ background: 'rgba(168,85,247,0.15)' }} />
-                                <div className="h-3 w-full rounded mb-2" style={{ background: 'rgba(255,255,255,0.06)' }} />
-                                <div className="h-3 w-4/5 rounded" style={{ background: 'rgba(255,255,255,0.06)' }} />
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                {!isLoadingSuggestions && suggestions.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                        {suggestions.map((suggestion) => {
-                            const isSelected = selectedSuggestionId === suggestion.id;
-                            return (
-                                <div
-                                    key={suggestion.id}
-                                    onClick={() => {
-                                        setSelectedSuggestionId(suggestion.id);
-                                        setTopicContext(suggestion.title);
-                                    }}
-                                    className="relative rounded-xl p-6 cursor-pointer transition-all duration-300 flex flex-col"
-                                    style={{
-                                        background: isSelected ? 'rgba(168,85,247,0.1)' : 'rgba(8, 5, 16, 0.5)',
-                                        backdropFilter: 'blur(12px)',
-                                        border: isSelected ? '2px solid #a855f7' : '1px solid rgba(255,255,255,0.05)',
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        if (!isSelected) e.currentTarget.style.borderColor = 'rgba(168,85,247,0.4)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
-                                    }}
-                                >
-                                    {isSelected && (
-                                        <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-[#a855f7] flex items-center justify-center">
-                                            <CheckCircle2 size={14} className="text-white" />
-                                        </div>
-                                    )}
-                                    <h3 className="text-base font-bold text-white mb-2 pr-6">{suggestion.title}</h3>
-                                    <p className="text-sm leading-relaxed" style={{ color: isSelected ? 'rgba(255,255,255,0.7)' : 'rgba(148,163,184,1)' }}>
-                                        {suggestion.description}
-                                    </p>
+                        <div className="flex flex-col gap-5">
+                            {/* Nicho e Contexto lado a lado em desktop, empilhados em mobile */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-[11px] font-bold uppercase tracking-widest font-mono text-slate-400 ml-1">
+                                        Nicho Operacional <span className="text-[#a855f7]">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={niche}
+                                        onChange={(e) => setNiche(e.target.value)}
+                                        placeholder="Ex: Marketing Digital, Fitness..."
+                                        className="w-full h-12 px-4 rounded-xl text-slate-100 placeholder:text-slate-600 transition-all outline-none text-sm"
+                                        style={inputStyle}
+                                        onFocus={handleInputFocus}
+                                        onBlur={handleInputBlur}
+                                    />
                                 </div>
-                            );
-                        })}
-                    </div>
-                )}
-            </section>
-            )}
-
-            {/* Section 3: Slide Count */}
-            <section className="relative overflow-hidden rounded-xl p-8 group" style={sectionStyle}>
-                <div className="absolute top-0 left-0 w-1 h-full bg-[#a855f7]/40 group-hover:bg-[#a855f7] transition-colors rounded-l-xl" />
-                <div className="flex flex-col gap-8 pl-2">
-                    <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-[#a855f7]/10">
-                                <Layers size={18} className="text-[#a855f7]" />
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex justify-between items-end">
+                                        <label className="text-[11px] font-bold uppercase tracking-widest font-mono text-slate-400 ml-1">
+                                            Seu @usuario
+                                        </label>
+                                        <span className="text-[9px] uppercase tracking-wider text-slate-600 mr-1">Opcional</span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        value={handle}
+                                        onChange={(e) => setHandle(e.target.value)}
+                                        placeholder="@meuperfil"
+                                        className="w-full h-12 px-4 rounded-xl text-slate-100 placeholder:text-slate-600 transition-all outline-none text-sm"
+                                        style={inputStyle}
+                                        onFocus={handleInputFocus}
+                                        onBlur={handleInputBlur}
+                                    />
+                                </div>
                             </div>
-                            <h2 className="text-xl font-bold text-white">Estrutura de Blocos</h2>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-tight">Config Atual:</span>
-                            <span
-                                className="text-sm font-black text-white px-4 py-1 rounded-md"
-                                style={{ background: '#a855f7', boxShadow: '0 0 15px rgba(168,85,247,0.4)' }}
-                            >
-                                {String(slideCount).padStart(2, '0')} SLIDES
-                            </span>
+
+                            <div className="flex flex-col gap-2 relative">
+                                <div className="flex justify-between items-end">
+                                    <label className="text-[11px] font-bold uppercase tracking-widest font-mono text-slate-400 ml-1">
+                                        O que você quer compartilhar? <span className="text-[#a855f7]">*</span>
+                                    </label>
+                                </div>
+                                <div className="relative group/textarea">
+                                    <textarea
+                                        value={topicContext}
+                                        onChange={(e) => setTopicContext(e.target.value)}
+                                        placeholder="Descreva o assunto principal do seu carrossel aqui..."
+                                        className="w-full min-h-[120px] p-4 pb-16 rounded-xl text-slate-100 placeholder:text-slate-600 transition-all outline-none text-sm resize-none"
+                                        style={inputStyle}
+                                        onFocus={handleInputFocus}
+                                        onBlur={handleInputBlur}
+                                    />
+                                    
+                                    {/* Magical Ghost Button inside Textarea Container */}
+                                    <div className="absolute bottom-3 right-3">
+                                        <button
+                                            type="button"
+                                            onClick={handleGenerateSuggestions}
+                                            disabled={!niche.trim() || isLoadingSuggestions}
+                                            className="group/btn flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed bg-[#1a0a2e] hover:bg-[#25123d] border border-[#a855f7]/20 hover:border-[#a855f7]/50 shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+                                        >
+                                            {isLoadingSuggestions ? (
+                                                <Loader2 size={14} className="animate-spin text-[#c08cf7]" />
+                                            ) : (
+                                                <Wand2 size={14} className="text-[#c08cf7] group-hover/btn:text-[#dab4ff] transition-colors" />
+                                            )}
+                                            <span className="bg-linear-to-r from-[#c08cf7] to-[#dab4ff] bg-clip-text text-transparent">
+                                                {isLoadingSuggestions ? 'Pensando...' : suggestions.length > 0 ? 'Novas Ideias' : 'Ideias por IA'}
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* AI Suggestions List */}
+                                {(isLoadingSuggestions || suggestions.length > 0) && (
+                                    <div className="mt-3 flex flex-col gap-2 animate-fade-in-up">
+                                        <div className="flex items-center gap-2 mb-1 ml-1 opacity-80">
+                                            <Sparkles size={12} className="text-[#a855f7]" />
+                                            <span className="text-[10px] font-mono text-[#c08cf7] uppercase tracking-widest">Sugestões de Tópicos</span>
+                                        </div>
+                                        
+                                        {isLoadingSuggestions && (
+                                            <div className="flex flex-col gap-2">
+                                                {[1, 2, 3].map((n) => (
+                                                    <div key={n} className="h-16 w-full rounded-xl animate-pulse bg-linear-to-r from-white/5 to-white/10" />
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {!isLoadingSuggestions && suggestions.length > 0 && (
+                                            <div className="flex flex-col gap-2">
+                                                {suggestions.map((suggestion) => {
+                                                    const isSelected = selectedSuggestionId === suggestion.id;
+                                                    return (
+                                                        <div
+                                                            key={suggestion.id}
+                                                            onClick={() => {
+                                                                setSelectedSuggestionId(suggestion.id);
+                                                                setTopicContext(suggestion.title);
+                                                            }}
+                                                            className={`group relative p-3 rounded-xl cursor-pointer transition-all duration-300 flex items-center justify-between border ${
+                                                                isSelected 
+                                                                    ? 'bg-[#a855f7]/10 border-[#a855f7] shadow-[inset_0_0_20px_rgba(168,85,247,0.1)]' 
+                                                                    : 'bg-white/5 border-white/5 hover:border-white/15 hover:bg-white/10'
+                                                            }`}
+                                                        >
+                                                            <div className="flex flex-col pr-8">
+                                                                <h4 className={`text-sm font-bold mb-0.5 ${isSelected ? 'text-white' : 'text-slate-200 group-hover:text-white'}`}>
+                                                                    {suggestion.title}
+                                                                </h4>
+                                                                <p className="text-xs text-slate-500 line-clamp-1">
+                                                                    {suggestion.description}
+                                                                </p>
+                                                            </div>
+                                                            {isSelected && (
+                                                                <div className="absolute right-4 w-5 h-5 rounded-full bg-[#a855f7] flex items-center justify-center shadow-[0_0_10px_rgba(168,85,247,0.5)] animate-scale-in">
+                                                                    <CheckCircle2 size={12} className="text-white" />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-6 px-1">
-                        <div className="flex justify-between w-full">
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                                <span
-                                    key={n}
-                                    className="text-xs font-mono transition-all duration-300"
-                                    style={{
-                                        color: n === slideCount ? '#a855f7' : 'rgba(100,116,139,0.6)',
-                                        fontWeight: n === slideCount ? 700 : 400,
-                                        transform: n === slideCount ? 'scale(1.2)' : 'scale(1)',
-                                        textShadow: n === slideCount ? '0 0 10px rgba(168,85,247,0.5)' : 'none',
-                                        display: 'inline-block',
-                                    }}
+                    <div className="w-full h-px bg-white/5 relative z-10" />
+
+                    {/* Structure / Slider Section */}
+                    <div className="flex flex-col gap-6 relative z-10">
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-linear-to-br from-[#a855f7]/20 to-transparent flex items-center justify-center border border-[#a855f7]/10">
+                                    <Layers size={18} className="text-[#c08cf7]" />
+                                </div>
+                                <div>
+                                    <h2 className="text-xl font-bold text-white tracking-tight">Tamanho do Carrossel</h2>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest hidden sm:inline-block">Volume:</span>
+                                <div className="px-3 py-1.5 rounded-lg bg-[#a855f7]/10 border border-[#a855f7]/30 flex items-center gap-2 shadow-[0_0_15px_rgba(168,85,247,0.15)]">
+                                    <span className="text-sm font-black text-[#dab4ff]">{String(slideCount).padStart(2, '0')}</span>
+                                    <span className="text-[10px] font-bold text-[#c08cf7] uppercase">Slides</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-6 pt-2">
+                            <div className="relative pt-6 pb-2">
+                                {/* Slide Value Indicator */}
+                                <div 
+                                    className="absolute top-0 -mt-6 flex flex-col items-center transition-all duration-200"
+                                    style={{ left: `calc(${((slideCount - 1) / 9) * 100}% - 12px)` }}
                                 >
-                                    {String(n).padStart(2, '0')}
-                                </span>
-                            ))}
-                        </div>
-                        <input
-                            type="range"
-                            min={1}
-                            max={10}
-                            value={slideCount}
-                            onChange={(e) => setSlideCount(Number(e.target.value))}
-                            className="w-full h-1.5 rounded-full appearance-none cursor-pointer outline-none"
-                            style={{
-                                background: `linear-gradient(to right, #a855f7 ${(slideCount - 1) / 9 * 100}%, rgba(255,255,255,0.1) ${(slideCount - 1) / 9 * 100}%)`,
-                            }}
-                        />
-                        <div className="flex items-center justify-center gap-2 text-slate-500">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg>
-                            <p className="text-[13px] font-medium italic">
-                                O algoritmo segmentara o conteudo em {slideCount} frames otimizados para engajamento.
-                            </p>
+                                    <div className="bg-[#1a0a2e] border border-[#a855f7]/40 text-[#dab4ff] text-[11px] font-bold px-2 py-0.5 rounded shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+                                        {slideCount}
+                                    </div>
+                                    <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-[#192540]"></div>
+                                </div>
+
+                                <div className="flex justify-between w-full mb-3 px-1">
+                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                                        <div 
+                                            key={n} 
+                                            className="flex flex-col items-center gap-2 relative z-0"
+                                            onClick={() => setSlideCount(n)}
+                                        >
+                                            <div 
+                                                className={`w-[3px] transition-all duration-300 rounded-full cursor-pointer hover:bg-white hover:h-[14px] absolute -top-[7px] ${n === slideCount ? 'h-[14px] bg-[#a855f7] shadow-[0_0_8px_rgba(168,85,247,0.6)] z-20' : n < slideCount ? 'h-2 bg-[#a855f7]/50 mt-[3px]' : 'h-2 bg-white/20 mt-[3px]'}`}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                                <input
+                                    type="range"
+                                    min={1}
+                                    max={10}
+                                    value={slideCount}
+                                    onChange={(e) => setSlideCount(Number(e.target.value))}
+                                    className="w-full absolute top-[35px] left-0 h-8 opacity-0 cursor-pointer z-20"
+                                />
+                                {/* Custom track background */}
+                                <div className="absolute top-[35px] left-0 w-full h-[3px] bg-white/5 rounded-full overflow-hidden pointer-events-none z-10">
+                                    <div 
+                                        className="h-full bg-linear-to-r from-[#7f0df2] to-[#c08cf7] transition-all duration-200"
+                                        style={{ width: `${((slideCount - 1) / 9) * 100}%` }}
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex gap-2 text-slate-500 mt-2 px-1">
+                                <Sparkles size={14} className="mt-0.5 text-slate-400" />
+                                <p className="text-[12px] font-medium italic">
+                                    O algoritmo segmentará seu conteúdo em {slideCount} frames visuais para reter a atenção e impulsionar compartilhamentos.
+                                </p>
+                            </div>
                         </div>
                     </div>
+
+                    <div className="w-full h-px bg-white/5 relative z-10" />
+
+                    {/* Footer Controls */}
+                    <div className="w-full flex justify-between items-center pt-2 relative z-10">
+                    <button
+                        type="button"
+                        onClick={onBack}
+                        className="flex items-center justify-center rounded-xl h-12 px-6 bg-transparent border border-white/10 hover:bg-white/5 text-slate-300 hover:text-white text-sm font-bold transition-all cursor-pointer"
+                    >
+                        Voltar
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleContinue}
+                        disabled={!isValid}
+                        className="group flex items-center justify-center gap-2 rounded-xl h-12 px-8 bg-[#7f0df2] hover:bg-[#922cee] disabled:opacity-40 disabled:hover:bg-[#7f0df2] disabled:cursor-not-allowed text-white text-base font-bold shadow-[0_0_20px_rgba(127,13,242,0.4)] hover:shadow-[0_0_30px_rgba(127,13,242,0.6)] transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                        style={{ fontFamily: 'var(--font-display)' }}
+                    >
+                        <span>Gerar Carrossel</span>
+                        <Sparkles size={18} className="text-[#dab4ff] group-hover:text-white transition-colors" />
+                    </button>
                 </div>
-            </section>
+                </section>
 
-            {/* Footer */}
-            <div className="w-full flex justify-between items-center border-t border-white/10 pt-8 mt-2">
-                <button
-                    type="button"
-                    onClick={onBack}
-                    className="flex items-center justify-center rounded-xl h-12 px-6 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-200 hover:text-white text-base font-bold transition-all cursor-pointer"
-                >
-                    Voltar
-                </button>
-                <button
-                    type="button"
-                    onClick={handleContinue}
-                    disabled={!isValid}
-                    className="flex items-center justify-center gap-2 rounded-xl h-12 px-8 bg-[#7f0df2] hover:bg-[#922cee] disabled:opacity-50 disabled:cursor-not-allowed text-white text-base font-bold shadow-[0_0_20px_rgba(127,13,242,0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer"
-                    style={{ fontFamily: 'var(--font-display)' }}
-                >
-                    Gerar Carrossel
-                    <Sparkles size={18} />
-                </button>
             </div>
-
-            <style>{`
-                input[type='range']::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    appearance: none;
-                    width: 20px;
-                    height: 20px;
-                    background: #a855f7;
-                    cursor: pointer;
-                    border-radius: 50%;
-                    border: 3px solid #ffffff;
-                    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
-                }
-                input[type='range']::-moz-range-thumb {
-                    width: 20px;
-                    height: 20px;
-                    background: #a855f7;
-                    cursor: pointer;
-                    border-radius: 50%;
-                    border: 3px solid #ffffff;
-                    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
-                }
-            `}</style>
         </div>
     );
 }
