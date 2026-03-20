@@ -80,7 +80,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
                     slides: carousel!.slides,
                     platform,
                     handle: config.handle || '',
-                    color: config.color || '#FFFFFF',
+                    color: config.color || '',
                 }),
             });
             const dataImages = await resImages.json();

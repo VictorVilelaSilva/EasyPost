@@ -19,9 +19,9 @@ function buildSlidePrompt(
     const platformLabel = platform === 'instagram' ? 'Instagram' : 'LinkedIn';
     const handleLine = handle ? `\n\n[Handle/Username]\n"${handle}"` : '';
 
+    const colorMeta = color ? `\nPaleta de Cores Principal: ${color}.` : '';
     const metaContext = `[CONTEXTO INTERNO - NAO RENDERIZAR COMO TEXTO NA IMAGEM]
-Plataforma: ${platformLabel}. Formato: ${dimensions}. Slide ${slideNumber} de ${totalSlides}.
-Paleta de Cores Principal: ${color}.
+Plataforma: ${platformLabel}. Formato: ${dimensions}. Slide ${slideNumber} de ${totalSlides}.${colorMeta}
 As informacoes acima sao apenas contexto para guiar o design. Elas NAO devem aparecer escritas na imagem em nenhuma hipotese.`;
 
     if (slide.slideType === 'cover') {
@@ -37,7 +37,7 @@ As informacoes acima sao apenas contexto para guiar o design. Elas NAO devem apa
 
             Direcao visual:
             - Gere a imagem final completa com o texto incorporado na arte.
-            - Utilize obrigatoriamente a cor hexadecimal ${color} como base ou elemento dominante da identidade visual.
+            ${color ? `- Utilize obrigatoriamente a cor hexadecimal ${color} como base ou elemento dominante da identidade visual.` : ''}
             - O titulo deve dominar a peca e ficar legivel em tela de celular.
             - Use ilustracoes ou elementos visuais coerentes com o tema.
             - O UNICO texto que deve aparecer na imagem e o Titulo, Subtitulo e Handle listados acima. NENHUM outro texto, rodape, legenda, dimensao, nome de plataforma ou metadado deve ser renderizado.`;
@@ -56,7 +56,7 @@ As informacoes acima sao apenas contexto para guiar o design. Elas NAO devem apa
 
                 Direcao visual:
                 - Gere a imagem final completa com o texto incorporado na arte.
-                - Utilize obrigatoriamente a cor hexadecimal ${color} como base ou elemento dominante da identidade visual.
+                ${color ? `- Utilize obrigatoriamente a cor hexadecimal ${color} como base ou elemento dominante da identidade visual.` : ''}
                 - Layout limpo, objetivo e orientado para acao.
                 - Composicao energica focada em engajamento.
                 - O UNICO texto que deve aparecer na imagem e o Titulo, Chamada para Acao e Handle listados acima. NENHUM outro texto, rodape, legenda, dimensao, nome de plataforma ou metadado deve ser renderizado.`;
@@ -74,7 +74,7 @@ As informacoes acima sao apenas contexto para guiar o design. Elas NAO devem apa
 
                 Direcao visual:
                 - Gere a imagem final completa com o texto incorporado na arte.
-                - Utilize obrigatoriamente a cor hexadecimal ${color} como base ou elemento dominante da identidade visual.
+                ${color ? `- Utilize obrigatoriamente a cor hexadecimal ${color} como base ou elemento dominante da identidade visual.` : ''}
                 - O titulo deve ficar em grande destaque.
                 - O corpo deve ser organizado em blocos curtos, escaneaveis e bem distribuidos.
                 - Quando houver lista, use apoio visual com icones simples e relevantes.
@@ -97,7 +97,7 @@ async function generateSlideImage(
     const contents = referenceImageBase64
         ? [
             { inlineData: { mimeType: 'image/png', data: referenceImageBase64 } },
-            { text: `Use a imagem acima como referencia visual. O slide que voce vai gerar agora DEVE seguir exatamente o mesmo estilo(Não necessariamente replicando os elementos, mas sim a identidade visual)), paleta de cores (baseada em ${color}), tipografia e identidade visual da capa.\n\n${prompt}` },
+            { text: `Use a imagem acima como referencia visual. O slide que voce vai gerar agora DEVE seguir exatamente o mesmo estilo(Não necessariamente replicando os elementos, mas sim a identidade visual))${color ? `, paleta de cores (baseada em ${color})` : ''}, tipografia e identidade visual da capa.\n\n${prompt}` },
         ]
         : prompt;
 
@@ -125,7 +125,7 @@ async function generateSlideImage(
 
 export async function POST(req: NextRequest) {
     try {
-        const { slides, platform = 'instagram', handle = '', color = '#FFFFFF' } = await req.json();
+        const { slides, platform = 'instagram', handle = '', color = '' } = await req.json();
 
         if (!slides || !Array.isArray(slides) || slides.length === 0) {
             return NextResponse.json({ error: "Array de slides e obrigatorio" }, { status: 400 });

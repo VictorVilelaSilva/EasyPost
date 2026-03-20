@@ -25,6 +25,7 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
     const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
     const [color, setColor] = useState('#7f0df2');
+    const [useCustomColor, setUseCustomColor] = useState(false);
 
     const colorPresets = [
         { name: 'Roxo Easy', hex: '#7f0df2' },
@@ -63,7 +64,7 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
             customPrompt: topicContext,
             handle: handle.trim() ? (handle.trim().startsWith('@') ? handle.trim() : `@${handle.trim()}`) : undefined,
             slideCount,
-            color,
+            color: useCustomColor ? color : undefined,
         });
     };
 
@@ -323,17 +324,34 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
 
                     {/* Visual Identity Section */}
                     <div className="flex flex-col gap-6 relative z-10">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-[#a855f7]/20 to-transparent flex items-center justify-center border border-[#a855f7]/10">
-                                <Palette size={18} className="text-[#c08cf7]" />
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-linear-to-br from-[#a855f7]/20 to-transparent flex items-center justify-center border border-[#a855f7]/10">
+                                    <Palette size={18} className="text-[#c08cf7]" />
+                                </div>
+                                <div>
+                                    <h2 className="text-xl font-bold text-white tracking-tight">Identidade Visual</h2>
+                                    <p className="text-xs text-slate-400 font-body">Defina a cor base para a sua marca</p>
+                                </div>
                             </div>
-                            <div>
-                                <h2 className="text-xl font-bold text-white tracking-tight">Identidade Visual</h2>
-                                <p className="text-xs text-slate-400 font-body">Defina a cor base para a sua marca</p>
-                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setUseCustomColor(!useCustomColor)}
+                                className={`relative w-12 h-6 rounded-full transition-all duration-300 cursor-pointer ${
+                                    useCustomColor
+                                        ? 'bg-[#7f0df2] shadow-[0_0_12px_rgba(127,13,242,0.4)]'
+                                        : 'bg-white/10'
+                                }`}
+                            >
+                                <div
+                                    className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all duration-300 ${
+                                        useCustomColor ? 'left-[26px]' : 'left-0.5'
+                                    }`}
+                                />
+                            </button>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+                        {useCustomColor && <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
                             {/* Color Picker & Hex Input */}
                             <div className="flex items-center gap-3 bg-white/5 p-3 rounded-2xl border border-white/5 w-full sm:w-auto">
                                 <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-white/10 shadow-inner group/color">
@@ -392,6 +410,13 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
                                 Esta cor será a base para fundos, tipografia e elementos de destaque em todos os slides.
                             </p>
                         </div>
+                        </div>}
+
+                        {!useCustomColor && (
+                            <p className="text-xs text-slate-500 italic font-body">
+                                A IA escolherá as cores automaticamente com base no tema do conteúdo.
+                            </p>
+                        )}
                     </div>
 
                     <div className="w-full h-px bg-white/5 relative z-10" />
