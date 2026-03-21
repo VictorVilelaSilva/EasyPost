@@ -53,7 +53,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
             const resText = await fetch('/api/generate-carousel', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ topic, niche: nicheVal, platform, objective, slideCount: count }),
+                body: JSON.stringify({ topic, niche: nicheVal, platform, objective, slideCount: count, textFormat: config.textFormat || '' }),
             });
             const dataText = await resText.json();
 
@@ -81,6 +81,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
                     platform,
                     handle: config.handle || '',
                     color: config.color || '',
+                    textFormat: config.textFormat || '',
                     ...(referenceImages && Object.keys(referenceImages).length > 0 && {
                         referenceImages: Object.fromEntries(
                             Object.entries(referenceImages).map(([key, val]) => [
