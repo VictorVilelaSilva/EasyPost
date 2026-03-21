@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from "@google/genai";
 import { TextBlock, Platform } from '@/types';
+import { extractIdentity, logCreation } from '@/lib/creationLog';
 
 export const maxDuration = 60;
 
@@ -125,6 +126,7 @@ REGRAS:
 
 export async function POST(req: NextRequest) {
     try {
+        const identity = await extractIdentity(req);
         const { backgroundBase64, textBlocks, platform = 'instagram', mode = 'auto' } = await req.json() as {
             backgroundBase64: string;
             textBlocks: TextBlock[];
@@ -179,6 +181,15 @@ export async function POST(req: NextRequest) {
         if (!base64Result) {
             throw new Error("Nenhuma imagem retornada pelo Gemini");
         }
+
+        // Fire-and-forget creation log
+        logCreation({
+            userId: identity.userId,
+            ipHash: identity.userId ? null : identity.ipHash,
+            action: 'edit',
+            platform,
+            slideCount: 1,
+        });
 
         return NextResponse.json({ image: `data:image/png;base64,${base64Result}` }, { status: 200 });
 

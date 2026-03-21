@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from "@google/genai";
 import { SlideData, Platform, ReferenceImages } from '@/types';
 import { checkUsageLimit, incrementUsage } from '@/lib/usageLimits';
+import { logCreation } from '@/lib/creationLog';
 
 export const maxDuration = 120;
 
@@ -188,6 +189,15 @@ export async function POST(req: NextRequest) {
         // Increment usage counter after successful generation
         const identifier = usage.userId || usage.ipHash!;
         await incrementUsage(identifier, 'carousel', !usage.userId);
+
+        // Fire-and-forget creation log
+        logCreation({
+            userId: usage.userId ?? null,
+            ipHash: usage.userId ? null : usage.ipHash ?? null,
+            action: 'carousel',
+            platform,
+            slideCount: slides.length,
+        });
 
         return NextResponse.json({ images }, { status: 200 });
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from "@google/genai";
 import { Platform } from '@/types';
 import { checkUsageLimit, incrementUsage } from '@/lib/usageLimits';
+import { logCreation } from '@/lib/creationLog';
 
 export const maxDuration = 60;
 
@@ -85,6 +86,15 @@ REGRAS:
         // Increment edit counter after success
         const identifier = usage.userId || usage.ipHash!;
         await incrementUsage(identifier, 'edit', !usage.userId);
+
+        // Fire-and-forget creation log
+        logCreation({
+            userId: usage.userId ?? null,
+            ipHash: usage.userId ? null : usage.ipHash ?? null,
+            action: 'edit',
+            platform,
+            slideCount: 1,
+        });
 
         return NextResponse.json({ image: `data:image/png;base64,${base64Result}` }, { status: 200 });
 
