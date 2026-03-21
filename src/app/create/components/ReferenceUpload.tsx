@@ -258,9 +258,13 @@ export default function ReferenceUpload({ referenceImages, onUpdate, onContinue,
                             <button
                                 type="button"
                                 onClick={onSkip}
-                                className="flex items-center justify-center rounded-xl h-12 px-6 bg-transparent border border-white/10 hover:bg-white/5 text-slate-300 hover:text-white text-sm font-bold transition-all cursor-pointer"
+                                className={hasAnyImage 
+                                    ? "flex items-center justify-center rounded-xl h-12 px-6 bg-transparent border border-white/10 hover:bg-white/5 text-slate-300 hover:text-white text-sm font-bold transition-all cursor-pointer"
+                                    : "group flex items-center justify-center gap-2 rounded-xl h-12 px-8 bg-[#7f0df2] hover:bg-[#922cee] text-white text-base font-bold shadow-[0_0_20px_rgba(127,13,242,0.4)] hover:shadow-[0_0_30px_rgba(127,13,242,0.6)] transition-all transform hover:-translate-y-0.5 cursor-pointer animate-fade-in"}
+                                style={!hasAnyImage ? { fontFamily: 'var(--font-display)' } : undefined}
                             >
-                                Pular
+                                <span>Pular</span>
+                                {!hasAnyImage && <Sparkles size={18} className="text-[#dab4ff] group-hover:text-white transition-colors" />}
                             </button>
                             {hasAnyImage && (
                                 <button

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCarouselWorkflow } from '@/hooks/useCarouselWorkflow';
 import { useStepNavigation } from './hooks/useStepNavigation';
@@ -11,6 +11,8 @@ import Step1Configuration from './components/steps/Step1Configuration';
 import Step2ReferenceUpload from './components/steps/Step2ReferenceUpload';
 import Step3ImageConfig from './components/steps/Step3ImageConfig';
 import { usePreviewData } from '@/contexts/PreviewContext';
+import UsageLimitModal from '@/components/UsageLimitModal';
+import { useUsageLimits } from '@/hooks/useUsageLimits';
 
 export default function CreatePage() {
     const router = useRouter();
@@ -23,10 +25,19 @@ export default function CreatePage() {
         platform, slideCount,
         isGeneratingText, isGeneratingImages,
         setPlatform, handleGenerateAll, setSlideImages,
-        setCarouselData,
+        setCarouselData, setOnLimitReached,
     } = workflow;
 
     const nav = useStepNavigation();
+    const usage = useUsageLimits();
+    const [limitInfo, setLimitInfo] = useState<{ type: 'carousel' | 'edit'; tier: string } | null>(null);
+
+    // Wire up limit reached callback
+    useEffect(() => {
+        setOnLimitReached(() => (info: { type: 'carousel' | 'edit'; tier: string }) => {
+            setLimitInfo(info);
+        });
+    }, [setOnLimitReached]);
 
     // Navigate to standalone preview when images are ready
     useEffect(() => {
@@ -101,6 +112,28 @@ export default function CreatePage() {
                 <p className="text-base max-w-lg mx-auto" style={{ color: 'var(--color-text-muted)' }}>
                     Digite seu nicho, escolha um tema em alta e deixe a IA gerar slides e imagens prontos para o Instagram.
                 </p>
+
+                {/* Usage indicator */}
+                {!usage.isLoading && usage.carousel.limit !== -1 && (
+                    <div
+                        className="inline-flex items-center gap-2 mt-4 px-4 py-1.5 rounded-full text-xs font-medium"
+                        style={{
+                            background: 'rgba(127,13,242,0.1)',
+                            border: '1px solid rgba(127,13,242,0.2)',
+                            color: usage.carousel.remaining > 0 ? 'rgba(255,255,255,0.6)' : '#f87171',
+                        }}
+                    >
+                        <span
+                            className="w-1.5 h-1.5 rounded-full"
+                            style={{
+                                background: usage.carousel.remaining > 0 ? '#7f0df2' : '#f87171',
+                            }}
+                        />
+                        {usage.carousel.remaining > 0
+                            ? `${usage.carousel.remaining}/${usage.carousel.limit} carrosséis restantes hoje`
+                            : 'Limite diário atingido'}
+                    </div>
+                )}
             </div>
 
             <section className="w-full flex flex-col items-center gap-8 pb-32">
@@ -115,6 +148,12 @@ export default function CreatePage() {
                             platform={platform} setPlatform={setPlatform}
                             onComplete={nav.onSubmitGeneration}
                             onBack={nav.goBack}
+                            usage={{
+                                remaining: usage.carousel.remaining,
+                                limit: usage.carousel.limit,
+                                tier: usage.tier,
+                                isLoading: usage.isLoading,
+                            }}
                         />
                     </div>
                 )}
@@ -160,6 +199,15 @@ export default function CreatePage() {
                     </div>
                 )}
             </section>
+
+            {/* Usage limit modal */}
+            {limitInfo && (
+                <UsageLimitModal
+                    type={limitInfo.type}
+                    tier={limitInfo.tier as 'anonymous' | 'free' | 'paid'}
+                    onClose={() => setLimitInfo(null)}
+                />
+            )}
         </main>
     );
 }

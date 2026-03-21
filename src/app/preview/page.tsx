@@ -23,6 +23,7 @@ import { usePreviewData } from '@/contexts/PreviewContext';
 import { usePreviewLogic } from '@/app/create/components/steps/preview/usePreviewLogic';
 import { EditPromptModal } from '@/app/create/components/steps/preview/EditPromptModal';
 import { CompareModal } from '@/app/create/components/steps/preview/CompareModal';
+import UsageLimitModal from '@/components/UsageLimitModal';
 
 /* ─────────────────────────────────────────────
    Empty state — shown when no data in context
@@ -76,6 +77,7 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
         handleAcceptEdit,
         handleRejectEdit,
         handleSaveCtaDefault,
+        setOnEditLimitReached,
     } = usePreviewLogic(previewData.images, previewData.slideTypes, previewData.caption, previewData.platform);
 
     const [showEditModal, setShowEditModal] = useState(false);
@@ -83,6 +85,14 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
     const [ctaSaved, setCtaSaved] = useState(false);
     const [captionCopied, setCaptionCopied] = useState(false);
     const [isZoomed, setIsZoomed] = useState(false);
+    const [limitInfo, setLimitInfo] = useState<{ type: 'carousel' | 'edit'; tier: string } | null>(null);
+
+    // Wire up the limit callback
+    useEffect(() => {
+        setOnEditLimitReached(() => (info: { type: 'carousel' | 'edit'; tier: string }) => {
+            setLimitInfo(info);
+        });
+    }, [setOnEditLimitReached]);
 
     const slideTypeLabels: Record<string, string> = { cover: 'Capa', content: 'Conteúdo', cta: 'CTA' };
 
@@ -578,6 +588,15 @@ function PreviewContent({ previewData }: { previewData: NonNullable<ReturnType<t
                     edited={compareData.edited}
                     onAccept={handleAcceptEdit}
                     onReject={handleRejectEdit}
+                />
+            )}
+
+            {/* Usage limit modal */}
+            {limitInfo && (
+                <UsageLimitModal
+                    type={limitInfo.type}
+                    tier={limitInfo.tier as 'anonymous' | 'free' | 'paid'}
+                    onClose={() => setLimitInfo(null)}
                 />
             )}
 

@@ -133,15 +133,15 @@ export async function POST(req: NextRequest) {
         };
 
         if (!backgroundBase64) {
-            return NextResponse.json({ error: "Imagem de fundo e obrigatoria" }, { status: 400 });
+            return NextResponse.json({ error: "Imagem de fundo é obrigatória" }, { status: 400 });
         }
         if (!textBlocks || textBlocks.length === 0) {
-            return NextResponse.json({ error: "Blocos de texto sao obrigatorios" }, { status: 400 });
+            return NextResponse.json({ error: "Blocos de texto são obrigatórios" }, { status: 400 });
         }
 
         const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
         if (!apiKey) {
-            return NextResponse.json({ error: "Chave da API nao encontrada" }, { status: 500 });
+            return NextResponse.json({ error: "Chave da API não encontrada" }, { status: 500 });
         }
 
         const ai = new GoogleGenAI({ apiKey });

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { CarouselData, ImageConfig, Platform, PostObjective, ReferenceImages } from '../types';
 import { useAuth } from '@/contexts/AuthContext';
 import { incrementRequestCount } from '@/lib/userService';
+import { auth } from '@/lib/firebase';
+import { toast } from 'sonner';
 
 interface CarouselWorkflowState {
     carouselData: CarouselData | null;
@@ -22,6 +24,8 @@ interface CarouselWorkflowActions {
     setSlideImages: (images: string[] | null) => void;
     setCarouselData: (data: CarouselData | null) => void;
     handleGenerateAll: (config: ImageConfig, referenceImages?: ReferenceImages) => Promise<void>;
+    onLimitReached: ((info: { type: 'carousel' | 'edit'; tier: string }) => void) | null;
+    setOnLimitReached: (cb: ((info: { type: 'carousel' | 'edit'; tier: string }) => void) | null) => void;
 }
 
 export type CarouselWorkflow = CarouselWorkflowState & CarouselWorkflowActions;
@@ -37,11 +41,23 @@ export function useCarouselWorkflow(): CarouselWorkflow {
 
     const [isGeneratingText, setIsGeneratingText] = useState(false);
     const [isGeneratingImages, setIsGeneratingImages] = useState(false);
+    const [onLimitReached, setOnLimitReached] = useState<((info: { type: 'carousel' | 'edit'; tier: string }) => void) | null>(null);
+
+    const getAuthHeaders = async (): Promise<Record<string, string>> => {
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+            const token = await currentUser.getIdToken();
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+        return headers;
+    };
 
     const handleGenerateAll = async (config: ImageConfig, referenceImages?: ReferenceImages) => {
         const topic = config.customPrompt || '';
         const nicheVal = config.audience?.interests || '';
         const count = config.slideCount ?? slideCount;
+        const headers = await getAuthHeaders();
 
         setIsGeneratingText(true);
         setCarouselData(null);
@@ -52,9 +68,17 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         try {
             const resText = await fetch('/api/generate-carousel', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
                 body: JSON.stringify({ topic, niche: nicheVal, platform, objective, slideCount: count }),
             });
+
+            if (resText.status === 429) {
+                const limitData = await resText.json();
+                onLimitReached?.({ type: 'carousel', tier: limitData.tier });
+                setIsGeneratingText(false);
+                return;
+            }
+
             const dataText = await resText.json();
 
             if (!dataText.slides || !dataText.caption) {
@@ -64,7 +88,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
             setCarouselData(carousel);
         } catch (e: unknown) {
             console.error(e);
-            alert(e instanceof Error ? e.message : 'Erro ao gerar texto do carrossel');
+            toast.error(e instanceof Error ? e.message : 'Erro ao gerar texto do carrossel');
             setIsGeneratingText(false);
             return;
         }
@@ -75,7 +99,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         try {
             const resImages = await fetch('/api/generate-images', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
                 body: JSON.stringify({
                     slides: carousel!.slides,
                     platform,
@@ -91,6 +115,14 @@ export function useCarouselWorkflow(): CarouselWorkflow {
                     }),
                 }),
             });
+
+            if (resImages.status === 429) {
+                const limitData = await resImages.json();
+                onLimitReached?.({ type: 'carousel', tier: limitData.tier });
+                setIsGeneratingImages(false);
+                return;
+            }
+
             const dataImages = await resImages.json();
 
             if (!dataImages.images) {
@@ -104,7 +136,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
             }
         } catch (e: unknown) {
             console.error(e);
-            alert(e instanceof Error ? e.message : 'Erro ao gerar imagens');
+            toast.error(e instanceof Error ? e.message : 'Erro ao gerar imagens');
         }
 
         setIsGeneratingImages(false);
@@ -124,5 +156,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
         setSlideImages,
         setCarouselData,
         handleGenerateAll,
+        onLimitReached,
+        setOnLimitReached,
     };
 }

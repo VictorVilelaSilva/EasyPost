@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Sparkles, Layers, Terminal, CheckCircle2, Loader2, Wand2, Palette, Hash } from 'lucide-react';
 import { ImageConfig as ImageConfigType } from '@/types';
+import { toast } from 'sonner';
 
 interface Suggestion {
     id: number;
@@ -50,10 +51,10 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
             if (data.suggestions) {
                 setSuggestions(data.suggestions);
             } else {
-                alert(data.error || 'Falha ao gerar sugestoes');
+                toast.error(data.error || 'Falha ao gerar sugestões');
             }
         } catch {
-            alert('Erro de conexao ao gerar sugestoes');
+            toast.error('Erro de conexão ao gerar sugestões');
         }
         setIsLoadingSuggestions(false);
     };
@@ -171,20 +172,20 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
                                     />
                                     
                                     {/* Magical Ghost Button inside Textarea Container */}
-                                    <div className="absolute bottom-3 right-3">
+                                    <div className="absolute bottom-3 right-3 z-10">
                                         <button
                                             type="button"
                                             onClick={handleGenerateSuggestions}
                                             disabled={!niche.trim() || isLoadingSuggestions}
-                                            className="group/btn flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed bg-[#1a0a2e] hover:bg-[#25123d] border border-[#a855f7]/20 hover:border-[#a855f7]/50 shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+                                            className="group/btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all transform hover:-translate-y-0.5 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none bg-[#7f0df2]/20 hover:bg-[#7f0df2]/40 border border-[#a855f7]/40 hover:border-[#a855f7] shadow-[0_0_15px_rgba(127,13,242,0.3)] hover:shadow-[0_0_25px_rgba(127,13,242,0.5)] backdrop-blur-md"
                                         >
                                             {isLoadingSuggestions ? (
-                                                <Loader2 size={14} className="animate-spin text-[#c08cf7]" />
+                                                <Loader2 size={16} className="animate-spin text-[#dab4ff]" />
                                             ) : (
-                                                <Wand2 size={14} className="text-[#c08cf7] group-hover/btn:text-[#dab4ff] transition-colors" />
+                                                <Wand2 size={16} className="text-[#dab4ff] group-hover/btn:text-white transition-colors" />
                                             )}
-                                            <span className="bg-linear-to-r from-[#c08cf7] to-[#dab4ff] bg-clip-text text-transparent">
-                                                {isLoadingSuggestions ? 'Pensando...' : suggestions.length > 0 ? 'Novas Ideias' : 'Ideias por IA'}
+                                            <span className="text-[#dab4ff] group-hover/btn:text-white transition-colors drop-shadow-md">
+                                                {isLoadingSuggestions ? 'Pensando...' : suggestions.length > 0 ? 'Gerar Novas Ideias' : 'Gerar Ideias por IA'}
                                             </span>
                                         </button>
                                     </div>
@@ -270,44 +271,38 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
                         </div>
 
                         <div className="flex flex-col gap-6 pt-2">
-                            <div className="relative pt-6 pb-2">
-                                {/* Slide Value Indicator */}
-                                <div 
-                                    className="absolute top-0 -mt-6 flex flex-col items-center transition-all duration-200"
-                                    style={{ left: `calc(${((slideCount - 1) / 9) * 100}% - 12px)` }}
-                                >
-                                    <div className="bg-[#1a0a2e] border border-[#a855f7]/40 text-[#dab4ff] text-[11px] font-bold px-2 py-0.5 rounded shadow-[0_0_10px_rgba(168,85,247,0.2)]">
-                                        {slideCount}
-                                    </div>
-                                    <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-[#192540]"></div>
-                                </div>
-
-                                <div className="flex justify-between w-full mb-3 px-1">
+                            <div className="relative flex flex-col gap-4">
+                                {/* Labels 1–10 */}
+                                <div className="flex justify-between px-[2px]">
                                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                                        <div 
-                                            key={n} 
-                                            className="flex flex-col items-center gap-2 relative z-0"
+                                        <span
+                                            key={n}
                                             onClick={() => setSlideCount(n)}
+                                            className={`text-[10px] font-mono cursor-pointer transition-all duration-200 select-none ${n === slideCount ? 'text-[#dab4ff] font-bold' : 'text-slate-600 hover:text-slate-400'}`}
                                         >
-                                            <div 
-                                                className={`w-[3px] transition-all duration-300 rounded-full cursor-pointer hover:bg-white hover:h-[14px] absolute -top-[7px] ${n === slideCount ? 'h-[14px] bg-[#a855f7] shadow-[0_0_8px_rgba(168,85,247,0.6)] z-20' : n < slideCount ? 'h-2 bg-[#a855f7]/50 mt-[3px]' : 'h-2 bg-white/20 mt-[3px]'}`}
-                                            />
-                                        </div>
+                                            {n}
+                                        </span>
                                     ))}
                                 </div>
-                                <input
-                                    type="range"
-                                    min={1}
-                                    max={10}
-                                    value={slideCount}
-                                    onChange={(e) => setSlideCount(Number(e.target.value))}
-                                    className="w-full absolute top-[35px] left-0 h-8 opacity-0 cursor-pointer z-20"
-                                />
-                                {/* Custom track background */}
-                                <div className="absolute top-[35px] left-0 w-full h-[3px] bg-white/5 rounded-full overflow-hidden pointer-events-none z-10">
-                                    <div 
-                                        className="h-full bg-linear-to-r from-[#7f0df2] to-[#c08cf7] transition-all duration-200"
-                                        style={{ width: `${((slideCount - 1) / 9) * 100}%` }}
+
+                                {/* Slider track + thumb */}
+                                <div className="relative flex items-center">
+                                    {/* Track fill */}
+                                    <div className="absolute left-0 top-1/2 -translate-y-1/2 h-[4px] rounded-full bg-white/8 w-full pointer-events-none" />
+                                    <div
+                                        className="absolute left-0 top-1/2 -translate-y-1/2 h-[4px] rounded-full pointer-events-none transition-all duration-150"
+                                        style={{
+                                            width: `${((slideCount - 1) / 9) * 100}%`,
+                                            background: 'linear-gradient(to right, #7f0df2, #c08cf7)',
+                                        }}
+                                    />
+                                    <input
+                                        type="range"
+                                        min={1}
+                                        max={10}
+                                        value={slideCount}
+                                        onChange={(e) => setSlideCount(Number(e.target.value))}
+                                        className="ep-slider relative z-10"
                                     />
                                 </div>
                             </div>

@@ -92,7 +92,6 @@ export default function HowItWorks() {
                                         width={1200}
                                         height={675}
                                         className="w-full h-auto transition-transform duration-700 group-hover:scale-[1.02] opacity-90"
-                                        quality={85}
                                     />
                                 </div>
                             </motion.div>

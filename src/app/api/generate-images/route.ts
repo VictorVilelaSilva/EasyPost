@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from "@google/genai";
 import { SlideData, Platform, ReferenceImages } from '@/types';
+import { checkUsageLimit, incrementUsage } from '@/lib/usageLimits';
 
 export const maxDuration = 120;
 
@@ -125,6 +126,17 @@ async function generateSlideImage(
 
 export async function POST(req: NextRequest) {
     try {
+        // Check carousel usage limit
+        const usage = await checkUsageLimit(req, 'carousel');
+        if (!usage.allowed) {
+            return NextResponse.json({
+                error: 'Limite de gerações atingido',
+                tier: usage.tier,
+                remaining: usage.remaining,
+                limit: usage.limit,
+            }, { status: 429 });
+        }
+
         const { slides, platform = 'instagram', handle = '', color = '', referenceImages } = await req.json() as {
             slides: SlideData[];
             platform: Platform;
@@ -134,12 +146,12 @@ export async function POST(req: NextRequest) {
         };
 
         if (!slides || !Array.isArray(slides) || slides.length === 0) {
-            return NextResponse.json({ error: "Array de slides e obrigatorio" }, { status: 400 });
+            return NextResponse.json({ error: "Array de slides é obrigatório" }, { status: 400 });
         }
 
         const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
         if (!apiKey) {
-            return NextResponse.json({ error: "Chave da API nao encontrada" }, { status: 500 });
+            return NextResponse.json({ error: "Chave da API não encontrada" }, { status: 500 });
         }
 
         const ai = new GoogleGenAI({ apiKey });
@@ -166,6 +178,10 @@ export async function POST(req: NextRequest) {
             : [];
 
         const images = [coverImage, ...remainingImages];
+
+        // Increment usage counter after successful generation
+        const identifier = usage.userId || usage.ipHash!;
+        await incrementUsage(identifier, 'carousel', !usage.userId);
 
         return NextResponse.json({ images }, { status: 200 });
 

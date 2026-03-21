@@ -42,6 +42,7 @@ export const metadata: Metadata = {
 
 import GlobalHeader from "@/components/GlobalHeader";
 import { PreviewProvider } from "@/contexts/PreviewContext";
+import { Toaster } from "sonner";
 
 export default function RootLayout({
   children,
@@ -64,6 +65,19 @@ export default function RootLayout({
             {children}
           </PreviewProvider>
         </AuthProvider>
+        <Toaster
+          theme="dark"
+          position="top-right"
+          richColors
+          toastOptions={{
+            style: {
+              background: 'rgba(22, 10, 38, 0.9)',
+              border: '1px solid rgba(168, 85, 247, 0.2)',
+              backdropFilter: 'blur(12px)',
+              fontFamily: 'var(--font-body)',
+            },
+          }}
+        />
       </body>
     </html>
   );

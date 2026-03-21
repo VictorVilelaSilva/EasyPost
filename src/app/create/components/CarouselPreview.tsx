@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { CarouselData } from '@/types';
 import { downloadCarouselZip } from '@/lib/downloadZip';
 import { Download, Copy, CheckCircle2, ZoomIn, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Props {
     data: CarouselData | null;
@@ -24,7 +25,7 @@ export default function CarouselPreview({ data, topic, images }: Props) {
             await downloadCarouselZip(topic, data, images);
         } catch (e) {
             console.error(e);
-            alert('Falha ao baixar o pacote');
+            toast.error('Falha ao baixar o pacote');
         }
         setIsDownloading(false);
     };

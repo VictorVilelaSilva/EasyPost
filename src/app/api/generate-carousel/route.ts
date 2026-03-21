@@ -1,7 +1,20 @@
 import { GoogleGenAI, Type } from "@google/genai";
+import { NextRequest } from 'next/server';
+import { checkUsageLimit } from '@/lib/usageLimits';
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     try {
+        // Check carousel usage limit (no increment here — increment happens in generate-images)
+        const usage = await checkUsageLimit(req, 'carousel');
+        if (!usage.allowed) {
+            return new Response(JSON.stringify({
+                error: 'Limite de gerações atingido',
+                tier: usage.tier,
+                remaining: usage.remaining,
+                limit: usage.limit,
+            }), { status: 429, headers: { 'Content-Type': 'application/json' } });
+        }
+
         const { topic, niche, platform, objective, slideCount } = await req.json();
 
         if (!topic || !niche) {

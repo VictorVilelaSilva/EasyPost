@@ -1,11 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from "@google/genai";
 import { Platform } from '@/types';
+import { checkUsageLimit, incrementUsage } from '@/lib/usageLimits';
 
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
     try {
+        // Check edit usage limit
+        const usage = await checkUsageLimit(req, 'edit');
+        if (!usage.allowed) {
+            return NextResponse.json({
+                error: 'Limite de edições atingido',
+                tier: usage.tier,
+                remaining: usage.remaining,
+                limit: usage.limit,
+            }, { status: 429 });
+        }
+
         const { imageBase64, editPrompt, platform = 'instagram' } = await req.json() as {
             imageBase64: string;
             editPrompt: string;
@@ -13,15 +25,15 @@ export async function POST(req: NextRequest) {
         };
 
         if (!imageBase64) {
-            return NextResponse.json({ error: "Imagem e obrigatoria" }, { status: 400 });
+            return NextResponse.json({ error: "Imagem é obrigatória" }, { status: 400 });
         }
         if (!editPrompt || editPrompt.trim().length === 0) {
-            return NextResponse.json({ error: "Instrucao de edicao e obrigatoria" }, { status: 400 });
+            return NextResponse.json({ error: "Instrução de edição é obrigatória" }, { status: 400 });
         }
 
         const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
         if (!apiKey) {
-            return NextResponse.json({ error: "Chave da API nao encontrada" }, { status: 500 });
+            return NextResponse.json({ error: "Chave da API não encontrada" }, { status: 500 });
         }
 
         const ai = new GoogleGenAI({ apiKey });
@@ -69,6 +81,10 @@ REGRAS:
         if (!base64Result) {
             throw new Error("Nenhuma imagem retornada pelo Gemini");
         }
+
+        // Increment edit counter after success
+        const identifier = usage.userId || usage.ipHash!;
+        await incrementUsage(identifier, 'edit', !usage.userId);
 
         return NextResponse.json({ image: `data:image/png;base64,${base64Result}` }, { status: 200 });
 
