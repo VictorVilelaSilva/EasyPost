@@ -5,11 +5,17 @@ export function useStepNavigation() {
     const [currentStep, setCurrentStep] = useState(1);
     const [referenceImages, setReferenceImages] = useState<ReferenceImages>({});
 
+    const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
     const onSubmitGeneration = () => {
         setCurrentStep(2);
+        scrollToTop();
     };
 
-    const goBack = () => setCurrentStep((s) => Math.max(1, s - 1));
+    const goBack = () => {
+        setCurrentStep((s) => Math.max(1, s - 1));
+        scrollToTop();
+    };
 
     return {
         currentStep,
@@ -17,6 +23,6 @@ export function useStepNavigation() {
         setReferenceImages,
         onSubmitGeneration,
         goBack,
-        goToStep: setCurrentStep,
+        goToStep: (step: number) => { setCurrentStep(step); scrollToTop(); },
     };
 }

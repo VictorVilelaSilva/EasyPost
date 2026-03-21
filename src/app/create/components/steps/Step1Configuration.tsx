@@ -94,25 +94,25 @@ export default function Step1Configuration({ platform, setPlatform, onComplete, 
                 {/* 1. Seleção de Plataforma */}
                 <section className={`flex flex-col gap-4 ${limitReached ? 'opacity-40 pointer-events-none select-none' : ''}`}>
                     <h3 className="text-xl font-bold text-white font-display">1. Seleção de Plataforma</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
 
                         {/* Instagram */}
                         <button
                             type="button"
                             onClick={() => setPlatform('instagram')}
-                            className={`glass-card rounded-2xl p-6 flex flex-col items-center justify-center gap-6 aspect-[4/5] group transition-all duration-300 relative overflow-hidden ${platform === 'instagram' ? 'selected border-2 border-[#7f0df2] shadow-[0_0_20px_rgba(127,13,242,0.3)]' : 'border border-[#7f0df2]/10 hover:border-[#7f0df2]/30 hover:bg-[#241930]/80'}`}
+                            className={`glass-card rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center gap-3 sm:gap-6 aspect-[4/5] group transition-all duration-300 relative overflow-hidden ${platform === 'instagram' ? 'selected border-2 border-[#7f0df2] shadow-[0_0_20px_rgba(127,13,242,0.3)]' : 'border border-[#7f0df2]/10 hover:border-[#7f0df2]/30 hover:bg-[#241930]/80'}`}
                             style={{
                                 background: platform === 'instagram' ? 'rgba(36, 25, 48, 0.8)' : 'rgba(22, 16, 29, 0.6)',
                                 backdropFilter: 'blur(12px)'
                             }}
                         >
                             <div className="absolute inset-0 bg-gradient-to-br from-[#833ab4]/20 via-[#fd1d1d]/20 to-[#fcb045]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className="relative z-10 w-20 h-20 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center shadow-lg shadow-[#bc1888]/30">
-                                <Instagram className="text-white" size={32} />
+                            <div className="relative z-10 w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center shadow-lg shadow-[#bc1888]/30">
+                                <Instagram className="text-white" size={24} />
                             </div>
                             <div className="relative z-10 text-center">
-                                <h3 className="text-xl font-bold text-white mb-2">Instagram</h3>
-                                <p className="text-[11px] text-slate-400">Feed, Stories & Reels</p>
+                                <h3 className="text-base sm:text-xl font-bold text-white mb-1">Instagram</h3>
+                                <p className="text-[10px] sm:text-[11px] text-slate-400">Feed, Stories & Reels</p>
                             </div>
                             {platform === 'instagram' && (
                                 <div className="absolute top-4 right-4 bg-[#7f0df2] text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-full flex items-center gap-1 z-10">
@@ -122,13 +122,13 @@ export default function Step1Configuration({ platform, setPlatform, onComplete, 
                         </button>
 
                         {/* LinkedIn */}
-                        <div className="glass-card opacity-50 pointer-events-none grayscale rounded-2xl p-6 flex flex-col items-center justify-center gap-6 aspect-[4/5] relative border border-[#7f0df2]/10" style={{ background: 'rgba(22, 16, 29, 0.6)', backdropFilter: 'blur(12px)' }}>
-                            <div className="relative z-10 w-20 h-20 rounded-2xl bg-[#0077b5] flex items-center justify-center">
-                                <Linkedin className="text-white" size={32} />
+                        <div className="glass-card opacity-50 pointer-events-none grayscale rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center gap-3 sm:gap-6 aspect-[4/5] relative border border-[#7f0df2]/10" style={{ background: 'rgba(22, 16, 29, 0.6)', backdropFilter: 'blur(12px)' }}>
+                            <div className="relative z-10 w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-[#0077b5] flex items-center justify-center">
+                                <Linkedin className="text-white" size={24} />
                             </div>
                             <div className="relative z-10 text-center">
-                                <h3 className="text-xl font-bold text-white mb-2">LinkedIn</h3>
-                                <p className="text-[11px] text-slate-400">Artigos & Posts</p>
+                                <h3 className="text-base sm:text-xl font-bold text-white mb-1">LinkedIn</h3>
+                                <p className="text-[10px] sm:text-[11px] text-slate-400">Artigos & Posts</p>
                             </div>
                             <div className="absolute inset-0 flex items-center justify-center z-20">
                                 <div className="bg-[#16101d]/90 border border-slate-700 backdrop-blur-sm px-3 py-1.5 rounded-full font-bold text-xs tracking-wide shadow-xl text-white">
@@ -138,13 +138,13 @@ export default function Step1Configuration({ platform, setPlatform, onComplete, 
                         </div>
 
                         {/* X (Twitter) */}
-                        <div className="glass-card opacity-50 pointer-events-none grayscale rounded-2xl p-6 flex flex-col items-center justify-center gap-6 aspect-[4/5] relative border border-[#7f0df2]/10" style={{ background: 'rgba(22, 16, 29, 0.6)', backdropFilter: 'blur(12px)' }}>
-                            <div className="relative z-10 w-20 h-20 rounded-2xl bg-white flex items-center justify-center">
-                                <Twitter className="text-black" fill="currentColor" size={32} />
+                        <div className="glass-card opacity-50 pointer-events-none grayscale rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center gap-3 sm:gap-6 aspect-[4/5] relative border border-[#7f0df2]/10" style={{ background: 'rgba(22, 16, 29, 0.6)', backdropFilter: 'blur(12px)' }}>
+                            <div className="relative z-10 w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-white flex items-center justify-center">
+                                <Twitter className="text-black" fill="currentColor" size={24} />
                             </div>
                             <div className="relative z-10 text-center">
-                                <h3 className="text-xl font-bold text-white mb-2">X (Twitter)</h3>
-                                <p className="text-[11px] text-slate-400">Threads & Tweets</p>
+                                <h3 className="text-base sm:text-xl font-bold text-white mb-1">X (Twitter)</h3>
+                                <p className="text-[10px] sm:text-[11px] text-slate-400">Threads & Tweets</p>
                             </div>
                             <div className="absolute inset-0 flex items-center justify-center z-20">
                                 <div className="bg-[#16101d]/90 border border-slate-700 backdrop-blur-sm px-3 py-1.5 rounded-full font-bold text-xs tracking-wide shadow-xl text-white">
@@ -154,13 +154,13 @@ export default function Step1Configuration({ platform, setPlatform, onComplete, 
                         </div>
 
                         {/* TikTok */}
-                        <div className="glass-card opacity-50 pointer-events-none grayscale rounded-2xl p-6 flex flex-col items-center justify-center gap-6 aspect-[4/5] relative border border-[#7f0df2]/10" style={{ background: 'rgba(22, 16, 29, 0.6)', backdropFilter: 'blur(12px)' }}>
-                            <div className="relative z-10 w-20 h-20 rounded-2xl bg-[#010101] flex items-center justify-center border border-[#69C9D0] shadow-[inset_0_0_10px_#EE1D52]">
-                                <Music className="text-white" size={32} />
+                        <div className="glass-card opacity-50 pointer-events-none grayscale rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center gap-3 sm:gap-6 aspect-[4/5] relative border border-[#7f0df2]/10" style={{ background: 'rgba(22, 16, 29, 0.6)', backdropFilter: 'blur(12px)' }}>
+                            <div className="relative z-10 w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-[#010101] flex items-center justify-center border border-[#69C9D0] shadow-[inset_0_0_10px_#EE1D52]">
+                                <Music className="text-white" size={24} />
                             </div>
                             <div className="relative z-10 text-center">
-                                <h3 className="text-xl font-bold text-white mb-2">TikTok</h3>
-                                <p className="text-[11px] text-slate-400">Vídeos curtos</p>
+                                <h3 className="text-base sm:text-xl font-bold text-white mb-1">TikTok</h3>
+                                <p className="text-[10px] sm:text-[11px] text-slate-400">Vídeos curtos</p>
                             </div>
                             <div className="absolute inset-0 flex items-center justify-center z-20">
                                 <div className="bg-[#16101d]/90 border border-slate-700 backdrop-blur-sm px-3 py-1.5 rounded-full font-bold text-xs tracking-wide shadow-xl text-white">
@@ -173,7 +173,7 @@ export default function Step1Configuration({ platform, setPlatform, onComplete, 
 
 
                 {/* Actions */}
-                <div className="w-full flex justify-between items-center border-t border-white/10 pt-8 mt-2">
+                <div className="w-full flex justify-between items-center border-t border-white/10 pt-6 mt-2 sm:static sticky bottom-0 sm:bg-transparent sm:backdrop-blur-none bg-[#0d0a14]/90 backdrop-blur-md sm:pb-0 pb-4 sm:px-0 -mx-4 px-4 sm:mx-0">
                     <button
                         type="button"
                         onClick={onBack}
