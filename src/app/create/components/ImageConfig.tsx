@@ -351,66 +351,69 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
                             </button>
                         </div>
 
-                        {useCustomColor && <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
-                            {/* Color Picker & Hex Input */}
-                            <div className="flex items-center gap-3 bg-white/5 p-3 rounded-2xl border border-white/5 w-full sm:w-auto">
-                                <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-white/10 shadow-inner group/color">
-                                    <input
-                                        type="color"
-                                        value={color}
-                                        onChange={(e) => setColor(e.target.value)}
-                                        className="absolute -inset-2 w-[150%] h-[150%] cursor-pointer bg-transparent border-none p-0"
-                                    />
-                                    <div 
-                                        className="absolute inset-0 pointer-events-none transition-transform group-hover/color:scale-110"
-                                        style={{ backgroundColor: color }}
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Cor Principal</span>
-                                    <div className="relative">
-                                        <Hash size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-                                        <input
-                                            type="text"
-                                            value={color.replace('#', '')}
-                                            onChange={(e) => {
-                                                const val = e.target.value;
-                                                if (val.length <= 6) {
-                                                    setColor(`#${val.toUpperCase()}`);
-                                                }
-                                            }}
-                                            className="bg-transparent border-none text-sm font-mono text-slate-200 focus:outline-none w-24 pl-7"
-                                            maxLength={6}
-                                        />
+                        {useCustomColor && (
+                            <>
+                                <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+                                    {/* Color Picker & Hex Input */}
+                                    <div className="flex items-center gap-3 bg-white/5 p-3 rounded-2xl border border-white/5 w-full sm:w-auto">
+                                        <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-white/10 shadow-inner group/color">
+                                            <input
+                                                type="color"
+                                                value={color}
+                                                onChange={(e) => setColor(e.target.value)}
+                                                className="absolute -inset-2 w-[150%] h-[150%] cursor-pointer bg-transparent border-none p-0"
+                                            />
+                                            <div
+                                                className="absolute inset-0 pointer-events-none transition-transform group-hover/color:scale-110"
+                                                style={{ backgroundColor: color }}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col gap-1">
+                                            <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Cor Principal</span>
+                                            <div className="relative">
+                                                <Hash size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                                                <input
+                                                    type="text"
+                                                    value={color.replace('#', '')}
+                                                    onChange={(e) => {
+                                                        const val = e.target.value;
+                                                        if (val.length <= 6) {
+                                                            setColor(`#${val.toUpperCase()}`);
+                                                        }
+                                                    }}
+                                                    className="bg-transparent border-none text-sm font-mono text-slate-200 focus:outline-none w-24 pl-7"
+                                                    maxLength={6}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Quick Presets */}
+                                    <div className="flex flex-wrap gap-2">
+                                        {colorPresets.map((preset) => (
+                                            <button
+                                                key={preset.hex}
+                                                onClick={() => setColor(preset.hex)}
+                                                title={preset.name}
+                                                className={`w-8 h-8 rounded-lg border transition-all duration-300 transform hover:scale-110 active:scale-95 ${
+                                                    color.toUpperCase() === preset.hex.toUpperCase()
+                                                        ? 'border-white scale-110 shadow-[0_0_12px_rgba(255,255,255,0.3)]'
+                                                        : 'border-white/10 hover:border-white/30'
+                                                }`}
+                                                style={{ backgroundColor: preset.hex }}
+                                            />
+                                        ))}
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Quick Presets */}
-                            <div className="flex flex-wrap gap-2">
-                                {colorPresets.map((preset) => (
-                                    <button
-                                        key={preset.hex}
-                                        onClick={() => setColor(preset.hex)}
-                                        title={preset.name}
-                                        className={`w-8 h-8 rounded-lg border transition-all duration-300 transform hover:scale-110 active:scale-95 ${
-                                            color.toUpperCase() === preset.hex.toUpperCase()
-                                                ? 'border-white scale-110 shadow-[0_0_12px_rgba(255,255,255,0.3)]'
-                                                : 'border-white/10 hover:border-white/30'
-                                        }`}
-                                        style={{ backgroundColor: preset.hex }}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                        
-                        <div className="flex gap-2 text-slate-500 mt-1 px-1">
-                            <Sparkles size={14} className="mt-0.5 text-slate-400" />
-                            <p className="text-[12px] font-medium italic">
-                                Esta cor será a base para fundos, tipografia e elementos de destaque em todos os slides.
-                            </p>
-                        </div>
-                        </div>}
+                                <div className="flex gap-2 text-slate-500 mt-1 px-1">
+                                    <Sparkles size={14} className="mt-0.5 text-slate-400" />
+                                    <p className="text-[12px] font-medium italic">
+                                        Esta cor será a base para fundos, tipografia e elementos de destaque em todos os slides.
+                                    </p>
+                                </div>
+                            </>
+                        )}
 
                         {!useCustomColor && (
                             <p className="text-xs text-slate-500 italic font-body">

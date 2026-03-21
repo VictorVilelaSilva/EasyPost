@@ -2,9 +2,10 @@
 
 
 const STEP_LABELS: Record<number, string> = {
-    1: 'Passo 1 de 2',
-    2: 'Passo 2 de 2',
-    3: 'Concluido',
+    1: 'Passo 1 de 3',
+    2: 'Passo 2 de 3',
+    3: 'Passo 3 de 3',
+    4: 'Concluido',
 };
 
 interface Props {
@@ -23,7 +24,7 @@ export default function StepProgress({ currentStep }: Props) {
                 </span>
             </div>
             <div className="flex items-center gap-2 w-full px-2">
-                {[1, 2].map((i) => (
+                {[1, 2, 3].map((i) => (
                     <div
                         key={i}
                         className={`h-1.5 flex-1 rounded-full transition-all duration-500 cursor-default ${currentStep >= i

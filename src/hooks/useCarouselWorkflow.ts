@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CarouselData, ImageConfig, Platform, PostObjective } from '../types';
+import { CarouselData, ImageConfig, Platform, PostObjective, ReferenceImages } from '../types';
 import { useAuth } from '@/contexts/AuthContext';
 import { incrementRequestCount } from '@/lib/userService';
 
@@ -21,7 +21,7 @@ interface CarouselWorkflowActions {
     setSlideCount: (count: number) => void;
     setSlideImages: (images: string[] | null) => void;
     setCarouselData: (data: CarouselData | null) => void;
-    handleGenerateAll: (config: ImageConfig) => Promise<void>;
+    handleGenerateAll: (config: ImageConfig, referenceImages?: ReferenceImages) => Promise<void>;
 }
 
 export type CarouselWorkflow = CarouselWorkflowState & CarouselWorkflowActions;
@@ -38,7 +38,7 @@ export function useCarouselWorkflow(): CarouselWorkflow {
     const [isGeneratingText, setIsGeneratingText] = useState(false);
     const [isGeneratingImages, setIsGeneratingImages] = useState(false);
 
-    const handleGenerateAll = async (config: ImageConfig) => {
+    const handleGenerateAll = async (config: ImageConfig, referenceImages?: ReferenceImages) => {
         const topic = config.customPrompt || '';
         const nicheVal = config.audience?.interests || '';
         const count = config.slideCount ?? slideCount;
@@ -81,6 +81,14 @@ export function useCarouselWorkflow(): CarouselWorkflow {
                     platform,
                     handle: config.handle || '',
                     color: config.color || '',
+                    ...(referenceImages && Object.keys(referenceImages).length > 0 && {
+                        referenceImages: Object.fromEntries(
+                            Object.entries(referenceImages).map(([key, val]) => [
+                                key,
+                                val ? val.replace(/^data:image\/\w+;base64,/, '') : undefined,
+                            ]).filter(([, v]) => v)
+                        ),
+                    }),
                 }),
             });
             const dataImages = await resImages.json();

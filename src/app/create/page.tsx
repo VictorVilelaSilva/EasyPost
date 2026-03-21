@@ -7,8 +7,9 @@ import { useStepNavigation } from './hooks/useStepNavigation';
 import LoadingCard from './components/LoadingCard';
 import SkeletonPreview from './components/SkeletonPreview';
 import StepProgress from './components/steps/StepProgress';
-import Step3ImageConfig from './components/steps/Step3ImageConfig';
 import Step1Configuration from './components/steps/Step1Configuration';
+import Step2ReferenceUpload from './components/steps/Step2ReferenceUpload';
+import Step3ImageConfig from './components/steps/Step3ImageConfig';
 import { usePreviewData } from '@/contexts/PreviewContext';
 
 export default function CreatePage() {
@@ -30,7 +31,7 @@ export default function CreatePage() {
     // Navigate to standalone preview when images are ready
     useEffect(() => {
         if (
-            nav.currentStep === 3 &&
+            nav.currentStep === 4 &&
             !isGeneratingImages &&
             slideImages &&
             carouselData &&
@@ -48,9 +49,9 @@ export default function CreatePage() {
         }
     }, [nav.currentStep, isGeneratingImages, slideImages, carouselData, platform, setPreviewData, setSlideImages, router]);
 
-    // Reset navigation flag when going back to step 2
+    // Reset navigation flag when going back
     useEffect(() => {
-        if (nav.currentStep < 3) {
+        if (nav.currentStep < 4) {
             hasNavigated.current = false;
         }
     }, [nav.currentStep]);
@@ -107,6 +108,7 @@ export default function CreatePage() {
                     <StepProgress currentStep={nav.currentStep} />
                 </div>
 
+                {/* Step 1: Configuration */}
                 {nav.currentStep === 1 && (
                     <div className="w-full max-w-[840px]">
                         <Step1Configuration
@@ -117,25 +119,41 @@ export default function CreatePage() {
                     </div>
                 )}
 
+                {/* Step 2: Reference Upload (Optional) */}
+                {nav.currentStep === 2 && (
+                    <div className="w-full max-w-[840px]">
+                        <Step2ReferenceUpload
+                            referenceImages={nav.referenceImages}
+                            onUpdate={nav.setReferenceImages}
+                            onContinue={() => nav.goToStep(3)}
+                            onSkip={() => nav.goToStep(3)}
+                            onBack={nav.goBack}
+                        />
+                    </div>
+                )}
+
+                {/* Loading: text generation */}
                 {isGeneratingText && (
                     <div className="w-full max-w-[840px] glass-panel rounded-xl p-8 border border-white/5 shadow-2xl animate-fade-in" style={{ background: 'rgba(25, 16, 34, 0.6)', backdropFilter: 'blur(12px)' }}>
                         <LoadingCard message="Criando roteiro e legenda perfeitos baseados no seu tema..." color="primary" />
                     </div>
                 )}
 
-                {nav.currentStep === 2 && !isGeneratingText && !isGeneratingImages && !slideImages && (
+                {/* Step 3: Image Config */}
+                {nav.currentStep === 3 && !isGeneratingText && !isGeneratingImages && !slideImages && (
                     <div className="w-full max-w-[1024px]">
                         <Step3ImageConfig
                             selectedTopic={''}
                             onContinue={(config) => {
-                                nav.goToStep(3);
-                                handleGenerateAll(config);
+                                nav.goToStep(4);
+                                handleGenerateAll(config, nav.referenceImages);
                             }}
                             onBack={nav.goBack}
                         />
                     </div>
                 )}
 
+                {/* Loading: image generation */}
                 {isGeneratingImages && (
                     <div className="w-full max-w-[1100px]">
                         <SkeletonPreview />

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from "@google/genai";
-import { SlideData, Platform } from '@/types';
+import { SlideData, Platform, ReferenceImages } from '@/types';
 
 export const maxDuration = 120;
 
@@ -125,7 +125,13 @@ async function generateSlideImage(
 
 export async function POST(req: NextRequest) {
     try {
-        const { slides, platform = 'instagram', handle = '', color = '' } = await req.json();
+        const { slides, platform = 'instagram', handle = '', color = '', referenceImages } = await req.json() as {
+            slides: SlideData[];
+            platform: Platform;
+            handle: string;
+            color: string;
+            referenceImages?: ReferenceImages;
+        };
 
         if (!slides || !Array.isArray(slides) || slides.length === 0) {
             return NextResponse.json({ error: "Array de slides e obrigatorio" }, { status: 400 });
@@ -138,17 +144,24 @@ export async function POST(req: NextRequest) {
 
         const ai = new GoogleGenAI({ apiKey });
 
-        // 1) Generate cover slide first to establish visual identity
+        // 1) Generate cover slide — use uploaded cover reference if available
+        const coverReference = referenceImages?.cover;
         const coverImage = await generateSlideImage(
-            slides[0], 1, slides.length, platform as Platform, handle, ai, color
+            slides[0], 1, slides.length, platform, handle, ai, color, coverReference
         );
 
-        // 2) Generate remaining slides in parallel, using cover as visual reference
+        // 2) Generate remaining slides in parallel
+        //    Priority: uploaded reference for that type > generated cover as fallback
         const remainingImages = slides.length > 1
             ? await Promise.all(
-                slides.slice(1).map((slide: SlideData, index: number) =>
-                    generateSlideImage(slide, index + 2, slides.length, platform as Platform, handle, ai, color, coverImage)
-                )
+                slides.slice(1).map((slide: SlideData, index: number) => {
+                    const typeRef = referenceImages?.[slide.slideType];
+                    const fallbackRef = coverImage;
+                    return generateSlideImage(
+                        slide, index + 2, slides.length, platform, handle, ai, color,
+                        typeRef || fallbackRef
+                    );
+                })
             )
             : [];
 

@@ -37,6 +37,12 @@ export interface SlideBackgrounds {
     cta: string[];
 }
 
+export interface ReferenceImages {
+    cover?: string;    // base64 data URL
+    content?: string;  // base64 data URL
+    cta?: string;      // base64 data URL
+}
+
 export interface TextBlock {
     id: string;
     text: string;
