@@ -18,6 +18,7 @@ export interface ImageConfig {
     handle?: string;
     slideCount?: number;
     color?: string;
+    textFormat?: 'continuous' | 'topics';
 }
 
 export type Platform = 'instagram' | 'linkedin';
