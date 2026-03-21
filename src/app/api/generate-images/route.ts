@@ -12,6 +12,7 @@ function buildSlidePrompt(
     platform: Platform,
     handle: string,
     color: string,
+    textFormat: string,
 ): string {
     const dimensions = platform === 'instagram'
         ? '4:5 portrait, 1080x1350px'
@@ -77,8 +78,11 @@ As informacoes acima sao apenas contexto para guiar o design. Elas NAO devem apa
                 - Gere a imagem final completa com o texto incorporado na arte.
                 ${color ? `- Utilize obrigatoriamente a cor hexadecimal ${color} como base ou elemento dominante da identidade visual.` : ''}
                 - O titulo deve ficar em grande destaque.
-                - O corpo deve ser organizado em blocos curtos, escaneaveis e bem distribuidos.
-                - Quando houver lista, use apoio visual com icones simples e relevantes.
+                ${textFormat === 'continuous'
+            ? '- O corpo deve ser apresentado em paragrafos fluidos e narrativos, sem usar listas ou bullet points.'
+            : textFormat === 'topics'
+                ? '- O corpo DEVE ser organizado em bullet points ou topicos curtos com icones visuais de apoio. NAO use paragrafos corridos.'
+                : '- O corpo deve ser organizado em blocos curtos, escaneaveis e bem distribuidos.\n                - Quando houver lista, use apoio visual com icones simples e relevantes.'}
                 - Design editorial, moderno, premium e muito legivel no mobile.
                 - O UNICO texto que deve aparecer na imagem e o Titulo, Corpo do Texto e Handle listados acima. NENHUM outro texto, rodape, legenda, dimensao, nome de plataforma ou metadado deve ser renderizado.`;
 }
@@ -91,9 +95,10 @@ async function generateSlideImage(
     handle: string,
     ai: GoogleGenAI,
     color: string,
+    textFormat: string,
     referenceImageBase64?: string,
 ): Promise<string> {
-    const prompt = buildSlidePrompt(slide, slideNumber, totalSlides, platform, handle, color);
+    const prompt = buildSlidePrompt(slide, slideNumber, totalSlides, platform, handle, color, textFormat);
 
     const contents = referenceImageBase64
         ? [
@@ -137,11 +142,12 @@ export async function POST(req: NextRequest) {
             }, { status: 429 });
         }
 
-        const { slides, platform = 'instagram', handle = '', color = '', referenceImages } = await req.json() as {
+        const { slides, platform = 'instagram', handle = '', color = '', textFormat = '', referenceImages } = await req.json() as {
             slides: SlideData[];
             platform: Platform;
             handle: string;
             color: string;
+            textFormat: string;
             referenceImages?: ReferenceImages;
         };
 
@@ -159,7 +165,7 @@ export async function POST(req: NextRequest) {
         // 1) Generate cover slide — use uploaded cover reference if available
         const coverReference = referenceImages?.cover;
         const coverImage = await generateSlideImage(
-            slides[0], 1, slides.length, platform, handle, ai, color, coverReference
+            slides[0], 1, slides.length, platform, handle, ai, color, textFormat, coverReference
         );
 
         // 2) Generate remaining slides in parallel
@@ -170,7 +176,7 @@ export async function POST(req: NextRequest) {
                     const typeRef = referenceImages?.[slide.slideType];
                     const fallbackRef = coverImage;
                     return generateSlideImage(
-                        slide, index + 2, slides.length, platform, handle, ai, color,
+                        slide, index + 2, slides.length, platform, handle, ai, color, textFormat,
                         typeRef || fallbackRef
                     );
                 })

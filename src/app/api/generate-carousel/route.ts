@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
             }), { status: 429, headers: { 'Content-Type': 'application/json' } });
         }
 
-        const { topic, niche, platform, objective, slideCount } = await req.json();
+        const { topic, niche, platform, objective, slideCount, textFormat = '' } = await req.json();
 
         if (!topic || !niche) {
             return new Response(JSON.stringify({ error: "Tópico e nicho são obrigatórios" }), {
@@ -68,7 +68,9 @@ export async function POST(req: NextRequest) {
             Slides 2 a ${totalSlides - 1} — CONTEÚDO (Desenvolvimento, total de ${contentSlides} slides):
             - slideType: "content"
             - title: Título do Slide (Grande e Destaque, focando no ponto principal ou benefício).
-            - content: Corpo do texto em pontos curtos, claros e diretos. Separe cada ponto com quebra de linha (\\n). Termine o texto com uma frase curta de destaque para fechar a ideia do slide.
+            ${textFormat === 'continuous'
+                ? '- content: Corpo do texto em formato de paragrafo corrido, fluido e narrativo. NAO use listas, bullet points ou quebras de linha (\\n). Escreva como um texto continuo e coeso que conta uma ideia de forma natural.'
+                : '- content: Corpo do texto em pontos curtos, claros e diretos. Separe cada ponto com quebra de linha (\\n). Termine o texto com uma frase curta de destaque para fechar a ideia do slide.'}
 
             Slide ${totalSlides} — CTA (Chamada para Ação):
             - slideType: "cta"

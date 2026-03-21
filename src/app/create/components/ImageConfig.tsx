@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Sparkles, Layers, Terminal, CheckCircle2, Loader2, Wand2, Palette, Hash } from 'lucide-react';
+import { Sparkles, Layers, Terminal, CheckCircle2, Loader2, Wand2, Palette, Hash, AlignLeft, List } from 'lucide-react';
 import { ImageConfig as ImageConfigType } from '@/types';
 import { toast } from 'sonner';
 
@@ -27,6 +27,7 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
     const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
     const [color, setColor] = useState('#7f0df2');
     const [useCustomColor, setUseCustomColor] = useState(false);
+    const [textFormat, setTextFormat] = useState<'continuous' | 'topics' | null>(null);
 
     const colorPresets = [
         { name: 'Roxo Easy', hex: '#7f0df2' },
@@ -66,6 +67,7 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
             handle: handle.trim() ? (handle.trim().startsWith('@') ? handle.trim() : `@${handle.trim()}`) : undefined,
             slideCount,
             color: useCustomColor ? color : undefined,
+            textFormat: textFormat || undefined,
         });
     };
 
@@ -413,6 +415,73 @@ export default function ImageConfigPanel({ topic, onContinue, onBack }: Props) {
                         {!useCustomColor && (
                             <p className="text-xs text-slate-500 italic font-body">
                                 A IA escolherá as cores automaticamente com base no tema do conteúdo.
+                            </p>
+                        )}
+                    </div>
+
+                    <div className="w-full h-px bg-white/5 relative z-10" />
+
+                    {/* Text Format Section */}
+                    <div className="flex flex-col gap-6 relative z-10">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-[#a855f7]/20 to-transparent flex items-center justify-center border border-[#a855f7]/10">
+                                <AlignLeft size={18} className="text-[#c08cf7]" />
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-bold text-white tracking-tight">Formato do Texto</h2>
+                                <p className="text-xs text-slate-400 font-body">Como o conteúdo dos slides deve ser apresentado</p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setTextFormat(textFormat === 'continuous' ? null : 'continuous')}
+                                className={`group flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 cursor-pointer text-left ${
+                                    textFormat === 'continuous'
+                                        ? 'bg-[#a855f7]/10 border-[#a855f7] shadow-[inset_0_0_20px_rgba(168,85,247,0.1)]'
+                                        : 'bg-white/5 border-white/5 hover:border-white/15 hover:bg-white/10'
+                                }`}
+                            >
+                                <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                                    textFormat === 'continuous' ? 'bg-[#a855f7]/20' : 'bg-white/5'
+                                }`}>
+                                    <AlignLeft size={16} className={textFormat === 'continuous' ? 'text-[#dab4ff]' : 'text-slate-400'} />
+                                </div>
+                                <div>
+                                    <h4 className={`text-sm font-bold ${textFormat === 'continuous' ? 'text-white' : 'text-slate-200'}`}>
+                                        Texto Corrido
+                                    </h4>
+                                    <p className="text-[11px] text-slate-500 mt-0.5">Parágrafos fluidos e narrativos</p>
+                                </div>
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setTextFormat(textFormat === 'topics' ? null : 'topics')}
+                                className={`group flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 cursor-pointer text-left ${
+                                    textFormat === 'topics'
+                                        ? 'bg-[#a855f7]/10 border-[#a855f7] shadow-[inset_0_0_20px_rgba(168,85,247,0.1)]'
+                                        : 'bg-white/5 border-white/5 hover:border-white/15 hover:bg-white/10'
+                                }`}
+                            >
+                                <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                                    textFormat === 'topics' ? 'bg-[#a855f7]/20' : 'bg-white/5'
+                                }`}>
+                                    <List size={16} className={textFormat === 'topics' ? 'text-[#dab4ff]' : 'text-slate-400'} />
+                                </div>
+                                <div>
+                                    <h4 className={`text-sm font-bold ${textFormat === 'topics' ? 'text-white' : 'text-slate-200'}`}>
+                                        Tópicos
+                                    </h4>
+                                    <p className="text-[11px] text-slate-500 mt-0.5">Bullet points objetivos e escaneáveis</p>
+                                </div>
+                            </button>
+                        </div>
+
+                        {!textFormat && (
+                            <p className="text-xs text-slate-500 italic font-body">
+                                A IA escolherá o melhor formato automaticamente com base no conteúdo.
                             </p>
                         )}
                     </div>
