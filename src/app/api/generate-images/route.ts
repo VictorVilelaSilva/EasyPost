@@ -98,13 +98,18 @@ async function generateSlideImage(
     color: string,
     textFormat: string,
     referenceImageBase64?: string,
+    isContentChain?: boolean,
 ): Promise<string> {
     const prompt = buildSlidePrompt(slide, slideNumber, totalSlides, platform, handle, color, textFormat);
 
     const contents = referenceImageBase64
         ? [
             { inlineData: { mimeType: 'image/png', data: referenceImageBase64 } },
-            { text: `Use a imagem acima como referencia visual. O slide que voce vai gerar agora DEVE seguir exatamente o mesmo estilo(Não necessariamente replicando os elementos, mas sim a identidade visual))${color ? `, paleta de cores (baseada em ${color})` : ''}, tipografia e identidade visual da capa.\n\n${prompt}` },
+            {
+                text: isContentChain
+                    ? `Use a imagem acima como referencia do slide de conteudo anterior. Mantenha EXATAMENTE a mesma identidade visual${color ? `, paleta de cores (baseada em ${color})` : ''}, tipografia, layout e estilo. Este slide deve parecer parte da mesma serie visual coesa.\n\n${prompt}`
+                    : `Use a imagem acima como referencia visual. O slide que voce vai gerar agora DEVE seguir exatamente o mesmo estilo(Não necessariamente replicando os elementos, mas sim a identidade visual)${color ? `, paleta de cores (baseada em ${color})` : ''}, tipografia e identidade visual da capa.\n\n${prompt}`
+            },
         ]
         : prompt;
 
@@ -169,20 +174,41 @@ export async function POST(req: NextRequest) {
             slides[0], 1, slides.length, platform, handle, ai, color, textFormat, coverReference
         );
 
-        // 2) Generate remaining slides in parallel
-        //    Priority: uploaded reference for that type > generated cover as fallback
-        const remainingImages = slides.length > 1
-            ? await Promise.all(
-                slides.slice(1).map((slide: SlideData, index: number) => {
-                    const typeRef = referenceImages?.[slide.slideType];
-                    const fallbackRef = coverImage;
-                    return generateSlideImage(
-                        slide, index + 2, slides.length, platform, handle, ai, color, textFormat,
-                        typeRef || fallbackRef
-                    );
-                })
-            )
-            : [];
+        // 2) Generate remaining slides
+        //    Content slides: sequential chain — each uses the previously generated content slide
+        //    Cover/CTA slides: use uploaded reference for that type or cover as fallback
+        const remainingImages: string[] = [];
+        let lastContentImage: string | undefined = undefined;
+
+        for (let i = 1; i < slides.length; i++) {
+            const slide = slides[i];
+            const typeRef = referenceImages?.[slide.slideType];
+
+            let refImage: string | undefined;
+            let isContentChain = false;
+
+            if (slide.slideType === 'content') {
+                if (lastContentImage) {
+                    refImage = lastContentImage;
+                    isContentChain = true;
+                } else {
+                    refImage = typeRef || coverImage;
+                }
+            } else {
+                refImage = typeRef || coverImage;
+            }
+
+            const image = await generateSlideImage(
+                slide, i + 1, slides.length, platform, handle, ai, color, textFormat,
+                refImage, isContentChain
+            );
+
+            if (slide.slideType === 'content') {
+                lastContentImage = image;
+            }
+
+            remainingImages.push(image);
+        }
 
         const images = [coverImage, ...remainingImages];
 
