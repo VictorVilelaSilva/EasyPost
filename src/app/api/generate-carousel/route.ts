@@ -83,6 +83,7 @@ export async function POST(req: NextRequest) {
             model: "gemini-2.5-flash",
             contents: prompt,
             config: {
+                systemInstruction: "Você é um especialista em criação de conteúdo para redes sociais. Responda SEMPRE em Português do Brasil, com acentuação correta e ortografia impecável. Nunca omita acentos, cedilhas ou caracteres especiais do português.",
                 responseMimeType: "application/json",
                 responseSchema: {
                     type: Type.OBJECT,

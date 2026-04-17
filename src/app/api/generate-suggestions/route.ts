@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
             model: 'gemini-3.1-flash-lite-preview',
             contents: prompt,
             config: {
+                systemInstruction: "Você é um especialista em criação de conteúdo para redes sociais. Responda SEMPRE em Português do Brasil, com acentuação correta e ortografia impecável. Nunca omita acentos, cedilhas ou caracteres especiais do português.",
                 tools: [{ googleSearch: {} }],
             } as unknown as Record<string, unknown>,
         });
