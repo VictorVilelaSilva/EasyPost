@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Status da Geração - ImageForge IA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#2f3131",
+                        "secondary-container": "#474746",
+                        "inverse-on-surface": "#313030",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "secondary-fixed": "#e5e2e1",
+                        "surface-bright": "#3a3939",
+                        "tertiary-fixed": "#e2e2e2",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-surface-variant": "#c4c7c8",
+                        "on-surface": "#e5e2e1",
+                        "surface": "#131313",
+                        "primary": "#ffffff",
+                        "outline-variant": "#444748",
+                        "on-secondary-container": "#b7b4b4",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-error-container": "#ffdad6",
+                        "outline": "#8e9192",
+                        "primary-container": "#e2e2e2",
+                        "surface-variant": "#353534",
+                        "secondary": "#c8c6c5",
+                        "surface-container-highest": "#353534",
+                        "primary-fixed-dim": "#c6c6c7",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "surface-tint": "#c6c6c7",
+                        "on-secondary": "#313030",
+                        "tertiary": "#ffffff",
+                        "on-tertiary-container": "#636565",
+                        "on-primary-fixed-variant": "#454747",
+                        "on-primary-container": "#636565",
+                        "on-background": "#e5e2e1",
+                        "inverse-surface": "#e5e2e1",
+                        "primary-fixed": "#e2e2e2",
+                        "tertiary-container": "#e2e2e2",
+                        "surface-dim": "#131313",
+                        "error": "#ffb4ab",
+                        "on-error": "#690005",
+                        "inverse-primary": "#5d5f5f",
+                        "surface-container-low": "#1c1b1b",
+                        "on-primary-fixed": "#1a1c1c",
+                        "surface-container-lowest": "#0e0e0e",
+                        "error-container": "#93000a",
+                        "on-tertiary": "#2f3131",
+                        "surface-container": "#201f1f",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "surface-container-high": "#2a2a2a",
+                        "background": "#131313"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "40px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "container-max": "1440px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "title-sm": ["16px", { "lineHeight": "1.4", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "display-lg": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom Prestige Minimalism utilities */
+        .border-prestige { border-color: #2A2A2A; }
+        .bg-canvas { background-color: #050505; }
+        .bg-layer-1 { background-color: #101010; }
+        .bg-layer-hover { background-color: #181818; }
+        .text-muted { color: #A3A3A3; }
+        .text-primary-light { color: #F5F5F5; }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            background-color: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Typography overrides for prestige feel */
+        .prestige-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+        
+        /* Spinner animation */
+        @keyframes prestige-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .prestige-spinner {
+            animation: prestige-spin 2s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-canvas text-on-surface font-body-md min-h-screen overflow-hidden selection:bg-surface-variant selection:text-primary">
+<!-- Background App State (Subtle) -->
+<div class="fixed inset-0 z-0 opacity-40 pointer-events-none">
+<header class="h-16 border-b border-prestige flex justify-between items-center px-lg max-w-container-max mx-auto w-full">
+<div class="font-headline-md font-bold text-primary tracking-tight">ImageForge IA</div>
+<div class="w-8 h-8 rounded-full border border-prestige flex items-center justify-center font-label-caps bg-surface-container">JS</div>
+</header>
+<main class="p-xl grid grid-cols-12 gap-lg max-w-container-max mx-auto h-[calc(100vh-64px)]">
+<div class="col-span-3 border-r border-prestige h-full"></div>
+<div class="col-span-9"></div>
+</main>
+</div>
+<!-- Modal Overlay & Container -->
+<div class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-gutter">
+<div class="bg-layer-1 border border-prestige rounded-lg w-full max-w-[920px] shadow-2xl flex flex-col max-h-[921px]">
+<!-- Modal Header -->
+<div class="flex items-start justify-between p-lg border-b border-prestige shrink-0">
+<div>
+<div class="flex items-center gap-md mb-sm">
+<h2 class="font-headline-md text-primary-light">Status da geração</h2>
+<span class="inline-flex items-center px-2 py-1 rounded border border-[#F59E0B]/30 text-[#F59E0B] font-label-caps uppercase text-[10px] tracking-wider bg-[#F59E0B]/10">
+                            Na fila
+                        </span>
+</div>
+<p class="text-muted font-body-md">Acompanhe a fila, processamento e metadados da API</p>
+</div>
+<button aria-label="Close modal" class="text-muted hover:text-primary-light transition-colors">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Modal Content Scrollable Area -->
+<div class="overflow-y-auto flex-1 p-lg flex flex-col gap-xl">
+<!-- 1. Primary State Area -->
+<div class="grid grid-cols-1 md:grid-cols-5 gap-lg">
+<!-- Left: Status Message -->
+<div class="md:col-span-3 flex flex-col justify-center border border-prestige rounded p-lg relative overflow-hidden group">
+<div class="flex items-start gap-md relative z-10">
+<div class="w-10 h-10 rounded-full border border-prestige flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-muted prestige-spinner" data-icon="hourglass_empty">hourglass_empty</span>
+</div>
+<div>
+<h3 class="font-title-sm text-primary-light mb-xs">Sua imagem ainda não começou</h3>
+<p class="text-muted font-body-md mb-md">O job está aguardando um worker disponível para iniciar o processamento.</p>
+<div class="flex flex-wrap gap-sm">
+<div class="inline-flex items-center gap-xs px-3 py-1.5 border border-prestige rounded text-muted font-label-caps">
+<span class="material-symbols-outlined text-[14px]" data-icon="schedule">schedule</span>
+                                        Fila: 1m 21s
+                                    </div>
+<div class="inline-flex items-center gap-xs px-3 py-1.5 border border-prestige rounded text-muted font-label-caps">
+<span class="material-symbols-outlined text-[14px]" data-icon="timelapse">timelapse</span>
+                                        Estimativa: ~3 min
+                                    </div>
+<div class="inline-flex items-center gap-xs px-3 py-1.5 border border-prestige rounded text-muted font-label-caps">
+<span class="material-symbols-outlined text-[14px]" data-icon="add_circle">add_circle</span>
+                                        Criado: agora
+                                    </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: API Identity Panel -->
+<div class="md:col-span-2 border border-prestige rounded p-md bg-surface flex flex-col gap-sm">
+<h4 class="font-label-caps text-muted mb-xs uppercase">Metadados da API</h4>
+<div class="flex justify-between items-center py-1 border-b border-prestige/50">
+<span class="text-muted text-[13px]">job_id</span>
+<span class="prestige-mono text-primary-light text-[13px]">gen_9fd42a</span>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-prestige/50">
+<span class="text-muted text-[13px]">status</span>
+<span class="prestige-mono text-[#F59E0B] text-[13px]">queued</span>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-prestige/50">
+<span class="text-muted text-[13px]">provider</span>
+<span class="prestige-mono text-primary-light text-[13px]">image-model-v1</span>
+</div>
+<div class="flex justify-between items-center py-1 border-b border-prestige/50">
+<span class="text-muted text-[13px]">retry_count</span>
+<span class="prestige-mono text-primary-light text-[13px]">0</span>
+</div>
+<div class="flex justify-between items-center py-1">
+<span class="text-muted text-[13px]">priority</span>
+<span class="prestige-mono text-primary-light text-[13px]">standard</span>
+</div>
+</div>
+</div>
+<!-- 2. Timeline Section -->
+<div>
+<h4 class="font-label-caps text-muted mb-md uppercase">Progresso</h4>
+<div class="border border-prestige rounded p-md flex items-center justify-between relative">
+<!-- Connecting Line Background -->
+<div class="absolute top-1/2 left-8 right-8 h-[1px] bg-prestige -translate-y-1/2 z-0"></div>
+<!-- Active Connecting Line (partial) -->
+<div class="absolute top-1/2 left-8 w-[25%] h-[1px] bg-[#F59E0B] -translate-y-1/2 z-0"></div>
+<!-- Steps -->
+<div class="flex flex-col items-center gap-2 relative z-10 w-24">
+<div class="w-6 h-6 rounded-full bg-canvas border border-[#10B981] flex items-center justify-center text-[#10B981]">
+<span class="material-symbols-outlined text-[14px]" data-icon="check">check</span>
+</div>
+<div class="text-center">
+<div class="font-label-caps text-[#10B981]">Recebido</div>
+<div class="text-[10px] text-muted">14:02:10</div>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 relative z-10 w-24">
+<div class="w-6 h-6 rounded-full bg-canvas border border-[#F59E0B] flex items-center justify-center text-[#F59E0B] shadow-[0_0_8px_rgba(245,158,11,0.2)]">
+<div class="w-2 h-2 rounded-full bg-[#F59E0B] animate-pulse"></div>
+</div>
+<div class="text-center">
+<div class="font-label-caps text-[#F59E0B]">Na fila</div>
+<div class="text-[10px] text-[#F59E0B]">1m 21s</div>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 relative z-10 w-24 opacity-40">
+<div class="w-6 h-6 rounded-full bg-canvas border border-prestige flex items-center justify-center text-muted">
+<div class="w-1.5 h-1.5 rounded-full bg-muted"></div>
+</div>
+<div class="text-center">
+<div class="font-label-caps text-muted">Processando</div>
+<div class="text-[10px] text-muted">Pendente</div>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 relative z-10 w-24 opacity-40">
+<div class="w-6 h-6 rounded-full bg-canvas border border-prestige flex items-center justify-center text-muted">
+<div class="w-1.5 h-1.5 rounded-full bg-muted"></div>
+</div>
+<div class="text-center">
+<div class="font-label-caps text-muted">Finalizado</div>
+<div class="text-[10px] text-muted">Pendente</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. Details Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Config Fields -->
+<div class="border border-prestige rounded p-md flex flex-col gap-sm">
+<h4 class="font-label-caps text-muted mb-xs uppercase">Configurações</h4>
+<div class="grid grid-cols-2 gap-y-sm gap-x-md text-[13px]">
+<div class="text-muted">Universo:</div>
+<div class="text-primary-light truncate">Pokémon</div>
+<div class="text-muted">Formato:</div>
+<div class="text-primary-light truncate">Quadrado 1:1</div>
+<div class="text-muted">Arquivo:</div>
+<div class="text-primary-light truncate font-mono text-[11px] bg-surface px-1 py-0.5 rounded border border-prestige">rosto_referencia.png</div>
+<div class="text-muted">Fundo:</div>
+<div class="text-primary-light flex items-center gap-2">
+<div class="w-3 h-3 rounded-sm border border-prestige" style="background-color: #1A1A2E;"></div>
+                                #1A1A2E
+                            </div>
+<div class="text-muted">Insígnias:</div>
+<div class="text-primary-light">Ativado</div>
+<div class="text-muted">Modo roupa:</div>
+<div class="text-primary-light truncate">Herdar da foto</div>
+</div>
+</div>
+<!-- Prompt Summary -->
+<div class="border border-prestige rounded p-md flex flex-col gap-sm bg-surface">
+<div class="flex justify-between items-center mb-xs">
+<h4 class="font-label-caps text-muted uppercase">Prompt enviado</h4>
+<button class="text-[12px] text-muted hover:text-primary-light transition-colors underline decoration-prestige underline-offset-2">Ver prompt completo</button>
+</div>
+<p class="text-primary-light text-[13px] leading-relaxed line-clamp-4 italic border-l-2 border-prestige pl-3">
+                            "A highly detailed, professional digital illustration of a custom Pokémon trainer in the style of official Pokémon concept art. The character has facial features matching the reference image, wearing inherited clothing adapted to the Pokémon universe aesthetic. Standing confidently against a clean, flat dark navy blue background (#1A1A2E). Gym badges are visibly pinned to the jacket. Crisp linework, vibrant yet sophisticated coloring, 8k resolution, studio lighting setup."
+                        </p>
+</div>
+</div>
+<!-- 4. Alert Strip -->
+<div class="border border-[#F59E0B]/30 bg-[#F59E0B]/5 rounded p-sm flex items-start gap-sm">
+<span class="material-symbols-outlined text-[#F59E0B] text-[20px] shrink-0 mt-0.5" data-icon="info">info</span>
+<p class="text-[#F59E0B] font-body-md text-[13px]">
+                        Nenhum runner disponível no momento. O job iniciará automaticamente assim que houver capacidade.
+                    </p>
+</div>
+</div>
+<!-- 5. Footer Actions -->
+<div class="p-lg border-t border-prestige flex justify-between items-center shrink-0 bg-layer-1 rounded-b-lg">
+<button class="font-label-caps text-[#EF4444] hover:text-[#F87171] hover:bg-[#EF4444]/10 px-4 py-2 rounded transition-colors duration-200 border border-transparent hover:border-[#EF4444]/30">
+                    Cancelar geração
+                </button>
+<div class="flex gap-md">
+<button class="font-label-caps text-muted hover:text-primary-light px-4 py-2 rounded transition-colors duration-200 border border-transparent hover:border-prestige">
+                        Voltar às configurações
+                    </button>
+<button class="font-label-caps bg-primary text-[#050505] px-6 py-2 rounded hover:bg-primary-fixed transition-colors duration-200 font-semibold flex items-center gap-2">
+                        Manter aguardando
+                    </button>
+</div>
+</div>
+</div>
+</div>
+</body></html>

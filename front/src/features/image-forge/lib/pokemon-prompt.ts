@@ -1,5 +1,5 @@
 import { defaultPokemonList } from "../constants";
-import type { Format, PokemonConfig, PokemonOutfit } from "../types";
+import type { CustomPokemonOutfit, Format, PokemonConfig, PokemonOutfitConfig } from "../types";
 
 const backgroundPromptMap: Record<string, string> = {
   "#050505": "near-black premium studio background",
@@ -69,19 +69,29 @@ QUALITY TAGS: masterpiece, best quality, ultra detailed, cinematic composition, 
 NEGATIVE PROMPT: low quality, blurry face, extra limbs, bad anatomy, deformed hands, duplicate Pokémon, messy composition, overexposed lighting, flat colors, distorted eyes, poorly drawn face, text artifacts, watermark, cropped body, unrealistic proportions.`;
 }
 
-function getPokemonOutfitPrompt(outfit: PokemonOutfit) {
-  const outfitMap: Record<PokemonOutfit, string> = {
-    "Jaqueta tática verde escura":
-      "a futuristic dark green tactical jacket with subtle white accents, utility straps, and modern streetwear-inspired Pokémon trainer fashion",
-    "Casaco preto campeão":
-      "a sleek black champion coat with subtle white accents, premium tactical seams, and modern Pokémon trainer fashion",
-    "Streetwear branco e preto":
-      "a black and white streetwear outfit with layered technical fabrics, utility straps, and premium trainer details",
-    "Uniforme futurista":
-      "a futuristic champion uniform with technical panels, metallic accessories, and high-end Pokémon trainer silhouettes",
-  };
+function getPokemonOutfitPrompt(outfit: PokemonOutfitConfig) {
+  if (outfit.mode === "photo") {
+    return "the same outfit visible in the uploaded photo, preserving clothing colors, fabric style, proportions, and accessories while adapting it to premium Pokémon trainer fashion";
+  }
 
-  return outfitMap[outfit];
+  return getCustomOutfitPrompt(outfit.custom);
+}
+
+function getCustomOutfitPrompt(outfit: CustomPokemonOutfit) {
+  const torsoMap: Record<string, string> = {
+    "Jaqueta tática verde escura":
+      "a futuristic dark green tactical jacket with subtle white accents and utility straps",
+    "Casaco preto campeão":
+      "a sleek black champion coat with subtle white accents and premium tactical seams",
+    "Moletom streetwear branco e preto":
+      "a black and white streetwear hoodie with layered technical fabrics",
+    "Uniforme futurista":
+      "a futuristic champion uniform with technical panels and high-end trainer silhouettes",
+  };
+  const glasses = outfit.glasses === "Sem óculos" ? "no glasses" : outfit.glasses.toLowerCase();
+  const hat = outfit.hat.trim() ? `${outfit.hat.trim().toLowerCase()}, ` : "";
+
+  return `${torsoMap[outfit.torso] ?? outfit.torso.toLowerCase()}, ${outfit.legs.toLowerCase()}, ${outfit.shoes.toLowerCase()}, ${hat}${glasses}, modern Pokémon trainer fashion`;
 }
 
 function pokemonPositionPrompt(position: string) {

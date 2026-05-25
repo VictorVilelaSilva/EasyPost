@@ -8,10 +8,10 @@ import { PrimaryButton } from "./common";
 
 export function Dashboard({ onCreate }: { onCreate: () => void }) {
   return (
-    <section className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_360px] lg:px-8 lg:py-10">
-      <div className="space-y-8">
+    <section className="mx-auto grid max-w-7xl gap-6 px-4 py-6 sm:px-6 sm:py-8 xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-8 xl:px-8 xl:py-10">
+      <div className="min-w-0 space-y-8">
         <div className="flex flex-col justify-between gap-5 border-b border-[#2a2a2a] pb-7 sm:flex-row sm:items-end">
-          <div>
+          <div className="min-w-0">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#a3a3a3]">
               Estúdio de geração
             </p>
@@ -36,27 +36,37 @@ export function Dashboard({ onCreate }: { onCreate: () => void }) {
               Ver tudo
             </Button>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {recentGenerations.map((item, index) => (
               <Card
                 key={item.title}
-                className="group rounded-lg border border-[#2a2a2a] bg-[#101010] p-3 transition hover:border-[#555] hover:bg-[#181818]"
+                className="group min-w-0 rounded-lg border border-[#2a2a2a] bg-[#101010] p-3 transition hover:border-[#555] hover:bg-[#181818]"
               >
                 <div className="aspect-square rounded-md border border-[#2a2a2a] bg-[linear-gradient(135deg,#111,#1d1d1d_45%,#090909)] p-3">
-                  <div className="flex h-full items-end justify-between">
-                    <ImageIcon className="size-5 text-[#a3a3a3]" aria-hidden="true" />
-                    <span className="text-xs text-[#a3a3a3]">0{index + 1}</span>
+                  <div className="flex h-full flex-col justify-between gap-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <ImageIcon className="size-5 text-[#a3a3a3]" aria-hidden="true" />
+                      <span className="text-xs text-[#a3a3a3]">0{index + 1}</span>
+                    </div>
+                    <div className="flex flex-1 items-center justify-center rounded-md border border-[#2a2a2a] bg-[#0e0e0e] p-3">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={item.image}
+                        alt=""
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
                   </div>
                 </div>
-                <h3 className="mt-3 text-sm font-semibold">{item.title}</h3>
-                <p className="mt-1 text-xs text-[#a3a3a3]">{item.meta}</p>
+                <h3 className="mt-3 truncate text-sm font-semibold">{item.title}</h3>
+                <p className="mt-1 truncate text-xs text-[#a3a3a3]">{item.meta}</p>
               </Card>
             ))}
           </div>
         </div>
       </div>
 
-      <Card className="rounded-lg border border-[#2a2a2a] bg-[#101010] p-5">
+      <Card className="rounded-lg border border-[#2a2a2a] bg-[#101010] p-4 sm:p-5">
         <div className="flex size-10 items-center justify-center rounded-lg border border-[#2a2a2a] bg-[#181818]">
           <Sparkles className="size-5" aria-hidden="true" />
         </div>

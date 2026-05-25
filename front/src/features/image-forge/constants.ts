@@ -1,4 +1,4 @@
-import type { Format, PokemonOutfit, PokemonPlacement, UniverseOption } from "./types";
+import type { CustomPokemonOutfit, Format, PokemonPlacement, UniverseOption } from "./types";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8004";
 
@@ -8,37 +8,42 @@ export const universes: UniverseOption[] = [
     label: "Kimetsu",
     description: "Traços dramáticos, lâminas, haori e composição cinematográfica.",
     code: "KMT",
+    image: "/kimetsu.png",
   },
   {
     name: "Pokemon",
     label: "Pokémon",
     description: "Criaturas, insígnias, energia elemental e visual de treinador.",
     code: "PKM",
+    image: "/Pokemon.png",
   },
   {
     name: "Naruto",
     label: "Naruto",
     description: "Vilas, clãs, bandanas, selos e poses de ação.",
     code: "NRT",
+    image: "/Naruto.png",
   },
   {
     name: "Digimon",
     label: "Digimon",
     description: "Parceiros digitais, circuitos sutis e evolução heroica.",
     code: "DGM",
+    image: "/Digimon.png",
   },
   {
     name: "Avatar, the Last Airbender",
     label: "Avatar, the Last Airbender",
     description: "Mestres do elemento, técnicas de combate e ambientes de fantasia.",
     code: "AVT",
+    image: "/Avatar.png",
   },
 ];
 
 export const recentGenerations = [
-  { title: "Avatar treinador", meta: "Pokémon · Quadrada · hoje" },
-  { title: "Retrato hashira", meta: "Kimetsu · Retrato · ontem" },
-  { title: "Clã da folha", meta: "Naruto · Paisagem · 18 mai" },
+  { title: "Avatar treinador", meta: "Pokémon · Quadrada · hoje", image: "/Pokemon.png" },
+  { title: "Retrato hashira", meta: "Kimetsu · Retrato · ontem", image: "/kimetsu.png" },
+  { title: "Clã da folha", meta: "Naruto · Paisagem · 18 mai", image: "/Naruto.png" },
 ];
 
 export const backgroundColors = [
@@ -65,11 +70,40 @@ export const formats: Array<{ label: Format; ratio: string; shape: string }> = [
   { label: "Widescreen 16:9", ratio: "16:9", shape: "wide" },
 ];
 
-export const pokemonOutfits: PokemonOutfit[] = [
+export const defaultPokemonOutfit: CustomPokemonOutfit = {
+  torso: "Jaqueta tática verde escura",
+  legs: "Calça cargo preta",
+  shoes: "Tênis técnico branco",
+  hat: "",
+  glasses: "Sem óculos",
+};
+
+export const torsoOptions = [
   "Jaqueta tática verde escura",
   "Casaco preto campeão",
-  "Streetwear branco e preto",
+  "Moletom streetwear branco e preto",
   "Uniforme futurista",
+];
+
+export const legOptions = [
+  "Calça cargo preta",
+  "Calça jogger cinza escura",
+  "Calça técnica branca",
+  "Calça de campeão azul marinho",
+];
+
+export const shoeOptions = [
+  "Tênis técnico branco",
+  "Botas táticas pretas",
+  "Tênis high-top vermelho",
+  "Sneaker futurista prateado",
+];
+
+export const glassesOptions = [
+  "Sem óculos",
+  "Óculos escuros retangulares",
+  "Óculos redondos transparentes",
+  "Óculos esportivo futurista",
 ];
 
 export const defaultPokemonList: PokemonPlacement[] = [

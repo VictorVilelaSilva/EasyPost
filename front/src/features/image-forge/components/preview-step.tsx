@@ -2,6 +2,7 @@ import { BadgeCheck, Check, Download, RefreshCcw, SlidersHorizontal, Sparkles } 
 
 import { Button } from "@/components/ui/button";
 
+import { summarizeOutfit } from "../lib/outfit-summary";
 import { summarizePokemonList } from "../lib/pokemon-summary";
 import type { Format, PokemonConfig, UniverseOption } from "../types";
 import { MetaRow, PrimaryButton, StepIntro } from "./common";
@@ -28,18 +29,18 @@ export function PreviewStep({
   const isPokemon = selectedUniverse.name === "Pokemon";
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+    <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
       <StepIntro
         eyebrow="Finalizado"
         title="Imagem gerada"
         description="Revise o resultado, baixe a imagem ou volte para refinar as configurações."
       />
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_340px]">
-        <div className="rounded-lg border border-[#2a2a2a] bg-[#101010] p-4">
-          <div className="grid min-h-[520px] place-items-center rounded-lg border border-[#2a2a2a] p-6" style={{ background }}>
+      <div className="mt-6 grid min-w-0 gap-5 lg:mt-8 xl:grid-cols-[minmax(0,1fr)_340px] xl:gap-6">
+        <div className="min-w-0 rounded-lg border border-[#2a2a2a] bg-[#101010] p-3 sm:p-4">
+          <div className="grid min-h-[320px] place-items-center rounded-lg border border-[#2a2a2a] p-3 sm:min-h-[520px] sm:p-6" style={{ background }}>
             <div className="aspect-square w-full max-w-[520px] rounded-lg border border-white/10 bg-black/30 p-5">
-              <div className="flex h-full flex-col justify-between rounded-md border border-white/10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.16),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.10),rgba(0,0,0,0.35))] p-6">
+              <div className="flex h-full flex-col justify-between rounded-md border border-white/10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.16),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.10),rgba(0,0,0,0.35))] p-4 sm:p-6">
                 <PreviewArtwork selectedUniverse={selectedUniverse} badgesEnabled={badgesEnabled} />
               </div>
             </div>
@@ -72,7 +73,7 @@ function PreviewArtwork({
   return (
     <>
       <div className="flex items-center justify-between">
-        <span className="rounded-md bg-black/40 px-3 py-1 text-xs font-semibold text-white/80">
+        <span className="min-w-0 truncate rounded-md bg-black/40 px-3 py-1 text-xs font-semibold text-white/80">
           {selectedUniverse.label}
         </span>
         {badgesEnabled && (
@@ -112,7 +113,7 @@ function PreviewSummary({
   onRegenerate: () => void;
 }) {
   return (
-    <aside className="h-fit rounded-lg border border-[#2a2a2a] bg-[#101010] p-5">
+    <aside className="h-fit min-w-0 rounded-lg border border-[#2a2a2a] bg-[#101010] p-4 sm:p-5 xl:sticky xl:top-20">
       <div className="mb-5 flex items-center gap-2 text-sm text-[#a3a3a3]">
         <Check className="size-4 text-[#f5f5f5]" aria-hidden="true" />
         Geração concluída
@@ -120,7 +121,7 @@ function PreviewSummary({
       <dl className="space-y-3 text-sm">
         <MetaRow label="Universo" value={selectedUniverse.label} />
         {isPokemon && <MetaRow label="Título" value={pokemonConfig.title || "Portugal"} />}
-        {isPokemon && <MetaRow label="Roupa" value={pokemonConfig.outfit} />}
+        {isPokemon && <MetaRow label="Roupa" value={summarizeOutfit(pokemonConfig.outfit)} />}
         {isPokemon && <MetaRow label="Pokémon" value={summarizePokemonList(pokemonConfig.pokemon)} />}
         <MetaRow label="Formato" value={`${format} · 1024x1024`} />
         <MetaRow label="Cor de fundo" value={background} />
@@ -138,7 +139,7 @@ function PreviewSummary({
           type="button"
           variant="outline"
           onClick={onRegenerate}
-          className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#2a2a2a] px-4 py-3 text-sm font-semibold transition hover:bg-[#181818]"
+          className="inline-flex items-center justify-center gap-2 whitespace-normal rounded-lg border border-[#2a2a2a] px-4 py-3 text-sm font-semibold transition hover:bg-[#181818]"
         >
           <RefreshCcw className="size-4" aria-hidden="true" />
           Gerar novamente
@@ -147,7 +148,7 @@ function PreviewSummary({
           type="button"
           variant="ghost"
           onClick={onBackToSettings}
-          className="inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold text-[#a3a3a3] transition hover:bg-[#181818] hover:text-[#f5f5f5]"
+          className="inline-flex items-center justify-center gap-2 whitespace-normal rounded-lg px-4 py-3 text-sm font-semibold text-[#a3a3a3] transition hover:bg-[#181818] hover:text-[#f5f5f5]"
         >
           <SlidersHorizontal className="size-4" aria-hidden="true" />
           Editar configurações

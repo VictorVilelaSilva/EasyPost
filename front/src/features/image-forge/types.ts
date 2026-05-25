@@ -7,11 +7,7 @@ export type Universe =
   | "Digimon"
   | "Avatar, the Last Airbender";
 
-export type PokemonOutfit =
-  | "Jaqueta tática verde escura"
-  | "Casaco preto campeão"
-  | "Streetwear branco e preto"
-  | "Uniforme futurista";
+export type OutfitMode = "photo" | "custom";
 
 export type Format =
   | "Automático"
@@ -26,12 +22,26 @@ export type UniverseOption = {
   label: string;
   description: string;
   code: string;
+  image: string;
 };
 
 export type PokemonConfig = {
   title: string;
-  outfit: PokemonOutfit;
+  outfit: PokemonOutfitConfig;
   pokemon: PokemonPlacement[];
+};
+
+export type PokemonOutfitConfig = {
+  mode: OutfitMode;
+  custom: CustomPokemonOutfit;
+};
+
+export type CustomPokemonOutfit = {
+  torso: string;
+  legs: string;
+  shoes: string;
+  hat: string;
+  glasses: string;
 };
 
 export type PokemonPlacement = {

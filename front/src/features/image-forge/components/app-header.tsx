@@ -14,13 +14,13 @@ export function AppHeader({ step }: { step: Step }) {
 
   return (
     <header className="sticky top-0 z-20 border-b border-[#2a2a2a] bg-[#050505]/90 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3">
-          <div className="flex size-9 items-center justify-center rounded-lg border border-[#2a2a2a] bg-[#101010]">
+      <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-[#2a2a2a] bg-[#101010]">
             <Wand2 className="size-4" aria-hidden="true" />
           </div>
-          <div>
-            <p className="text-sm font-semibold">ImageForge IA</p>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold">ImageForge IA</p>
             <p className="text-xs text-[#a3a3a3]">{current}</p>
           </div>
         </div>
@@ -36,7 +36,7 @@ export function AppHeader({ step }: { step: Step }) {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3">
           <Button
             type="button"
             variant="outline"
@@ -44,7 +44,7 @@ export function AppHeader({ step }: { step: Step }) {
           >
             Histórico
           </Button>
-          <div className="flex size-9 items-center justify-center rounded-full bg-[#f5f5f5] text-sm font-semibold text-[#050505]">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f5f5f5] text-sm font-semibold text-[#050505]">
             VF
           </div>
         </div>

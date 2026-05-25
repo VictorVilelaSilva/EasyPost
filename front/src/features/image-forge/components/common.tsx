@@ -14,11 +14,11 @@ export function StepIntro({
   title: string;
 }) {
   return (
-    <div className="border-b border-[#2a2a2a] pb-7">
+    <div className="min-w-0 border-b border-[#2a2a2a] pb-6 sm:pb-7">
       <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#a3a3a3]">
         {eyebrow}
       </p>
-      <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
       <p className="mt-3 max-w-2xl text-sm leading-6 text-[#a3a3a3]">{description}</p>
     </div>
   );
@@ -27,7 +27,7 @@ export function StepIntro({
 export function Panel({ children }: { children: ReactNode }) {
   return (
     <Card className="rounded-lg border border-[#2a2a2a] bg-[#101010] py-0">
-      <CardContent className="p-5">{children}</CardContent>
+      <CardContent className="p-4 sm:p-5">{children}</CardContent>
     </Card>
   );
 }
@@ -49,9 +49,9 @@ export function SectionTitle({
 
 export function MetaRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-[#2a2a2a] pb-3 last:border-b-0 last:pb-0">
+    <div className="grid min-w-0 grid-cols-[minmax(90px,auto)_minmax(0,1fr)] items-start gap-3 border-b border-[#2a2a2a] pb-3 last:border-b-0 last:pb-0">
       <dt className="text-[#a3a3a3]">{label}</dt>
-      <dd className="text-right font-medium">{value}</dd>
+      <dd className="min-w-0 break-words text-right font-medium">{value}</dd>
     </div>
   );
 }
@@ -69,7 +69,7 @@ export function PrimaryButton({
     <Button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center justify-center gap-2 rounded-lg bg-[#f5f5f5] px-4 py-3 text-sm font-semibold text-[#050505] transition hover:bg-white ${full ? "w-full" : ""}`}
+      className={`inline-flex items-center justify-center gap-2 whitespace-normal rounded-lg bg-[#f5f5f5] px-4 py-3 text-sm font-semibold text-[#050505] transition hover:bg-white ${full ? "w-full" : "w-full sm:w-auto"}`}
     >
       {children}
     </Button>
@@ -88,12 +88,14 @@ export function StepActions({
   onNext: () => void;
 }) {
   return (
-    <div className={`flex items-center justify-between gap-3 ${compact ? "mt-6" : "mt-8"}`}>
+    <div
+      className={`flex flex-col-reverse items-stretch justify-between gap-3 sm:flex-row sm:items-center ${compact ? "mt-6" : "mt-8"}`}
+    >
       <Button
         type="button"
         variant="outline"
         onClick={onBack}
-        className="inline-flex items-center gap-2 rounded-lg border border-[#2a2a2a] px-4 py-3 text-sm font-semibold text-[#a3a3a3] transition hover:bg-[#181818] hover:text-[#f5f5f5]"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#2a2a2a] px-4 py-3 text-sm font-semibold text-[#a3a3a3] transition hover:bg-[#181818] hover:text-[#f5f5f5] sm:w-auto"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />
         Voltar

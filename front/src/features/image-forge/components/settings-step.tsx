@@ -39,15 +39,15 @@ export function SettingsStep({
   const isPokemon = selectedUniverse.name === "Pokemon";
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+    <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
       <StepIntro
         eyebrow="Passo 2 de 3"
         title="Configurações da imagem"
         description="Ajuste a referência, o fundo e o formato antes de iniciar a geração."
       />
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
-        <div className="space-y-5">
+      <div className="mt-6 grid min-w-0 gap-5 lg:mt-8 xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-6">
+        <div className="min-w-0 space-y-5">
           <FaceUploadPanel uploadedName={uploadedName} onFileChange={onFileChange} />
           <BackgroundPanel background={background} onBackgroundChange={onBackgroundChange} />
           {isPokemon && (

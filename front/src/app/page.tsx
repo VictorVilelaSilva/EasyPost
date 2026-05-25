@@ -7,7 +7,11 @@ import { Dashboard } from "@/features/image-forge/components/dashboard";
 import { PreviewStep } from "@/features/image-forge/components/preview-step";
 import { SettingsStep } from "@/features/image-forge/components/settings-step";
 import { UniverseStep } from "@/features/image-forge/components/universe-step";
-import { backgroundColors, universes } from "@/features/image-forge/constants";
+import {
+  backgroundColors,
+  defaultPokemonOutfit,
+  universes,
+} from "@/features/image-forge/constants";
 import { buildPokemonPrompt } from "@/features/image-forge/lib/pokemon-prompt";
 import type {
   Format,
@@ -25,7 +29,10 @@ export default function Home() {
   const [uploadedName, setUploadedName] = useState("rosto_referencia.png");
   const [pokemonConfig, setPokemonConfig] = useState<PokemonConfig>({
     title: "Portugal",
-    outfit: "Jaqueta tática verde escura",
+    outfit: {
+      mode: "photo",
+      custom: defaultPokemonOutfit,
+    },
     pokemon: [],
   });
 
