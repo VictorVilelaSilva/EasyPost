@@ -1,0 +1,2 @@
+Create an original character sheet in the universe of “show of your choice” based on the appearance, energy and personality of the person in the photo sent. Turn the person into a character fully integrated into the world of "show of your choice", as if it were an official part of the animation. Add personalised weapons.
+The art should have a premium poster/concept art format divided into several panels, reminiscent of character guide pages or official artbook. [name: add your name here]
