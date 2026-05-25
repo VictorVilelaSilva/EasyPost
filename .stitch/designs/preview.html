@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ImageForge IA - Imagem Gerada</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "surface-container-high": "#2a2a2a",
+                      "surface-container-lowest": "#0e0e0e",
+                      "on-error": "#690005",
+                      "error-container": "#93000a",
+                      "on-primary-fixed-variant": "#454747",
+                      "inverse-surface": "#e5e2e1",
+                      "surface-variant": "#353534",
+                      "on-primary": "#2f3131",
+                      "on-tertiary": "#2f3131",
+                      "on-background": "#e5e2e1",
+                      "inverse-primary": "#5d5f5f",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "on-primary-container": "#636565",
+                      "background": "#131313",
+                      "surface-container-low": "#1c1b1b",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "tertiary": "#ffffff",
+                      "on-error-container": "#ffdad6",
+                      "secondary-container": "#474746",
+                      "primary": "#ffffff",
+                      "surface-tint": "#c6c6c7",
+                      "inverse-on-surface": "#313030",
+                      "tertiary-fixed": "#e2e2e2",
+                      "surface-container-highest": "#353534",
+                      "surface-dim": "#131313",
+                      "surface": "#131313",
+                      "primary-fixed-dim": "#c6c6c7",
+                      "on-surface-variant": "#c4c7c8",
+                      "on-surface": "#e5e2e1",
+                      "tertiary-container": "#e2e2e2",
+                      "primary-fixed": "#e2e2e2",
+                      "outline-variant": "#444748",
+                      "on-tertiary-container": "#636565",
+                      "on-secondary": "#313030",
+                      "primary-container": "#e2e2e2",
+                      "on-secondary-fixed-variant": "#474746",
+                      "on-primary-fixed": "#1a1c1c",
+                      "surface-bright": "#3a3939",
+                      "secondary-fixed": "#e5e2e1",
+                      "error": "#ffb4ab",
+                      "surface-container": "#201f1f",
+                      "secondary": "#c8c6c5",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "on-secondary-container": "#b7b4b4",
+                      "outline": "#8e9192"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "lg": "24px",
+                      "base": "8px",
+                      "xs": "4px",
+                      "container-max": "1440px",
+                      "xl": "40px",
+                      "sm": "8px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "headline-md-mobile": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "title-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md-mobile": [
+                              "20px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-sm": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body { background-color: #050505; color: #e5e2e1; }
+        .bg-surface-custom { background-color: #101010; }
+        .bg-surface-elevated { background-color: #181818; }
+        .border-custom { border-color: #2A2A2A; }
+    </style>
+</head>
+<body class="bg-[#050505] text-on-surface antialiased min-h-screen flex flex-col md:flex-row">
+<!-- TopNavBar (Mobile Only) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center h-16 px-gutter md:px-xl max-w-container-max mx-auto bg-surface dark:bg-surface border-b border-custom md:hidden">
+<div class="font-headline-md-mobile text-headline-md-mobile font-bold text-primary dark:text-primary tracking-tight">ImageForge IA</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-highest rounded-full p-2">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-highest rounded-full p-2">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<img alt="User avatar" class="w-8 h-8 rounded-full border border-custom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUqQfiKjmdd-BNWaSCfs_Y6DfaNaAXFLUhFLlG1WRr354s1F0Q4_qO6Gnv297cva3pLACwzSFvvDQJGvdRXmmDx7-lnV2E_8Hl8VIJzsHZBCAO-nudJA0UrKBwR403gKvX-AzSuwxuYJhYUBgjZi7svaqGToQIRlCat0HHJgyfDGozaWOHV5A8I9XDa5Z87JVNGYygrRUd_tk2N80SDAMiEfurN38HW72OalMmksIZ7A8qKuHfXfHfhSfE-b_I2rnoQgja_XQULg"/>
+</div>
+</header>
+<!-- SideNavBar (Desktop Only) -->
+<nav class="hidden md:flex flex-col fixed left-0 top-0 h-full w-64 py-lg px-md z-40 bg-surface-container dark:bg-surface-container border-r border-custom">
+<div class="mb-lg">
+<h1 class="font-headline-md text-headline-md text-primary font-bold tracking-tight">Estúdio Digital</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Plano Pro</p>
+</div>
+<button class="w-full bg-primary text-on-primary font-title-sm text-title-sm py-2 px-4 rounded-DEFAULT hover:bg-opacity-90 transition-opacity mb-lg flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+            Gerar Imagens
+        </button>
+<ul class="flex flex-col gap-2 flex-grow">
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT bg-surface-container-highest text-primary font-semibold border-r-2 border-primary translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-caps text-label-caps">Criações</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="layers">layers</span>
+<span class="font-label-caps text-label-caps">Modelos</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+<span class="font-label-caps text-label-caps">Configurações</span>
+</a>
+</li>
+</ul>
+<ul class="flex flex-col gap-2 mt-auto pt-lg border-t border-custom">
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span class="font-label-caps text-label-caps">Suporte</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-caps text-label-caps">Sair</span>
+</a>
+</li>
+</ul>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 mt-16 md:mt-0 md:ml-64 p-gutter md:p-xl flex flex-col items-center justify-center min-h-[calc(100vh-64px)] md:min-h-screen">
+<div class="w-full max-w-5xl">
+<!-- Step Indicator -->
+<div class="mb-lg flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">
+<span>Passo 4 de 4</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-primary">Finalizado</span>
+</div>
+<!-- Header -->
+<div class="mb-xl flex items-center gap-3">
+<h2 class="font-headline-md md:font-display-lg text-headline-md md:text-display-lg text-primary">Imagem gerada</h2>
+<span class="material-symbols-outlined text-green-400" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<!-- Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- Main Display (Canvas Level) -->
+<div class="lg:col-span-8 flex flex-col items-center">
+<div class="w-full aspect-square border border-custom rounded-DEFAULT bg-[#050505] overflow-hidden relative group">
+<img alt="Generated anime character" class="w-full h-full object-cover" data-alt="A highly detailed, cinematic digital illustration of an anime swordsman standing in a dark, atmospheric bamboo forest at midnight. The character wears a dark navy haori with subtle metallic gold accents. The lighting is dramatic, with cool moonlight piercing through the canopy, highlighting the sharp edge of a drawn katana. Sparks of ethereal blue energy float around the blade. The aesthetic is extremely high-end, crisp, and moody, adhering strictly to a premium dark mode UI context with stark contrast and deep blacks (#050505)." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8M4JLJO5HyJYD3J7mt67yyBv8ubKiJ4__uZe11PxceMIFdbtWZgvH-s4BhEtnNfUOO8gE0ZCSvcsBhBzpFHT_gtGezPgxlUxMMARvFmWJNSJLelSwbH7z3vcN6pCr_rJGOC1EF7MPjLaXWyxmRvwZk9zoOe90LrAncBV4yMZvPGz36r6RiifeASg7bIYiDVV4Vo_4M19oeTwuuF4S3_Vrl_yPD4bPA4FWXvFkDonuhgawlog4AvWvL0AXMOok3IgKdvsnNBzuAA"/>
+</div>
+</div>
+<!-- Metadata & Actions Panel (Elevated Level) -->
+<div class="lg:col-span-4 flex flex-col gap-lg">
+<!-- Metadata Grid -->
+<div class="bg-surface-custom border border-custom rounded-DEFAULT p-lg flex flex-col gap-md">
+<h3 class="font-title-sm text-title-sm text-primary mb-2">Detalhes da Geração</h3>
+<div class="grid grid-cols-2 gap-y-4 gap-x-2">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1">Universo</span>
+<span class="font-body-md text-body-md text-primary">Kimetsu</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1">Formato</span>
+<span class="font-body-md text-body-md text-primary">Quadrada (1024x1024)</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1">Cor de fundo</span>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-[#1A1A2E] border border-custom"></span>
+<span class="font-body-md text-body-md text-primary">Dark Navy</span>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1">Insígnias/Adereços</span>
+<span class="font-body-md text-body-md text-primary">Ativado</span>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="flex flex-col gap-3 mt-auto">
+<button class="w-full bg-primary text-on-primary font-title-sm text-title-sm py-3 px-4 rounded-DEFAULT flex items-center justify-center gap-2 transition-transform hover:scale-[0.98]">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                            Baixar
+                        </button>
+<button class="w-full bg-transparent border border-custom text-primary font-title-sm text-title-sm py-3 px-4 rounded-DEFAULT flex items-center justify-center gap-2 hover:bg-surface-elevated transition-colors">
+<span class="material-symbols-outlined text-[20px]">refresh</span>
+                            Gerar novamente
+                        </button>
+<button class="w-full bg-transparent text-outline hover:text-primary font-title-sm text-title-sm py-3 px-4 rounded-DEFAULT flex items-center justify-center gap-2 transition-colors mt-2">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+                            Editar configurações
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface dark:bg-surface border-t border-custom md:hidden">
+<ul class="flex justify-around items-center h-16">
+<li>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center justify-center w-full h-full text-primary border-t-2 border-primary -mt-[2px]" href="#">
+<span class="material-symbols-outlined text-[24px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">layers</span>
+</a>
+</li>
+<li>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">tune</span>
+</a>
+</li>
+</ul>
+</nav>
+</body></html>

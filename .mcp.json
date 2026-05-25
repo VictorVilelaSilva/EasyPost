@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "asaas": {
+      "type": "http",
+      "url": "https://docs.asaas.com/mcp",
+      "headers": {
+        "access_token": "$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjFkMGNmOGVjLWU1NGUtNGYyZi1iMTE2LTI2MjEwZjI5ODIzNTo6JGFhY2hfOTU5YTBmNWMtNDc3OS00MDg1LTg1YTctOTkwY2EzOGU2YTY3"
+      }
+    }
+  }
+}

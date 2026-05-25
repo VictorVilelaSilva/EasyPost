@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Escolher Universo - ImageForge IA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#131313",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#c6c6c7",
+                        "outline-variant": "#444748",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "surface-dim": "#131313",
+                        "surface-container": "#201f1f",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "surface-container-highest": "#353534",
+                        "outline": "#8e9192",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "inverse-primary": "#5d5f5f",
+                        "on-tertiary": "#2f3131",
+                        "surface-container-low": "#1c1b1b",
+                        "on-surface": "#e5e2e1",
+                        "surface-bright": "#3a3939",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-container": "#b7b4b4",
+                        "on-tertiary-container": "#636565",
+                        "tertiary-container": "#e2e2e2",
+                        "surface-container-lowest": "#0e0e0e",
+                        "primary": "#ffffff",
+                        "on-background": "#e5e2e1",
+                        "on-primary-container": "#636565",
+                        "surface-container-high": "#2a2a2a",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary-fixed-variant": "#454747",
+                        "error": "#ffb4ab",
+                        "tertiary": "#ffffff",
+                        "primary-container": "#e2e2e2",
+                        "on-surface-variant": "#c4c7c8",
+                        "on-primary": "#2f3131",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-tint": "#c6c6c7",
+                        "surface": "#131313",
+                        "primary-fixed": "#e2e2e2",
+                        "on-secondary": "#313030",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-error": "#690005",
+                        "surface-variant": "#353534",
+                        "on-secondary-fixed-variant": "#474746",
+                        "secondary": "#c8c6c5",
+                        "secondary-container": "#474746",
+                        "on-primary-fixed": "#1a1c1c",
+                        "inverse-on-surface": "#313030"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "sm": "8px",
+                        "gutter": "16px",
+                        "xs": "4px",
+                        "container-max": "1440px",
+                        "base": "8px",
+                        "xl": "40px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "title-sm": ["Inter"],
+                        "headline-md-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-sm": ["16px", { "lineHeight": "1.4", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "headline-md-mobile": ["20px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "display-lg": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-surface dark:bg-surface border-b border-outline-variant fixed top-0 left-0 w-full z-50 flex justify-between items-center h-16 px-gutter md:px-xl max-w-container-max mx-auto">
+<div class="flex items-center gap-xl">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary tracking-tight">ImageForge IA</span>
+<ul class="hidden md:flex gap-lg">
+<li><a class="font-label-caps text-label-caps text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200 px-sm py-xs rounded" href="#">Início</a></li>
+<li><a class="font-label-caps text-label-caps text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200 px-sm py-xs rounded" href="#">Galeria</a></li>
+<li><a class="font-label-caps text-label-caps text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200 px-sm py-xs rounded" href="#">Créditos</a></li>
+</ul>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant ml-sm">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="A minimalist, high-contrast black and white portrait of a person in profile. Smooth gradients, sharp edges. Professional studio lighting, dark background, premium editorial look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8qRRkdcxx94eUt3jqsJB5VuVc6rcmELQcdA_ZLlgQq0QDsVtXT0EzvKPgn1fkiEtNwQYNMcJshXYwj20KUmj9jql8M2aVxJ7cvE41ZD3sHC4okZwXMRrgLgMHrhBYj6m4YLjIJQwq6yqNejchinjRgmo71Syh1j1QRwmodLM7RXmr2UFdUbLzBcLXoCQaIF6juIDzIk2K1BDQN7Koy2yNqLw2J40JriGkejAb6JmoyVqKhka15j8GPEEQ40dbMrBnJaleBc6FQQ"/>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow pt-[104px] pb-xl px-gutter md:px-xl w-full max-w-4xl mx-auto flex flex-col">
+<!-- Header -->
+<header class="mb-xl text-center md:text-left">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-md uppercase tracking-widest">Passo 1 de 3: Escolha o universo</p>
+<h1 class="font-display-lg text-display-lg text-primary tracking-tight">Escolha o universo da imagem</h1>
+</header>
+<!-- Universe Selection Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md mb-xl flex-grow">
+<!-- Card 1: Selected -->
+<label class="relative block rounded-lg border-2 border-primary bg-surface-container-low overflow-hidden cursor-pointer group">
+<input checked="" class="peer sr-only" name="universe" type="radio" value="kimetsu"/>
+<div class="aspect-square bg-surface-container-high w-full relative">
+<img alt="Kimetsu Placeholder" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300" data-alt="A striking digital illustration of a demon slayer character wielding a glowing katana in a dark bamboo forest. High-key volumetric lighting cutting through the mist, creating a cinematic and dramatic mood. The art style is anime-inspired with sharp lines, deep blacks, and vibrant crimson and aquamarine accents. Professional digital studio quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1cVTTtw8Q7audTXAneSg9gQ6sRLSAlZRrdge60JudrhmXXyITtl41eFNAzxbpmj7yZS0-5r8sfkqWzlZ2DicNkrABV6ue0HFsaxb1QEwYrO6c-tD4QLaV74hP4k1ZRjVyaHMJcT0mZkJAKwlWmpzZ6iSXNOxrvqcFlI9rGKeV9IC2IxigPtd4o4Pm9_0hs2pHmkwSEzXEb0s7NeJjYM55UeLucad6yqZykDmIDk5nXP3s9g5lHT0Jcf27hyP1dt6pWA8d17Sm0g"/>
+<div class="absolute inset-0 bg-black/20"></div>
+</div>
+<div class="p-md text-center bg-surface-container">
+<span class="font-label-caps text-label-caps text-primary uppercase tracking-widest">Kimetsu</span>
+</div>
+<div class="absolute top-sm right-sm bg-primary text-background rounded-full p-xs flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</label>
+<!-- Card 2 -->
+<label class="relative block rounded-lg border border-surface-container-high bg-surface-container-low overflow-hidden cursor-pointer hover:bg-surface-container hover:border-outline-variant transition-all duration-200 group">
+<input class="peer sr-only" name="universe" type="radio" value="pokemon"/>
+<div class="aspect-square bg-surface-container-high w-full relative">
+<img alt="Pokémon Placeholder" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-300 grayscale group-hover:grayscale-0" data-alt="A highly detailed digital render of a mystical electric creature standing on a rocky outcrop under a stormy night sky. Crackling blue energy surrounds the subject. The style is realistic yet stylized, utilizing a cool color palette with stark contrasts between the dark environment and the glowing electric elements. Cinematic composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1uHCNKfgFTBdagc_AxcaroQd2UGc9izhH4eheKHhWSbnyRn0MuVjbjT83a-oGRdRv0LpKDAnc51EYoQG7sCoefDcldzoailtxtiaejOB7ktSlK4c5SQBIq83D-ZoSJWv6aaHLJUFKGdNOD4kVeBpRkQl9L3uw3QbzIF5oXw2UPcOQ60DStUmEBvlq2FiD18hHtCkOpRY_H9JlMyqjQkkkosDuouuzRTnzjzJBmKwII20N5e0n4oILp_c_ibnm5M5XEnxVXFHW2g"/>
+</div>
+<div class="p-md text-center border-t border-surface-container-high group-hover:border-outline-variant transition-colors">
+<span class="font-label-caps text-label-caps text-on-surface-variant group-hover:text-primary transition-colors uppercase tracking-widest">Pokémon</span>
+</div>
+</label>
+<!-- Card 3 -->
+<label class="relative block rounded-lg border border-surface-container-high bg-surface-container-low overflow-hidden cursor-pointer hover:bg-surface-container hover:border-outline-variant transition-all duration-200 group">
+<input class="peer sr-only" name="universe" type="radio" value="naruto"/>
+<div class="aspect-square bg-surface-container-high w-full relative">
+<img alt="Naruto Placeholder" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-300 grayscale group-hover:grayscale-0" data-alt="A dynamic digital art piece depicting a ninja leaping through the air with a swirling sphere of blue chakra in hand. The background is a blurred traditional village setting. Fast-paced action captured with motion blur and intense focus. The color palette features stark oranges, deep blues, and high-contrast shading. Epic and energetic mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiWdly0jCsqaDKdFpSwAfYgsq-t-pEx_klDNDRJvqF3JoZWfn49xy8FWZtMbC-va_0yUyX66XHu0c3f7f-TmPdFarGRs8gsPOxYlp9AEP5QhjaE6nwzVmoZjV2Ip_43Kx9JiPEcpdOwMZlezaHNotVTy8sCjEAAupCPfNa-wdtEjC7nvKATcYFP4ZvPKj6XruFthgZe8mjHUxsDu7KyBN5Qqd_JFPjXmzA1ESu2u9nW6pcg8ts10pNIa6zurlNtn1fvQK0QDKwvg"/>
+</div>
+<div class="p-md text-center border-t border-surface-container-high group-hover:border-outline-variant transition-colors">
+<span class="font-label-caps text-label-caps text-on-surface-variant group-hover:text-primary transition-colors uppercase tracking-widest">Naruto</span>
+</div>
+</label>
+<!-- Card 4 -->
+<label class="relative block rounded-lg border border-surface-container-high bg-surface-container-low overflow-hidden cursor-pointer hover:bg-surface-container hover:border-outline-variant transition-all duration-200 group">
+<input class="peer sr-only" name="universe" type="radio" value="digimon"/>
+<div class="aspect-square bg-surface-container-high w-full relative">
+<img alt="Digimon Placeholder" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-300 grayscale group-hover:grayscale-0" data-alt="A sleek, futuristic digital monster with metallic armor and glowing neon circuits standing in a cybernetic landscape. The aesthetic is cyperpunk and mecha-inspired, with intricate mechanical details and glowing teal and magenta lights against a dark, minimalist background. Studio lighting highlighting the metallic textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl1-g4KfOnJICNLvQoHV1AYAF6wfme5PHi44nlPkGklSacYsP1wTtP-Xi73SIkyBbIikIr-RbJqRArdqyWZFGJH6GiDDAtsGF0Z4oI6eJuSqCI-YiAI7aMHtlNZ4wKQHQtLNitryMFugDk86UQY-ANHYqNk6s-qZhoDVR8dD86bYlx2JBZd41oy_gzdnE9nOeBr7XpCJrg8pamQRnoCFKbuJQGxHryEftyq_g2G-8gSZqt3481GZGrDqch2Ve153Lnao-qcBI-6w"/>
+</div>
+<div class="p-md text-center border-t border-surface-container-high group-hover:border-outline-variant transition-colors">
+<span class="font-label-caps text-label-caps text-on-surface-variant group-hover:text-primary transition-colors uppercase tracking-widest">Digimon</span>
+</div>
+</label>
+</div>
+<!-- Actions -->
+<div class="flex flex-col-reverse sm:flex-row justify-between items-center gap-md pt-lg border-t border-surface-container-high mt-auto">
+<button class="w-full sm:w-auto px-xl py-sm rounded border border-surface-container-high text-primary font-body-md hover:bg-surface-container-low transition-colors text-center" type="button">
+                Voltar
+            </button>
+<button class="w-full sm:w-auto px-xl py-sm rounded bg-primary text-background font-body-md font-semibold hover:bg-surface-tint transition-colors text-center" type="button">
+                Continuar
+            </button>
+</div>
+</main>
+<script>
+        // Simple script to handle visual selection state across radio buttons
+        document.querySelectorAll('input[name="universe"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                // Reset all
+                document.querySelectorAll('label').forEach(label => {
+                    label.classList.remove('border-2', 'border-primary');
+                    label.classList.add('border', 'border-surface-container-high');
+                    const img = label.querySelector('img');
+                    if(img) {
+                        img.classList.add('grayscale', 'opacity-60');
+                        img.classList.remove('opacity-80');
+                    }
+                    const checkIcon = label.querySelector('.material-symbols-outlined');
+                    if (checkIcon && checkIcon.parentElement.classList.contains('absolute')) {
+                        checkIcon.parentElement.remove();
+                    }
+                    const textSpan = label.querySelector('span:not(.material-symbols-outlined)');
+                    if(textSpan) {
+                         textSpan.classList.remove('text-primary');
+                         textSpan.classList.add('text-on-surface-variant');
+                         label.querySelector('div:last-child').classList.remove('bg-surface-container');
+                    }
+                });
+
+                // Apply active state
+                if (e.target.checked) {
+                    const activeLabel = e.target.closest('label');
+                    activeLabel.classList.remove('border', 'border-surface-container-high');
+                    activeLabel.classList.add('border-2', 'border-primary');
+                    
+                    const img = activeLabel.querySelector('img');
+                    if(img) {
+                        img.classList.remove('grayscale', 'opacity-60');
+                        img.classList.add('opacity-80');
+                    }
+
+                    const textContainer = activeLabel.querySelector('div:last-child');
+                    textContainer.classList.add('bg-surface-container');
+                    const textSpan = textContainer.querySelector('span');
+                    if(textSpan) {
+                        textSpan.classList.remove('text-on-surface-variant');
+                        textSpan.classList.add('text-primary');
+                    }
+
+                    // Add check icon
+                    const iconHTML = `
+                        <div class="absolute top-sm right-sm bg-primary text-background rounded-full p-xs flex items-center justify-center shadow-md transition-all duration-300 scale-in">
+                            <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;" data-icon="check_circle">check_circle</span>
+                        </div>
+                    `;
+                    activeLabel.insertAdjacentHTML('beforeend', iconHTML);
+                }
+            });
+        });
+    </script>
+</body></html>

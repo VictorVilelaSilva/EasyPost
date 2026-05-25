@@ -1,0 +1,26 @@
+{
+  "planPath": "docs/superpowers/plans/2026-04-27-ratings.md",
+  "tasks": [
+    {
+      "id": 5,
+      "subject": "Task 1: Modelo Rating + migração Alembic",
+      "status": "completed",
+      "description": "**Goal:** Criar o modelo ORM Rating e aplicar a migração que cria a tabela `ratings`.\n\n**Files:**\n- Create: `app/ratings/__init__.py`\n- Create: `app/ratings/models.py`\n- Create: `alembic/versions/<hash>_add_ratings_table.py`\n\n**Acceptance Criteria:**\n- [ ] Modelo `Rating` com todos os campos, UniqueConstraint e CheckConstraint\n- [ ] `task migrate` aplica sem erros\n- [ ] Migração não contém drops de índices não-relacionados\n\n**Verify:** `cd back && uv run alembic upgrade head` → sem erros\n\n```json:metadata\n{\"files\": [\"app/ratings/__init__.py\", \"app/ratings/models.py\", \"alembic/versions/\"], \"verifyCommand\": \"cd back && uv run alembic upgrade head\", \"acceptanceCriteria\": [\"modelo Rating com todos os campos\", \"UniqueConstraint (transaction_id, rater_id)\", \"CheckConstraint stars 0-5\", \"migração aplica sem erros\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 6,
+      "subject": "Task 2: ConflictError + service.py + testes de serviço",
+      "status": "completed",
+      "blockedBy": [5],
+      "description": "**Goal:** Adicionar ConflictError, implementar lógica de negócio e cobrir com testes.\n\n**Files:**\n- Modify: `app/common/exceptions.py`\n- Create: `app/ratings/service.py`\n- Create: `tests/test_ratings_service.py`\n\n**Verify:** `cd back && uv run pytest tests/test_ratings_service.py -v` → todos passam\n\n```json:metadata\n{\"files\": [\"app/common/exceptions.py\", \"app/ratings/service.py\", \"tests/test_ratings_service.py\"], \"verifyCommand\": \"cd back && uv run pytest tests/test_ratings_service.py -v\", \"acceptanceCriteria\": [\"ConflictError retorna 409\", \"submit_rating valida status/participação/deduplicação\", \"ratee_id determinado corretamente\", \"_recalculate_reputation calcula floor(positives/total*100)\", \"get_user_ratings retorna lista ordenada\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 7,
+      "subject": "Task 3: Schemas + router + main.py + testes de router",
+      "status": "completed",
+      "blockedBy": [6],
+      "description": "**Goal:** Expor os dois endpoints HTTP e registrá-los na aplicação.\n\n**Files:**\n- Create: `app/ratings/schemas.py`\n- Create: `app/ratings/router.py`\n- Modify: `app/ratings/models.py` (adicionar relationship rater)\n- Modify: `app/main.py`\n- Create: `tests/test_ratings_router.py`\n\n**Verify:** `cd back && uv run pytest tests/test_ratings_router.py -v` → todos passam\n\n```json:metadata\n{\"files\": [\"app/ratings/schemas.py\", \"app/ratings/router.py\", \"app/ratings/models.py\", \"app/main.py\", \"tests/test_ratings_router.py\"], \"verifyCommand\": \"cd back && uv run pytest tests/test_ratings_router.py -v\", \"acceptanceCriteria\": [\"POST /transactions/{id}/rate retorna 201\", \"GET /users/{id}/ratings retorna 200 sem auth\", \"400/403/404/409 nos casos de erro\", \"stars fora de 0-5 retorna 422\"], \"requiresUserVerification\": false}\n```"
+    }
+  ],
+  "lastUpdated": "2026-04-27T00:00:00Z"
+}

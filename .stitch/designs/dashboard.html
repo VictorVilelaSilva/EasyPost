@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ImageForge IA - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline-variant": "#444748",
+                        "on-primary-fixed-variant": "#454747",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface": "#131313",
+                        "surface-container": "#201f1f",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#b7b4b4",
+                        "on-tertiary-container": "#636565",
+                        "on-primary-container": "#636565",
+                        "secondary-container": "#474746",
+                        "on-secondary-fixed-variant": "#474746",
+                        "primary-fixed-dim": "#c6c6c7",
+                        "on-secondary": "#313030",
+                        "secondary-fixed": "#e5e2e1",
+                        "inverse-primary": "#5d5f5f",
+                        "surface-container-lowest": "#0e0e0e",
+                        "background": "#131313",
+                        "on-error-container": "#ffdad6",
+                        "on-error": "#690005",
+                        "surface-container-highest": "#353534",
+                        "surface-variant": "#353534",
+                        "inverse-surface": "#e5e2e1",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-tertiary": "#2f3131",
+                        "on-surface": "#e5e2e1",
+                        "on-surface-variant": "#c4c7c8",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "inverse-on-surface": "#313030",
+                        "on-primary-fixed": "#1a1c1c",
+                        "primary-container": "#e2e2e2",
+                        "on-primary": "#2f3131",
+                        "surface-container-high": "#2a2a2a",
+                        "tertiary-container": "#e2e2e2",
+                        "primary": "#ffffff",
+                        "outline": "#8e9192",
+                        "surface-container-low": "#1c1b1b",
+                        "tertiary-fixed": "#e2e2e2",
+                        "secondary": "#c8c6c5",
+                        "surface-bright": "#3a3939",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "surface-tint": "#c6c6c7",
+                        "primary-fixed": "#e2e2e2",
+                        "on-background": "#e5e2e1",
+                        "surface-dim": "#131313",
+                        "error": "#ffb4ab",
+                        "tertiary": "#ffffff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "xs": "4px",
+                        "lg": "24px",
+                        "gutter": "16px",
+                        "container-max": "1440px",
+                        "xl": "40px",
+                        "md": "16px",
+                        "base": "8px",
+                        "sm": "8px"
+                    },
+                    fontFamily: {
+                        "headline-md": ["Inter"],
+                        "headline-md-mobile": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    fontSize: {
+                        "headline-md": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                        "headline-md-mobile": ["20px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "title-sm": ["16px", { "lineHeight": "1.4", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "display-lg": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body-md antialiased h-screen w-full overflow-hidden flex flex-col">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center h-16 px-gutter md:px-xl max-w-container-max mx-auto bg-surface dark:bg-surface border-b border-outline-variant flat no shadows">
+<div class="flex items-center gap-lg">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary tracking-tight">ImageForge IA</span>
+<nav class="hidden md:flex items-center gap-md ml-lg">
+<!-- Active Navigation Item -->
+<a class="font-label-caps text-label-caps text-primary dark:text-primary border-b-2 border-primary pb-2 pt-2 px-2 hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200" href="#">Início</a>
+<!-- Inactive Navigation Items -->
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200 py-2 px-2 rounded" href="#">Galeria</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200 py-2 px-2 rounded" href="#">Créditos</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-highest">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-highest mr-2">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="A close up portrait of a person used as a generic user avatar in a digital interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAmzN-fVchHlpRqYGRT7akvBjfGgOwRQ9qMdFDbWJdifSDN8EZ956-KXrQ-2qaFdonePFwGAecrHMV6sibAYEC3i8Ig2_PxVM_KyqOCumlOsD8LO5SaccPvOMim27m2GmV1k9QE-G_EgMntcLODGQOpjlXABbLZLdhdVIqaYvu3-eTBDmm4KjAG1w9yJN2eP5Y9hfkwqkUnK_tT3mYzHodioNXZ9wPjcoDmQ742b74DDXyv1emBClfnH28ASZApbc57CZPLpkI-g"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 pt-16 h-full overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col fixed left-0 top-16 h-[calc(100vh-64px)] w-64 py-lg px-md z-40 bg-surface-container dark:bg-surface-container border-r border-outline-variant flat no shadows">
+<div class="mb-lg px-3">
+<h2 class="font-headline-md text-headline-md text-primary">Estúdio Digital</h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1 block">Plano Pro</span>
+</div>
+<button class="w-full bg-primary text-surface font-title-sm text-title-sm py-2 px-4 rounded-lg mb-lg hover:bg-surface-container-highest hover:text-primary transition-colors duration-200 border border-transparent hover:border-outline-variant flex items-center justify-center gap-2">
+                Gerar Imagens
+            </button>
+<nav class="flex-1 flex flex-col gap-1">
+<!-- Active Tab -->
+<a class="flex items-center gap-3 px-3 py-2 bg-surface-container-highest text-primary font-semibold border-r-2 border-primary rounded-l-md font-label-caps text-label-caps scale-95 opacity-80 transition-transform" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+                    Dashboard
+                </a>
+<!-- Inactive Tabs -->
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-md font-label-caps text-label-caps transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="auto_awesome">auto_awesome</span>
+                    Criações
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-md font-label-caps text-label-caps transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="layers">layers</span>
+                    Modelos
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-md font-label-caps text-label-caps transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="tune">tune</span>
+                    Configurações
+                </a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 border-t border-surface-container-high pt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-md font-label-caps text-label-caps transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="help_outline">help_outline</span>
+                    Suporte
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-md font-label-caps text-label-caps transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+                    Sair
+                </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-64 h-full overflow-y-auto bg-surface-container-lowest">
+<div class="max-w-container-max mx-auto p-gutter lg:p-xl">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-xl gap-4">
+<h1 class="font-headline-md text-headline-md text-primary tracking-tight">Suas gerações</h1>
+<button class="bg-primary text-surface font-title-sm text-title-sm py-2 px-6 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 w-full md:w-auto">
+<span class="material-symbols-outlined text-[20px]" data-icon="add" data-weight="fill">add</span>
+                        Gerar imagens
+                    </button>
+</div>
+<!-- Content Grid (Populated State) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-md md:gap-lg mb-xl">
+<!-- Card 1 -->
+<div class="group flex flex-col border border-surface-container-high bg-surface-container-lowest overflow-hidden hover:border-outline-variant transition-colors duration-300">
+<div class="aspect-square bg-surface-container-low overflow-hidden relative">
+<img alt="Abstract 3D rendering" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A striking digital installation art piece featuring glowing, generative geometric shapes suspended in a vast, minimalist gallery space. The room is illuminated by high-key, soft white lighting that creates a bright, modern aesthetic. The artwork relies on a sophisticated palette of deep blacks and pristine whites, punctuated by intense accents of vibrant neon colors. The mood is serene yet technologically advanced." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBk5ghuQn2-d4TzznsQxwEg7fW1xs8JtAl0SmfcHwolbJRst1P5_u9g-XaUMvh-kl99guWEYG1PiylFvMYNANhwSHexSL4ubNncqGN8D_YZlO8ODnLuSymzdqVN8sS7KMaPp1PtEmwmfKt0HVvWOnD1lMpCSxpr7ub0Muh4EcI3ZeVwhM7iSgUmvNuw4WjOHDhG282Lwojq48nvEvd6qr42MkH11KWpVoCaL_zH4BWFVULngofbY9Buk1_NegLT8M4VHrMN7im8SA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+<span class="text-primary font-label-caps text-label-caps truncate">Geometria fluída em neon...</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group flex flex-col border border-surface-container-high bg-surface-container-lowest overflow-hidden hover:border-outline-variant transition-colors duration-300">
+<div class="aspect-square bg-surface-container-low overflow-hidden relative">
+<img alt="Minimalist landscape" class="w-full h-full object-cover grayscale opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" data-alt="A highly detailed, ultra-realistic digital painting of a surreal minimalist landscape. Rolling dunes of dark sand contrast with a pitch-black sky. A single, perfectly spherical glowing orb hovers silently above the horizon, casting a stark, dramatic light. The color palette is strictly monochromatic with subtle shifts in metallic greys and deep charcoal. The overall aesthetic is mysterious and premium." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdBURGf2QpbarklJNCiyP1LfDp9zO1QWBH-v4a4UJHI5F2radcEaBK5A1Z4YVd4LnVM8aYGxyGeGaLjRyMgJrww-MESONaEN1VskV8xZsbOWPyEwkrKN2luTTA6Ujmrswj2dtHk4-D3DJ4FIY1U9d9o6pi4fb6iFXPRd2TXvA2HO9f-dx04InsYfOCRUgVTwM7TCuvsoPhH2BZ-CHB3ugcNIpeghTXd5TxODeBkoeJBr3qlvGsBGuFOZin4K93WlIh_QiqFHqJmw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+<span class="text-primary font-label-caps text-label-caps truncate">Paisagem surrealista obscura...</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group flex flex-col border border-surface-container-high bg-surface-container-lowest overflow-hidden hover:border-outline-variant transition-colors duration-300">
+<div class="aspect-square bg-surface-container-low overflow-hidden relative">
+<div class="w-full h-full bg-surface-container-highest flex items-center justify-center animate-pulse">
+<!-- Simulated loading state -->
+<span class="material-symbols-outlined text-outline-variant text-[32px] animate-spin" data-icon="progress_activity">progress_activity</span>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group flex flex-col border border-surface-container-high bg-surface-container-lowest overflow-hidden hover:border-outline-variant transition-colors duration-300">
+<div class="aspect-[4/5] bg-surface-container-low overflow-hidden relative">
+<img alt="Cyberpunk portrait" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A cinematic portrait of a cybernetic entity in a high-tech studio environment. The lighting is harsh and directional, emphasizing the sharp angles of the metallic faceplates and glowing optical sensors. The background is completely devoid of detail, a pure, infinite black void. The image exhibits extreme photorealism with a cold, blue-tinted color grade. It exudes a sense of stark, futuristic precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAN1xVkd8cQ4TEBZMgStkUZJubjvTHcbVml_am7F7sVlmFBxeaK7EPIaXEtx9AvKCAAq3K2uCg9n5CJWBhkmqpmVXedRcDzl6uXTSzWniI7i2OlgPR4lD8-VM5fEsyj6gF0o3sZJgDbqWTxkNrN37iL2-qWeOLXIOw7yzBHTj5LIIhoYZ6Ri2Zmqmiipo6AQSKCSENj1K_nQSkM-qB-0l3hEgAdFjTpDxC1M3RQokifkXbBvXxRxSb0Jzw5BjbBGA1pzqtpA4kWuA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+<span class="text-primary font-label-caps text-label-caps truncate">Retrato cibernético estúdio...</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Empty State (Demonstration, hidden by default in this flow but structure provided) -->
+<!-- Remove 'hidden' class to view -->
+<div class="hidden flex flex-col items-center justify-center py-24 border border-surface-container-high border-dashed rounded-lg bg-surface-container-lowest text-center">
+<span class="material-symbols-outlined text-outline-variant text-[48px] mb-4" data-icon="imagesmode" data-weight="100">imagesmode</span>
+<h3 class="font-title-sm text-title-sm text-primary mb-2">Nenhuma imagem gerada ainda</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-6">
+                        Comece a criar imagens incríveis utilizando nossa inteligência artificial de última geração. O seu estúdio digital está pronto.
+                    </p>
+<button class="bg-transparent border border-surface-container-high text-primary font-title-sm text-title-sm py-2 px-6 rounded-lg hover:bg-surface-container-high transition-colors">
+                        Explorar modelos
+                    </button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

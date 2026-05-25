@@ -1,0 +1,2 @@
+Create an original character sheet in the universe of "Avatar: The Legend of Aang" based on my appearance, energy and personality of the person in the photos sent before. Turn the person into a character fully integrated into the world of Avatar, the character is from [write here the tribe or nation], please assign a pet as if it were an official part of the animation.
+The art should have a premium poster/concept art format divided into several panels, reminiscent of character guide pages or official artbook.

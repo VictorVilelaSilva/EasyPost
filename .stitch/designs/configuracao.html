@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Configurações da Imagem - ImageForge IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#e2e2e2",
+                      "primary-fixed-dim": "#c6c6c7",
+                      "inverse-on-surface": "#313030",
+                      "tertiary-fixed": "#e2e2e2",
+                      "on-primary": "#2f3131",
+                      "surface-container-lowest": "#0e0e0e",
+                      "inverse-surface": "#e5e2e1",
+                      "outline": "#8e9192",
+                      "on-error": "#690005",
+                      "on-background": "#e5e2e1",
+                      "on-secondary": "#313030",
+                      "on-surface": "#e5e2e1",
+                      "error-container": "#93000a",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "surface-container": "#201f1f",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-container": "#b7b4b4",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "surface-container-high": "#2a2a2a",
+                      "surface-bright": "#3a3939",
+                      "primary-fixed": "#e2e2e2",
+                      "surface-tint": "#c6c6c7",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "secondary": "#c8c6c5",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "secondary-container": "#474746",
+                      "tertiary-container": "#e2e2e2",
+                      "surface": "#131313",
+                      "on-surface-variant": "#c4c7c8",
+                      "tertiary": "#ffffff",
+                      "on-tertiary": "#2f3131",
+                      "on-primary-fixed": "#1a1c1c",
+                      "primary": "#ffffff",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-tertiary-container": "#636565",
+                      "surface-dim": "#131313",
+                      "error": "#ffb4ab",
+                      "surface-container-low": "#1c1b1b",
+                      "surface-container-highest": "#353534",
+                      "secondary-fixed": "#e5e2e1",
+                      "inverse-primary": "#5d5f5f",
+                      "on-primary-container": "#636565",
+                      "background": "#131313",
+                      "on-secondary-fixed-variant": "#474746",
+                      "on-primary-fixed-variant": "#454747",
+                      "surface-variant": "#353534",
+                      "outline-variant": "#444748"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "base": "8px",
+                      "xl": "40px",
+                      "md": "16px",
+                      "lg": "24px",
+                      "sm": "8px",
+                      "gutter": "16px",
+                      "container-max": "1440px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "title-sm": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "headline-md-mobile": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "title-sm": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md-mobile": [
+                              "20px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #050505;
+            color: #F5F5F5;
+        }
+        .border-subtle {
+            border-color: #2A2A2A;
+        }
+        .bg-surface-elevated {
+            background-color: #101010;
+        }
+        .bg-surface-hover {
+            background-color: #181818;
+        }
+        .text-muted {
+            color: #A3A3A3;
+        }
+      </style>
+</head>
+<body class="font-body-md text-body-md antialiased min-h-screen flex bg-[#050505]">
+<!-- SideNavBar (Suppressed as this is a transactional flow - Step 3 of 3, but prompt requests it "if it's an app interface". Given the transactional nature of a 'wizard', hiding it is the better UX choice per rules, but I will include it to follow the prompt's explicit suggestion, keeping it semantic to the dashboard). Let's keep it but minimal. Actually, rule says: "Automatic Suppression: You MUST exclude the navigation shell if the page intent is: Linear/Transactional". Since it's a step-by-step config, I will suppress SideNav to prioritize canvas. Wait, prompt says: "SideNavBar should be present if it's an app interface." I will include it. -->
+<nav class="hidden lg:flex flex-col fixed left-0 top-0 h-full w-64 py-lg px-md z-40 bg-surface-container dark:bg-surface-container border-r border-outline-variant text-primary dark:text-primary">
+<div class="mb-xl">
+<span class="font-headline-md text-headline-md text-primary font-bold tracking-tight">Estúdio Digital</span>
+<div class="font-label-caps text-label-caps text-on-surface-variant mt-1">Plano Pro</div>
+</div>
+<div class="flex-1 flex flex-col gap-2">
+<!-- Active state logic: "Criações" is closest to creating/configuring an image -->
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded bg-surface-container-highest text-primary font-semibold border-r-2 border-primary transition-transform translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-caps text-label-caps">Criações</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="layers">layers</span>
+<span class="font-label-caps text-label-caps">Modelos</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+<span class="font-label-caps text-label-caps">Configurações</span>
+</a>
+</div>
+<div class="mt-auto flex flex-col gap-2 border-t border-outline-variant pt-4">
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span class="font-label-caps text-label-caps">Suporte</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-caps text-label-caps">Sair</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar (Slim Header) -->
+<header class="h-16 border-b border-subtle flex items-center justify-between px-gutter md:px-xl sticky top-0 bg-[#050505] z-30">
+<div class="flex items-center gap-4">
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-[#F5F5F5]">ImageForge IA</h1>
+<div class="h-4 w-px bg-[#2A2A2A] mx-2 hidden sm:block"></div>
+<span class="text-muted font-label-caps text-label-caps hidden sm:block">Passo 3 de 3</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-muted hover:text-[#F5F5F5] transition-colors flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#181818]">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-[#181818] border border-subtle overflow-hidden">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="A close up portrait of a young woman with a neutral expression, serving as a user profile avatar. The image is high quality, well-lit with soft natural light, set against a blurred background. The style is professional photography suitable for a modern digital interface. Minimalist and clean aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgUW8ItERpcr_gmGtawZMHXLg7fElK8bEV9TFXc8wjCDGK6fZgzkmRTNIlMytYhT0NZS9E27qbW6iE598CDtEgPfMhKQW3IUyDGO2mQlbaxunJAbMcCo7qmsDIY6Lhekyqox6wckoutpJrojZA_eDA8XbjWR3zcE-ZqdhuXRWkerDAkQfIfv_5VwKWlkhg-xl7NuU9joSg2vUmmW-0kEZumVC9kVPGDbyYGWXw9Xu9D-zEXBIxHgsfArakXtcFZFPjB0cTZ4EXTA"/>
+</div>
+</div>
+</header>
+<!-- Config Canvas -->
+<div class="flex-1 overflow-y-auto p-gutter md:p-xl flex flex-col lg:flex-row gap-8 lg:gap-12 max-w-container-max mx-auto w-full">
+<!-- Form Area (Left) -->
+<div class="flex-1 max-w-2xl flex flex-col gap-8">
+<div>
+<h2 class="font-headline-md text-headline-md text-[#F5F5F5] mb-2">Configurações da imagem</h2>
+<p class="text-muted font-body-md text-body-md">Ajuste os parâmetros finais antes da geração.</p>
+</div>
+<!-- 1. Upload Dropzone -->
+<div class="flex flex-col gap-3">
+<label class="font-label-caps text-label-caps text-muted uppercase">Imagem de rosto</label>
+<div class="border border-subtle border-dashed rounded-lg bg-surface-elevated hover:bg-surface-hover transition-colors p-8 flex flex-col items-center justify-center gap-4 cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-[#050505] border border-subtle flex items-center justify-center text-muted group-hover:text-[#F5F5F5] transition-colors">
+<span class="material-symbols-outlined" data-icon="upload">upload</span>
+</div>
+<div class="text-center">
+<p class="font-title-sm text-title-sm text-[#F5F5F5]">Clique ou arraste a imagem</p>
+<p class="font-body-md text-body-md text-muted mt-1">PNG, JPG até 5MB</p>
+</div>
+</div>
+</div>
+<!-- 2. Color Swatches -->
+<div class="flex flex-col gap-3">
+<label class="font-label-caps text-label-caps text-muted uppercase">Cor de fundo</label>
+<div class="flex flex-wrap gap-3">
+<button aria-label="Cinza claro" class="w-10 h-10 rounded-full bg-[#E5E7EB] border-2 border-[#F5F5F5] ring-2 ring-transparent ring-offset-2 ring-offset-[#050505] focus:ring-[#F5F5F5] transition-all"></button>
+<button aria-label="Cinza escuro" class="w-10 h-10 rounded-full bg-[#1F2937] border border-subtle hover:border-[#F5F5F5] transition-colors"></button>
+<button aria-label="Vermelho escuro" class="w-10 h-10 rounded-full bg-[#991B1B] border border-subtle hover:border-[#F5F5F5] transition-colors"></button>
+<button aria-label="Azul escuro" class="w-10 h-10 rounded-full bg-[#1E40AF] border border-subtle hover:border-[#F5F5F5] transition-colors"></button>
+<button class="w-10 h-10 rounded-full bg-surface-elevated border border-subtle flex items-center justify-center text-muted hover:text-[#F5F5F5] hover:border-[#F5F5F5] transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<!-- 3. Universe Selector & 4. Toggle -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-3">
+<label class="font-label-caps text-label-caps text-muted uppercase">Estilo Visual</label>
+<div class="relative">
+<select class="w-full bg-surface-elevated border border-subtle text-[#F5F5F5] rounded-lg px-4 py-3 appearance-none focus:outline-none focus:border-[#F5F5F5] transition-colors cursor-pointer font-title-sm text-title-sm">
+<option>Estilo Anime / Mangá</option>
+<option>Realismo Cinematográfico</option>
+<option>Pintura a Óleo Digital</option>
+<option>Cyberpunk / Neon</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-muted pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col justify-end gap-3 pb-3">
+<label class="flex items-center justify-between cursor-pointer group">
+<span class="font-title-sm text-title-sm text-[#F5F5F5]">Gerar insígnias / Adereços</span>
+<div class="relative">
+<input checked="" class="sr-only" type="checkbox"/>
+<div class="w-11 h-6 bg-[#F5F5F5] rounded-full flex items-center px-1 transition-colors">
+<div class="w-4 h-4 bg-[#050505] rounded-full translate-x-5 transition-transform"></div>
+</div>
+</div>
+</label>
+</div>
+</div>
+<!-- 5. Segmented Control -->
+<div class="flex flex-col gap-3">
+<label class="font-label-caps text-label-caps text-muted uppercase">Formato de saída</label>
+<div class="flex bg-surface-elevated border border-subtle rounded-lg p-1">
+<button class="flex-1 py-2 px-4 rounded-md bg-[#2A2A2A] text-[#F5F5F5] font-title-sm text-title-sm shadow-sm transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="crop_square">crop_square</span>
+                            Quadrada
+                        </button>
+<button class="flex-1 py-2 px-4 rounded-md text-muted hover:text-[#F5F5F5] font-title-sm text-title-sm transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="crop_portrait">crop_portrait</span>
+                            Retrato
+                        </button>
+<button class="flex-1 py-2 px-4 rounded-md text-muted hover:text-[#F5F5F5] font-title-sm text-title-sm transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="crop_landscape">crop_landscape</span>
+                            Paisagem
+                        </button>
+</div>
+</div>
+</div>
+<!-- Preview Sidebar (Right) -->
+<div class="w-full lg:w-80 xl:w-96 flex flex-col">
+<div class="sticky top-24 bg-surface-elevated border border-subtle rounded-xl p-6 flex flex-col gap-6">
+<h3 class="font-title-sm text-title-sm text-[#F5F5F5] border-b border-subtle pb-4">Resumo da Geração</h3>
+<div class="aspect-square w-full border border-subtle rounded-lg bg-[#050505] flex items-center justify-center relative overflow-hidden group">
+<!-- Placeholder pattern -->
+<div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#2A2A2A 1px, transparent 1px); background-size: 16px 16px;"></div>
+<span class="material-symbols-outlined text-[48px] text-[#2A2A2A] z-10">image</span>
+<div class="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/80 to-transparent z-10 flex justify-between items-end">
+<span class="font-label-caps text-label-caps text-muted">1024x1024 px</span>
+<span class="font-label-caps text-label-caps text-[#F5F5F5] bg-[#2A2A2A] px-2 py-1 rounded">Alta Qualidade</span>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<span class="text-muted font-body-md text-body-md">Estilo</span>
+<span class="text-[#F5F5F5] font-title-sm text-title-sm">Anime / Mangá</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-muted font-body-md text-body-md">Custo estimado</span>
+<div class="flex items-center gap-1 text-[#F5F5F5] font-title-sm text-title-sm">
+<span class="material-symbols-outlined text-[16px] text-[#A3A3A3]" data-icon="toll">toll</span>
+                                2 Créditos
+                            </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<footer class="border-t border-subtle bg-[#050505] p-gutter md:p-lg flex items-center justify-between sticky bottom-0 z-30">
+<button class="px-6 py-3 rounded-lg border border-subtle text-[#F5F5F5] font-title-sm text-title-sm hover:bg-[#181818] transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_back">arrow_back</span>
+                Voltar
+            </button>
+<button class="px-8 py-3 rounded-lg bg-[#FFFFFF] text-[#050505] font-title-sm text-title-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="auto_fix_high">auto_fix_high</span>
+                Gerar imagem
+            </button>
+</footer>
+</main>
+</body></html>
