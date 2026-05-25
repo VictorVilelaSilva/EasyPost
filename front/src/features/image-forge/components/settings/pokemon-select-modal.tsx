@@ -22,12 +22,16 @@ export function PokemonSelectModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 px-4 py-6">
+    <div
+      className="fixed inset-0 z-50 grid place-items-center bg-black/70 px-4 py-6"
+      onClick={onClose}
+    >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="pokemon-select-title"
-        className="flex max-h-[min(760px,calc(100vh-3rem))] w-full max-w-3xl flex-col overflow-hidden rounded-lg border border-[#2a2a2a] bg-[#101010]"
+        className="flex max-h-[min(860px,calc(100vh-3rem))] w-full max-w-5xl flex-col overflow-hidden rounded-lg border border-[#2a2a2a] bg-[#101010]"
+        onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4 border-b border-[#2a2a2a] p-4 sm:p-5">
           <div className="min-w-0">
@@ -38,7 +42,7 @@ export function PokemonSelectModal({
               Selecionar Pokémon
             </h2>
             <p className="mt-1 text-sm leading-6 text-[#a3a3a3]">
-              Busque e escolha o Pokémon que vai ocupar este slot da composição.
+              Compare a arte, tipos e identificação antes de escolher quem entra na composição.
             </p>
           </div>
           <Button

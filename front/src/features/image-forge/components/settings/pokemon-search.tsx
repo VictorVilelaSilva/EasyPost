@@ -46,7 +46,7 @@ export function PokemonSearch({
       {error && <p className="mt-3 text-xs text-[#ffb4ab]">{error}</p>}
 
       {!error && options.length > 0 && (
-        <div className="mt-3 grid gap-2 md:grid-cols-2">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {options.map((pokemon) => (
             <PokemonOption
               key={pokemon.id}

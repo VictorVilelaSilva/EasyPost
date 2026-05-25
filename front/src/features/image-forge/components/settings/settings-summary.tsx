@@ -35,7 +35,7 @@ export function SettingsSummary({
       </div>
       <dl className="mt-5 space-y-3 text-sm">
         <MetaRow label="Universo" value={selectedUniverse.label} />
-        {isPokemon && <MetaRow label="Título" value={pokemonConfig.title || "Portugal"} />}
+        {isPokemon && <MetaRow label="Nome do Treinador" value={pokemonConfig.title || "Portugal"} />}
         {isPokemon && <MetaRow label="Roupa" value={summarizeOutfit(pokemonConfig.outfit)} />}
         {isPokemon && <MetaRow label="Pokémon" value={summarizePokemonList(pokemonConfig.pokemon)} />}
         <MetaRow label="Formato" value={format} />
