@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
+from app.image_generation.router import router as image_generation_router
 from app.pokemon.router import router as pokemon_router
 
 logging.basicConfig(level=logging.INFO)
@@ -23,9 +24,9 @@ app.add_middleware(
 )
 
 app.include_router(pokemon_router)
+app.include_router(image_generation_router)
 
 
 @app.get("/health")
 async def health() -> dict:
     return {"status": "ok"}
-

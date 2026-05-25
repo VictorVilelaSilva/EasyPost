@@ -9,7 +9,7 @@ export function FaceUploadPanel({
   onFileChange,
 }: {
   uploadedName: string;
-  onFileChange: (name: string) => void;
+  onFileChange: (file: File) => void;
 }) {
   return (
     <Panel>
@@ -21,7 +21,7 @@ export function FaceUploadPanel({
           accept="image/*"
           onChange={(event) => {
             const file = event.target.files?.[0];
-            if (file) onFileChange(file.name);
+            if (file) onFileChange(file);
           }}
         />
         <Upload className="size-6 text-[#a3a3a3]" aria-hidden="true" />

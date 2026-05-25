@@ -12,9 +12,10 @@ import {
   defaultPokemonOutfit,
   universes,
 } from "@/features/image-forge/constants";
-import { buildPokemonPrompt } from "@/features/image-forge/lib/pokemon-prompt";
+import { generatePokemonImage } from "@/features/image-forge/lib/image-generation-api";
 import type {
   Format,
+  ImageGenerationResult,
   PokemonConfig,
   Step,
   Universe,
@@ -26,7 +27,11 @@ export default function Home() {
   const [background, setBackground] = useState(backgroundColors[2]);
   const [format, setFormat] = useState<Format>("Automático");
   const [badgesEnabled, setBadgesEnabled] = useState(true);
-  const [uploadedName, setUploadedName] = useState("rosto_referencia.png");
+  const [referenceImage, setReferenceImage] = useState<File | null>(null);
+  const [uploadedName, setUploadedName] = useState("Nenhuma imagem selecionada");
+  const [generationResult, setGenerationResult] = useState<ImageGenerationResult | null>(null);
+  const [generationError, setGenerationError] = useState<string | null>(null);
+  const [generationLoading, setGenerationLoading] = useState(false);
   const [pokemonConfig, setPokemonConfig] = useState<PokemonConfig>({
     title: "Portugal",
     outfit: {
@@ -41,16 +46,44 @@ export default function Home() {
     [universe],
   );
 
-  const generationPrompt = useMemo(() => {
-    if (selectedUniverse.name !== "Pokemon") return "";
+  async function handleGenerate() {
+    if (selectedUniverse.name !== "Pokemon") {
+      setStep("preview");
+      return;
+    }
 
-    return buildPokemonPrompt({
-      background,
-      badgesEnabled,
-      config: pokemonConfig,
-      format,
-    });
-  }, [background, badgesEnabled, format, pokemonConfig, selectedUniverse.name]);
+    if (!referenceImage) {
+      setGenerationError("Selecione uma imagem de rosto antes de gerar.");
+      setStep("preview");
+      return;
+    }
+
+    setGenerationLoading(true);
+    setGenerationError(null);
+    setGenerationResult(null);
+    setStep("preview");
+
+    try {
+      const result = await generatePokemonImage({
+        background,
+        badgesEnabled,
+        format,
+        pokemonConfig,
+        referenceImage,
+      });
+      setGenerationResult(result);
+    } catch (error) {
+      setGenerationError(error instanceof Error ? error.message : "Falha ao gerar imagem.");
+    } finally {
+      setGenerationLoading(false);
+    }
+  }
+
+  function handleFileChange(file: File) {
+    setReferenceImage(file);
+    setUploadedName(file.name);
+    setGenerationError(null);
+  }
 
   return (
     <main className="min-h-screen bg-[#050505] text-[#f5f5f5]">
@@ -78,9 +111,9 @@ export default function Home() {
           onBack={() => setStep("universe")}
           onBackgroundChange={setBackground}
           onBadgesChange={setBadgesEnabled}
-          onFileChange={setUploadedName}
+          onFileChange={handleFileChange}
           onFormatChange={setFormat}
-          onGenerate={() => setStep("preview")}
+          onGenerate={handleGenerate}
           onPokemonConfigChange={setPokemonConfig}
         />
       )}
@@ -90,11 +123,13 @@ export default function Home() {
           background={background}
           badgesEnabled={badgesEnabled}
           format={format}
-          generationPrompt={generationPrompt}
+          generationError={generationError}
+          generationLoading={generationLoading}
+          generationResult={generationResult}
           pokemonConfig={pokemonConfig}
           selectedUniverse={selectedUniverse}
           onBackToSettings={() => setStep("settings")}
-          onRegenerate={() => setStep("settings")}
+          onRegenerate={handleGenerate}
         />
       )}
     </main>

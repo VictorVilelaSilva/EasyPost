@@ -1,17 +1,15 @@
-import { BadgeCheck, Check, Download, RefreshCcw, SlidersHorizontal, Sparkles } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-
-import { summarizeOutfit } from "../lib/outfit-summary";
-import { summarizePokemonList } from "../lib/pokemon-summary";
-import type { Format, PokemonConfig, UniverseOption } from "../types";
-import { MetaRow, PrimaryButton, StepIntro } from "./common";
+import type { Format, ImageGenerationResult, PokemonConfig, UniverseOption } from "../types";
+import { StepIntro } from "./common";
+import { PreviewArtwork } from "./preview/preview-artwork";
+import { PreviewSummary } from "./preview/preview-summary";
 
 export function PreviewStep({
   background,
   badgesEnabled,
   format,
-  generationPrompt,
+  generationError,
+  generationLoading,
+  generationResult,
   pokemonConfig,
   selectedUniverse,
   onBackToSettings,
@@ -20,7 +18,9 @@ export function PreviewStep({
   background: string;
   badgesEnabled: boolean;
   format: Format;
-  generationPrompt: string;
+  generationError: string | null;
+  generationLoading: boolean;
+  generationResult: ImageGenerationResult | null;
   pokemonConfig: PokemonConfig;
   selectedUniverse: UniverseOption;
   onBackToSettings: () => void;
@@ -31,18 +31,22 @@ export function PreviewStep({
   return (
     <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
       <StepIntro
-        eyebrow="Finalizado"
-        title="Imagem gerada"
-        description="Revise o resultado, baixe a imagem ou volte para refinar as configurações."
+        eyebrow={generationLoading ? "Gerando" : generationError ? "Erro" : "Finalizado"}
+        title={generationLoading ? "Gerando imagem" : generationError ? "Geração interrompida" : "Imagem gerada"}
+        description="Acompanhe a geração, baixe a imagem ou volte para refinar as configurações."
       />
 
-      <div className="mt-6 grid min-w-0 gap-5 lg:mt-8 xl:grid-cols-[minmax(0,1fr)_340px] xl:gap-6">
-        <div className="min-w-0 rounded-lg border border-[#2a2a2a] bg-[#101010] p-3 sm:p-4">
-          <div className="grid min-h-[320px] place-items-center rounded-lg border border-[#2a2a2a] p-3 sm:min-h-[520px] sm:p-6" style={{ background }}>
-            <div className="aspect-square w-full max-w-[520px] rounded-lg border border-white/10 bg-black/30 p-5">
-              <div className="flex h-full flex-col justify-between rounded-md border border-white/10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.16),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.10),rgba(0,0,0,0.35))] p-4 sm:p-6">
-                <PreviewArtwork selectedUniverse={selectedUniverse} badgesEnabled={badgesEnabled} />
-              </div>
+      <div className="mt-6 grid min-w-0 gap-5 lg:mt-8 xl:grid-cols-[minmax(0,1fr)_320px] xl:gap-6">
+        <div className="min-w-0 rounded-lg border border-[#2a2a2a] bg-[#0b0b0b] p-3 sm:p-4">
+          <div className="grid min-h-[360px] place-items-center overflow-hidden rounded-lg border border-[#2a2a2a] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_34%),#111] p-4 sm:min-h-[620px] sm:p-6">
+            <div className="grid w-full max-w-[680px] place-items-center rounded-lg border border-white/10 bg-black/20 p-2 shadow-2xl shadow-black/40 sm:p-3">
+              <PreviewArtwork
+                badgesEnabled={badgesEnabled}
+                error={generationError}
+                image={generationResult}
+                loading={generationLoading}
+                selectedUniverse={selectedUniverse}
+              />
             </div>
           </div>
         </div>
@@ -51,7 +55,9 @@ export function PreviewStep({
           background={background}
           badgesEnabled={badgesEnabled}
           format={format}
-          generationPrompt={generationPrompt}
+          generationError={generationError}
+          generationLoading={generationLoading}
+          generationResult={generationResult}
           isPokemon={isPokemon}
           pokemonConfig={pokemonConfig}
           selectedUniverse={selectedUniverse}
@@ -60,113 +66,5 @@ export function PreviewStep({
         />
       </div>
     </section>
-  );
-}
-
-function PreviewArtwork({
-  badgesEnabled,
-  selectedUniverse,
-}: {
-  badgesEnabled: boolean;
-  selectedUniverse: UniverseOption;
-}) {
-  return (
-    <>
-      <div className="flex items-center justify-between">
-        <span className="min-w-0 truncate rounded-md bg-black/40 px-3 py-1 text-xs font-semibold text-white/80">
-          {selectedUniverse.label}
-        </span>
-        {badgesEnabled && (
-          <span className="flex size-9 items-center justify-center rounded-full bg-white text-[#050505]">
-            <BadgeCheck className="size-5" aria-hidden="true" />
-          </span>
-        )}
-      </div>
-      <div>
-        <Sparkles className="mb-4 size-12 text-white/70" aria-hidden="true" />
-        <h2 className="text-2xl font-semibold">Preview IA</h2>
-        <p className="mt-2 text-sm text-white/65">Resultado simulado para validação do fluxo.</p>
-      </div>
-    </>
-  );
-}
-
-function PreviewSummary({
-  background,
-  badgesEnabled,
-  format,
-  generationPrompt,
-  isPokemon,
-  pokemonConfig,
-  selectedUniverse,
-  onBackToSettings,
-  onRegenerate,
-}: {
-  background: string;
-  badgesEnabled: boolean;
-  format: Format;
-  generationPrompt: string;
-  isPokemon: boolean;
-  pokemonConfig: PokemonConfig;
-  selectedUniverse: UniverseOption;
-  onBackToSettings: () => void;
-  onRegenerate: () => void;
-}) {
-  return (
-    <aside className="h-fit min-w-0 rounded-lg border border-[#2a2a2a] bg-[#101010] p-4 sm:p-5 xl:sticky xl:top-20">
-      <div className="mb-5 flex items-center gap-2 text-sm text-[#a3a3a3]">
-        <Check className="size-4 text-[#f5f5f5]" aria-hidden="true" />
-        Geração concluída
-      </div>
-      <dl className="space-y-3 text-sm">
-        <MetaRow label="Universo" value={selectedUniverse.label} />
-        {isPokemon && <MetaRow label="Título" value={pokemonConfig.title || "Portugal"} />}
-        {isPokemon && <MetaRow label="Roupa" value={summarizeOutfit(pokemonConfig.outfit)} />}
-        {isPokemon && <MetaRow label="Pokémon" value={summarizePokemonList(pokemonConfig.pokemon)} />}
-        <MetaRow label="Formato" value={`${format} · 1024x1024`} />
-        <MetaRow label="Cor de fundo" value={background} />
-        <MetaRow label="Insígnias" value={badgesEnabled ? "Ativado" : "Desativado"} />
-      </dl>
-
-      {isPokemon && <PromptPreview generationPrompt={generationPrompt} />}
-
-      <div className="mt-6 grid gap-3">
-        <PrimaryButton onClick={() => undefined} full>
-          <Download className="size-4" aria-hidden="true" />
-          Baixar
-        </PrimaryButton>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onRegenerate}
-          className="inline-flex items-center justify-center gap-2 whitespace-normal rounded-lg border border-[#2a2a2a] px-4 py-3 text-sm font-semibold transition hover:bg-[#181818]"
-        >
-          <RefreshCcw className="size-4" aria-hidden="true" />
-          Gerar novamente
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={onBackToSettings}
-          className="inline-flex items-center justify-center gap-2 whitespace-normal rounded-lg px-4 py-3 text-sm font-semibold text-[#a3a3a3] transition hover:bg-[#181818] hover:text-[#f5f5f5]"
-        >
-          <SlidersHorizontal className="size-4" aria-hidden="true" />
-          Editar configurações
-        </Button>
-      </div>
-    </aside>
-  );
-}
-
-function PromptPreview({ generationPrompt }: { generationPrompt: string }) {
-  return (
-    <div className="mt-6 rounded-lg border border-[#2a2a2a] bg-[#0c0c0c] p-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#a3a3a3]">
-        Prompt Pokémon
-      </p>
-      <p className="mt-3 line-clamp-6 whitespace-pre-wrap text-xs leading-5 text-[#d6d6d6]">
-        {generationPrompt}
-      </p>
-    </div>
   );
 }

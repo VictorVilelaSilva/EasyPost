@@ -62,3 +62,11 @@ export type PokemonListResponse = {
   count: number;
   results: PokemonSummary[];
 };
+
+export type ImageGenerationResult = {
+  image_base64: string;
+  mime_type: string;
+  model: string;
+  size: string;
+  output_format: string;
+};

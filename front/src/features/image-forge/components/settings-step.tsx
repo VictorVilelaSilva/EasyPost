@@ -31,7 +31,7 @@ export function SettingsStep({
   onBack: () => void;
   onBackgroundChange: (color: string) => void;
   onBadgesChange: (enabled: boolean) => void;
-  onFileChange: (name: string) => void;
+  onFileChange: (file: File) => void;
   onFormatChange: (format: Format) => void;
   onGenerate: () => void;
   onPokemonConfigChange: (config: PokemonConfig) => void;

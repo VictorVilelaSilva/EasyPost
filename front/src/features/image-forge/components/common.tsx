@@ -49,7 +49,7 @@ export function SectionTitle({
 
 export function MetaRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="grid min-w-0 grid-cols-[minmax(90px,auto)_minmax(0,1fr)] items-start gap-3 border-b border-[#2a2a2a] pb-3 last:border-b-0 last:pb-0">
+    <div className="grid min-w-0 grid-cols-[minmax(90px,auto)_minmax(0,1fr)] items-start gap-3 border-b border-[#2a2a2a] py-3 last:border-b-0">
       <dt className="text-[#a3a3a3]">{label}</dt>
       <dd className="min-w-0 break-words text-right font-medium">{value}</dd>
     </div>
@@ -58,18 +58,21 @@ export function MetaRow({ label, value }: { label: string; value: string }) {
 
 export function PrimaryButton({
   children,
+  disabled = false,
   full = false,
   onClick,
 }: {
   children: ReactNode;
+  disabled?: boolean;
   full?: boolean;
   onClick: () => void;
 }) {
   return (
     <Button
       type="button"
+      disabled={disabled}
       onClick={onClick}
-      className={`inline-flex items-center justify-center gap-2 whitespace-normal rounded-lg bg-[#f5f5f5] px-4 py-3 text-sm font-semibold text-[#050505] transition hover:bg-white ${full ? "w-full" : "w-full sm:w-auto"}`}
+      className={`inline-flex items-center justify-center gap-2 whitespace-normal rounded-lg bg-[#f5f5f5] px-4 py-3 text-sm font-semibold text-[#050505] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50 ${full ? "w-full" : "w-full sm:w-auto"}`}
     >
       {children}
     </Button>
