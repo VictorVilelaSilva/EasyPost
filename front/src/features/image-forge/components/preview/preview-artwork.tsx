@@ -1,4 +1,4 @@
-import { BadgeCheck, Loader2, Sparkles, TriangleAlert } from "lucide-react";
+import { BadgeCheck, Sparkles, TriangleAlert } from "lucide-react";
 
 import type { ImageGenerationResult, UniverseOption } from "../../types";
 
@@ -21,7 +21,7 @@ export function PreviewArtwork({
       <img
         src={`data:${image.mime_type};base64,${image.image_base64}`}
         alt="Imagem gerada"
-        className="max-h-[min(72vh,760px)] w-auto max-w-full rounded-md object-contain shadow-2xl shadow-black/50"
+        className="block h-auto w-full max-w-full rounded-md object-contain object-center shadow-2xl shadow-black/50"
       />
     );
   }
@@ -55,7 +55,15 @@ export function PreviewArtwork({
 
 function PreviewStatusIcon({ error, loading }: { error: string | null; loading: boolean }) {
   if (loading) {
-    return <Loader2 className="mb-4 size-12 animate-spin text-white/70" aria-hidden="true" />;
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src="/Sparkles_Loop_Loader.svg"
+        alt=""
+        aria-hidden="true"
+        className="mb-4 size-16"
+      />
+    );
   }
 
   if (error) {

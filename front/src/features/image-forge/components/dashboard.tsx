@@ -48,12 +48,12 @@ export function Dashboard({ onCreate }: { onCreate: () => void }) {
                       <ImageIcon className="size-5 text-[#a3a3a3]" aria-hidden="true" />
                       <span className="text-xs text-[#a3a3a3]">0{index + 1}</span>
                     </div>
-                    <div className="flex flex-1 items-center justify-center rounded-md border border-[#2a2a2a] bg-[#0e0e0e] p-3">
+                    <div className="flex flex-1 items-center justify-center rounded-md border border-[#2a2a2a] bg-[#0e0e0e] p-2 sm:p-3">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={item.image}
                         alt=""
-                        className="max-h-full max-w-full object-contain"
+                        className="block h-full w-full object-contain object-center"
                       />
                     </div>
                   </div>

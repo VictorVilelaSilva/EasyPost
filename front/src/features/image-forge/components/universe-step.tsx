@@ -59,9 +59,9 @@ function UniverseCard({
       type="button"
       variant="outline"
       onClick={() => onSelect(item.name)}
-      className={`group flex h-[280px] min-w-0 flex-col items-stretch justify-start overflow-hidden whitespace-normal rounded-lg border bg-[#101010] p-3 text-left transition hover:bg-[#181818] sm:h-[292px] sm:p-4 xl:h-[320px] ${isSelected ? "border-[#f5f5f5] bg-[#171717]" : "border-[#2a2a2a]"}`}
+      className={`group flex min-h-[280px] min-w-0 flex-col items-stretch justify-start overflow-hidden whitespace-normal rounded-lg border bg-[#101010] p-3 text-left transition hover:bg-[#181818] sm:min-h-[292px] sm:p-4 xl:min-h-[320px] ${isSelected ? "border-[#f5f5f5] bg-[#171717]" : "border-[#2a2a2a]"}`}
     >
-      <div className="relative h-[156px] shrink-0 overflow-hidden rounded-md border border-[#2a2a2a] bg-[#181818] p-3 sm:h-[166px] xl:h-[184px]">
+      <div className="relative h-[156px] shrink-0 overflow-hidden rounded-md border border-[#2a2a2a] bg-[#181818] p-2 sm:h-[166px] sm:p-3 xl:h-[184px]">
         <div className="flex h-full flex-col gap-2">
           <div className="flex items-start justify-between gap-3">
             <span className="text-xs font-semibold text-[#a3a3a3]">{item.code}</span>
@@ -71,9 +71,9 @@ function UniverseCard({
               </span>
             )}
           </div>
-          <div className="grid min-h-0 flex-1 place-items-center overflow-hidden rounded-md border border-[#2a2a2a] bg-[#0e0e0e] px-4 py-2">
+          <div className="grid min-h-0 flex-1 place-items-center overflow-hidden rounded-md border border-[#2a2a2a] bg-[#0e0e0e] px-3 py-2 sm:px-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={item.image} alt="" className="max-h-full max-w-full object-contain" />
+            <img src={item.image} alt="" className="block h-full w-full object-contain object-center" />
           </div>
         </div>
         <Sparkles className="absolute bottom-3 left-3 size-4 text-[#a3a3a3] sm:size-5" aria-hidden="true" />
