@@ -123,7 +123,9 @@ async def test_generate_pokemon_image_route_calls_openai(monkeypatch):
             "/image-generations/pokemon",
             data={
                 "trainer_name": "Portugal",
-                "pokemon": json.dumps([{"name": "Mewtwo", "position": "atrás do treinador"}]),
+                "pokemon": json.dumps(
+                    [{"name": "Mewtwo", "position": "atrás do treinador"}]
+                ),
             },
             files={"reference_image": ("face.png", b"fake-image", "image/png")},
         )

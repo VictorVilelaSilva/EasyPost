@@ -37,9 +37,18 @@ class _FakeAsyncClient:
                 {
                     "count": 3,
                     "results": [
-                        {"name": "bulbasaur", "url": "https://pokeapi.co/api/v2/pokemon/1/"},
-                        {"name": "pikachu", "url": "https://pokeapi.co/api/v2/pokemon/25/"},
-                        {"name": "mr-mime", "url": "https://pokeapi.co/api/v2/pokemon/122/"},
+                        {
+                            "name": "bulbasaur",
+                            "url": "https://pokeapi.co/api/v2/pokemon/1/",
+                        },
+                        {
+                            "name": "pikachu",
+                            "url": "https://pokeapi.co/api/v2/pokemon/25/",
+                        },
+                        {
+                            "name": "mr-mime",
+                            "url": "https://pokeapi.co/api/v2/pokemon/122/",
+                        },
                     ],
                 }
             )

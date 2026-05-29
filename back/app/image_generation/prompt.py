@@ -92,7 +92,9 @@ def _load_prompt_template(template: str) -> str:
     return prompt_path.read_text(encoding="utf-8").strip()
 
 
-def _build_generic_prompt(input_data: PokemonImageGenerationInput, base_prompt: str) -> str:
+def _build_generic_prompt(
+    input_data: PokemonImageGenerationInput, base_prompt: str
+) -> str:
     personal_line = _personal_characteristics_prompt(input_data)
     reference_line = _reference_image_notes_prompt(input_data)
 

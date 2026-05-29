@@ -1,7 +1,10 @@
 import httpx
 
 from app.config import settings
-from app.image_generation.schemas import ImageGenerationResponse, PokemonImageGenerationInput
+from app.image_generation.schemas import (
+    ImageGenerationResponse,
+    PokemonImageGenerationInput,
+)
 
 ReferenceImage = tuple[str, bytes, str]
 
@@ -41,14 +44,20 @@ async def generate_image_with_reference(
     )
 
     try:
-        async with httpx.AsyncClient(base_url=settings.openai_base_url, timeout=timeout) as client:
-            response = await client.post("/images/edits", data=data, files=files, headers=headers)
+        async with httpx.AsyncClient(
+            base_url=settings.openai_base_url, timeout=timeout
+        ) as client:
+            response = await client.post(
+                "/images/edits", data=data, files=files, headers=headers
+            )
     except httpx.TimeoutException as exc:
         raise OpenAIImageGenerationTimeout(
             "OpenAI image generation timed out. Try again or use a lighter image/quality."
         ) from exc
     except httpx.HTTPError as exc:
-        raise OpenAIImageGenerationError(f"OpenAI image generation request failed: {exc}") from exc
+        raise OpenAIImageGenerationError(
+            f"OpenAI image generation request failed: {exc}"
+        ) from exc
 
     if response.status_code >= 400:
         raise OpenAIImageGenerationError(_openai_error_message(response))

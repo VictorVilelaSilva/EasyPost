@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 
 import httpx
 
-from app.common.cache import get_cache
+from app.pokemon.cache import get_cache
 from app.config import settings
 from app.pokemon.schemas import PokemonDetail, PokemonListResponse, PokemonSummary
 
@@ -13,7 +13,9 @@ logger = logging.getLogger(__name__)
 POKEMON_LIST_LIMIT = 1302
 
 
-async def fetch_pokemon_list(search: str | None = None, limit: int = 50) -> PokemonListResponse:
+async def fetch_pokemon_list(
+    search: str | None = None, limit: int = 50
+) -> PokemonListResponse:
     normalized_search = search.strip().lower() if search else ""
     safe_limit = max(1, min(limit, 100))
     all_pokemon = await _fetch_all_pokemon()
@@ -22,7 +24,8 @@ async def fetch_pokemon_list(search: str | None = None, limit: int = 50) -> Poke
         filtered = [
             pokemon
             for pokemon in all_pokemon
-            if normalized_search in pokemon.name or normalized_search in pokemon.display_name.lower()
+            if normalized_search in pokemon.name
+            or normalized_search in pokemon.display_name.lower()
         ]
     else:
         filtered = all_pokemon
@@ -42,7 +45,9 @@ async def fetch_pokemon_detail(name_or_id: str) -> PokemonDetail:
         except Exception:
             logger.warning("Cache read failed for key %s", cache_key)
 
-    async with httpx.AsyncClient(base_url=settings.pokemon_api_base_url, timeout=10.0) as client:
+    async with httpx.AsyncClient(
+        base_url=settings.pokemon_api_base_url, timeout=10.0
+    ) as client:
         response = await client.get(f"/pokemon/{name_or_id.strip().lower()}")
         response.raise_for_status()
         data = response.json()
@@ -74,8 +79,12 @@ async def _fetch_all_pokemon() -> list[PokemonSummary]:
         except Exception:
             logger.warning("Cache read failed for key %s", cache_key)
 
-    async with httpx.AsyncClient(base_url=settings.pokemon_api_base_url, timeout=10.0) as client:
-        response = await client.get("/pokemon", params={"limit": POKEMON_LIST_LIMIT, "offset": 0})
+    async with httpx.AsyncClient(
+        base_url=settings.pokemon_api_base_url, timeout=10.0
+    ) as client:
+        response = await client.get(
+            "/pokemon", params={"limit": POKEMON_LIST_LIMIT, "offset": 0}
+        )
         response.raise_for_status()
         data = response.json()
 
@@ -125,10 +134,15 @@ def _parse_pokemon_detail(data: dict) -> PokemonDetail:
         display_name=_display_name(name),
         sprite_url=sprites.get("front_default"),
         artwork_url=official_artwork.get("front_default"),
-        types=[entry.get("type", {}).get("name", "") for entry in data.get("types", [])],
+        types=[
+            entry.get("type", {}).get("name", "") for entry in data.get("types", [])
+        ],
         height=data.get("height"),
         weight=data.get("weight"),
-        abilities=[entry.get("ability", {}).get("name", "") for entry in data.get("abilities", [])],
+        abilities=[
+            entry.get("ability", {}).get("name", "")
+            for entry in data.get("abilities", [])
+        ],
         stats={
             entry.get("stat", {}).get("name", ""): entry.get("base_stat", 0)
             for entry in data.get("stats", [])
