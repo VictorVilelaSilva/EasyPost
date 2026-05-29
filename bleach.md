@@ -1,0 +1,2 @@
+Create an original character sheet in the universe of "Bleach" based on the appearance, energy and personality of the person in the photo sent. Turn the person into a character fully integrated into the world of Avatar, as if it were an official part of the animation.
+The art should have a premium poster/concept art format divided into several panels, reminiscent of character guide pages or official artbook.

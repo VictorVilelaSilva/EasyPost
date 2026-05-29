@@ -1,0 +1,1 @@
+Crie uma figurinha igual a da primeira imagem. Com a segunda, na parte do nome coloque Rezende, data de nascimento 24/01/2067, altura 1.67, peso 67kg e no time coloque YASMANA FC (BRA). Na blusa coloque o número 67, no brasão faça o desenho de uma menina de anime rindo e na blusa coloque uma cor rosa e vários desenhos bonecas de anime no tom branco

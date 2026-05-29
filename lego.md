@@ -1,0 +1,3 @@
+Transforma a imagem num universo LEGO, mantendo a composição original e os elementos principais reconhecíveis. Reimagina todas as pessoas, objetos e cenários como minifiguras e peças LEGO detalhadas, com textura plástica realista, cores vibrantes e iluminação cinematográfica suave. Mantém a atmosfera divertida, acolhedora e expressiva da foto original, com um estilo criativo e encantador típico de um filme LEGO.
+
+Preserva as poses, emoções e enquadramento da imagem, adaptando tudo para um cenário construído em blocos LEGO

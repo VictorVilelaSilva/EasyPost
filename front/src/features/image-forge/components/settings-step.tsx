@@ -1,8 +1,11 @@
-import type { Format, PokemonConfig, UniverseOption } from "../types";
+import { needsCoupleReferences, needsPersonalCharacteristics } from "../lib/prompt-template-rules";
+import type { CoupleReferences, Format, PokemonConfig, UniverseOption } from "../types";
 import { StepIntro } from "./common";
 import { BackgroundPanel } from "./settings/background-panel";
+import { CoupleReferencePanel } from "./settings/couple-reference-panel";
 import { FaceUploadPanel } from "./settings/face-upload-panel";
 import { GenerationOptionsPanel } from "./settings/generation-options-panel";
+import { PersonalCharacteristicsPanel } from "./settings/personal-characteristics-panel";
 import { PokemonPosterPanel } from "./settings/pokemon-poster-panel";
 import { PokemonSelectionPanel } from "./settings/pokemon-selection-panel";
 import { SettingsSummary } from "./settings/settings-summary";
@@ -10,33 +13,45 @@ import { SettingsSummary } from "./settings/settings-summary";
 export function SettingsStep({
   background,
   badgesEnabled,
+  coupleReferences,
   format,
+  personalCharacteristics,
   pokemonConfig,
+  referenceImage,
   selectedUniverse,
   uploadedName,
   onBack,
   onBackgroundChange,
   onBadgesChange,
+  onCoupleReferencesChange,
   onFileChange,
   onFormatChange,
   onGenerate,
+  onPersonalCharacteristicsChange,
   onPokemonConfigChange,
 }: {
   background: string;
   badgesEnabled: boolean;
+  coupleReferences: CoupleReferences;
   format: Format;
+  personalCharacteristics: string;
   pokemonConfig: PokemonConfig;
+  referenceImage: File | null;
   selectedUniverse: UniverseOption;
   uploadedName: string;
   onBack: () => void;
   onBackgroundChange: (color: string) => void;
   onBadgesChange: (enabled: boolean) => void;
+  onCoupleReferencesChange: (references: CoupleReferences) => void;
   onFileChange: (file: File) => void;
   onFormatChange: (format: Format) => void;
   onGenerate: () => void;
+  onPersonalCharacteristicsChange: (value: string) => void;
   onPokemonConfigChange: (config: PokemonConfig) => void;
 }) {
   const isPokemon = selectedUniverse.name === "Pokemon";
+  const showPersonalCharacteristics = needsPersonalCharacteristics(selectedUniverse.promptTemplate);
+  const showCoupleReferences = needsCoupleReferences(selectedUniverse.promptTemplate);
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
@@ -48,7 +63,24 @@ export function SettingsStep({
 
       <div className="mt-6 grid min-w-0 gap-5 lg:mt-8 xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-6">
         <div className="min-w-0 space-y-5">
-          <FaceUploadPanel uploadedName={uploadedName} onFileChange={onFileChange} />
+          {showCoupleReferences ? (
+            <CoupleReferencePanel
+              references={coupleReferences}
+              onChange={onCoupleReferencesChange}
+            />
+          ) : (
+            <FaceUploadPanel
+              file={referenceImage}
+              uploadedName={uploadedName}
+              onFileChange={onFileChange}
+            />
+          )}
+          {showPersonalCharacteristics && (
+            <PersonalCharacteristicsPanel
+              value={personalCharacteristics}
+              onChange={onPersonalCharacteristicsChange}
+            />
+          )}
           <BackgroundPanel background={background} onBackgroundChange={onBackgroundChange} />
           {isPokemon && (
             <>

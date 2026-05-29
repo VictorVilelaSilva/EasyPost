@@ -1,4 +1,4 @@
-import { Check, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -58,20 +58,23 @@ function UniverseCard({
     <Button
       type="button"
       variant="outline"
+      aria-pressed={isSelected}
       onClick={() => onSelect(item.name)}
-      className={`group flex min-h-[280px] min-w-0 flex-col items-stretch justify-start overflow-hidden whitespace-normal rounded-lg border bg-[#101010] p-3 text-left transition hover:bg-[#181818] sm:min-h-[292px] sm:p-4 xl:min-h-[320px] ${isSelected ? "border-[#f5f5f5] bg-[#171717]" : "border-[#2a2a2a]"}`}
+      className={`group relative flex min-h-[280px] min-w-0 flex-col items-stretch justify-start overflow-hidden whitespace-normal rounded-lg border p-3 text-left transition sm:min-h-[292px] sm:p-4 xl:min-h-[320px] ${isSelected ? "border-[#f5f5f5] bg-[#181818] shadow-[0_0_0_1px_rgba(245,245,245,0.18),0_18px_48px_rgba(0,0,0,0.42)]" : "border-[#2a2a2a] bg-[#101010] hover:border-[#4a4a4a] hover:bg-[#181818]"}`}
     >
-      <div className="relative h-[156px] shrink-0 overflow-hidden rounded-md border border-[#2a2a2a] bg-[#181818] p-2 sm:h-[166px] sm:p-3 xl:h-[184px]">
+      {isSelected && (
+        <span className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-[#f5f5f5]" />
+      )}
+      <div
+        className={`relative h-[156px] shrink-0 overflow-hidden rounded-md border p-2 sm:h-[166px] sm:p-3 xl:h-[184px] ${isSelected ? "border-[#5a5a5a] bg-[#202020]" : "border-[#2a2a2a] bg-[#181818]"}`}
+      >
         <div className="flex h-full flex-col gap-2">
           <div className="flex items-start justify-between gap-3">
             <span className="text-xs font-semibold text-[#a3a3a3]">{item.code}</span>
-            {isSelected && (
-              <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#f5f5f5] text-[#050505]">
-                <Check className="size-4" aria-hidden="true" />
-              </span>
-            )}
           </div>
-          <div className="grid min-h-0 flex-1 place-items-center overflow-hidden rounded-md border border-[#2a2a2a] bg-[#0e0e0e] px-3 py-2 sm:px-4">
+          <div
+            className={`grid min-h-0 flex-1 place-items-center overflow-hidden rounded-md border px-3 py-2 sm:px-4 ${isSelected ? "border-[#4a4a4a] bg-[#101010]" : "border-[#2a2a2a] bg-[#0e0e0e]"}`}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={item.image} alt="" className="block h-full w-full object-contain object-center" />
           </div>

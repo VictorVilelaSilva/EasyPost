@@ -1,28 +1,42 @@
 import { API_URL } from "../constants";
-import type { Format, ImageGenerationResult, PokemonConfig } from "../types";
+import type {
+  CoupleReferences,
+  Format,
+  ImageGenerationResult,
+  PokemonConfig,
+  PromptTemplate,
+} from "../types";
 
-type GeneratePokemonImageInput = {
+type GenerateImageInput = {
   background: string;
   badgesEnabled: boolean;
+  coupleReferences: CoupleReferences;
   format: Format;
+  personalCharacteristics: string;
   pokemonConfig: PokemonConfig;
-  referenceImage: File;
+  promptTemplate: PromptTemplate;
+  referenceImage: File | null;
 };
 
-export async function generatePokemonImage({
+export async function generateImage({
   background,
   badgesEnabled,
+  coupleReferences,
   format,
+  personalCharacteristics,
   pokemonConfig,
+  promptTemplate,
   referenceImage,
-}: GeneratePokemonImageInput): Promise<ImageGenerationResult> {
+}: GenerateImageInput): Promise<ImageGenerationResult> {
   const formData = new FormData();
   const outfit = pokemonConfig.outfit.custom;
 
-  formData.set("reference_image", referenceImage);
+  appendReferenceImages(formData, promptTemplate, referenceImage, coupleReferences);
+  formData.set("prompt_template", promptTemplate);
   formData.set("trainer_name", pokemonConfig.title || "Portugal");
   formData.set("background", background);
   formData.set("image_format", format);
+  formData.set("personal_characteristics", personalCharacteristics.trim());
   formData.set("badges_enabled", String(badgesEnabled));
   formData.set("outfit_mode", pokemonConfig.outfit.mode);
   formData.set("torso", outfit.torso);
@@ -35,7 +49,7 @@ export async function generatePokemonImage({
   formData.set("quality", "high");
   formData.set("output_format", "png");
 
-  const response = await fetch(`${API_URL}/image-generations/pokemon`, {
+  const response = await fetch(`${API_URL}/image-generations/prompt`, {
     method: "POST",
     body: formData,
   });
@@ -49,6 +63,21 @@ export async function generatePokemonImage({
 
 function activePokemon(pokemon: PokemonConfig["pokemon"]) {
   return pokemon.filter((item) => item.name.trim() && item.position.trim());
+}
+
+function appendReferenceImages(
+  formData: FormData,
+  promptTemplate: PromptTemplate,
+  referenceImage: File | null,
+  coupleReferences: CoupleReferences,
+) {
+  if (promptTemplate === "couple") {
+    if (coupleReferences.face) formData.set("face_image", coupleReferences.face);
+    coupleReferences.bodies.slice(0, 2).forEach((file) => formData.append("body_images", file));
+    return;
+  }
+
+  if (referenceImage) formData.set("reference_image", referenceImage);
 }
 
 function imageSizeFromFormat(format: Format) {

@@ -3,6 +3,8 @@ import httpx
 from app.config import settings
 from app.image_generation.schemas import ImageGenerationResponse, PokemonImageGenerationInput
 
+ReferenceImage = tuple[str, bytes, str]
+
 
 class OpenAIImageGenerationError(RuntimeError):
     pass
@@ -14,9 +16,7 @@ class OpenAIImageGenerationTimeout(OpenAIImageGenerationError):
 
 async def generate_image_with_reference(
     *,
-    image_bytes: bytes,
-    image_filename: str,
-    image_content_type: str,
+    reference_images: list[ReferenceImage],
     prompt: str,
     request_data: PokemonImageGenerationInput,
 ) -> ImageGenerationResponse:
@@ -30,9 +30,7 @@ async def generate_image_with_reference(
         "quality": request_data.quality,
         "output_format": request_data.output_format,
     }
-    files = {
-        "image": (image_filename, image_bytes, image_content_type),
-    }
+    files = [("image", image) for image in reference_images]
     headers = {"Authorization": f"Bearer {settings.openai_api_key}"}
 
     timeout = httpx.Timeout(

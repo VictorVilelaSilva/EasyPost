@@ -5,7 +5,27 @@ export type Universe =
   | "Pokemon"
   | "Naruto"
   | "Digimon"
-  | "Avatar, the Last Airbender";
+  | "Avatar, the Last Airbender"
+  | "Anime Geral"
+  | "Bleach"
+  | "Copa"
+  | "Casal"
+  | "LEGO"
+  | "Monster High"
+  | "Rick and Morty"
+  | "San Andreas";
+
+export type PromptTemplate =
+  | "anime-general"
+  | "avatar"
+  | "bleach"
+  | "copa"
+  | "couple"
+  | "lego"
+  | "monster_high"
+  | "pokemon"
+  | "rick_morty"
+  | "san_andreas";
 
 export type OutfitMode = "photo" | "custom";
 
@@ -23,6 +43,7 @@ export type UniverseOption = {
   description: string;
   code: string;
   image: string;
+  promptTemplate: PromptTemplate;
 };
 
 export type PokemonConfig = {
@@ -47,6 +68,11 @@ export type CustomPokemonOutfit = {
 export type PokemonPlacement = {
   name: string;
   position: string;
+};
+
+export type CoupleReferences = {
+  face: File | null;
+  bodies: File[];
 };
 
 export type PokemonSummary = {

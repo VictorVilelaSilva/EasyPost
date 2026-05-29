@@ -14,10 +14,24 @@ from app.image_generation.service import (
 router = APIRouter(prefix="/image-generations", tags=["image-generations"])
 
 
+async def _image_tuple(upload: UploadFile, field_name: str) -> tuple[str, bytes, str]:
+    image_bytes = await upload.read()
+    if not image_bytes:
+        raise HTTPException(status_code=422, detail=f"{field_name} is required")
+
+    content_type = upload.content_type or "application/octet-stream"
+    if not content_type.startswith("image/"):
+        raise HTTPException(status_code=422, detail=f"{field_name} must be an image")
+
+    return (upload.filename or f"{field_name}.png", image_bytes, content_type)
+
+
 @router.post("/pokemon", response_model=ImageGenerationResponse)
 async def generate_pokemon_image(
     reference_image: UploadFile = File(...),
+    prompt_template: str = Form("pokemon"),
     trainer_name: str = Form("Portugal"),
+    personal_characteristics: str = Form(""),
     background: str = Form("#1A1A2E"),
     image_format: str = Form("Quadrado 1:1"),
     badges_enabled: bool = Form(True),
@@ -32,17 +46,13 @@ async def generate_pokemon_image(
     quality: str = Form("high"),
     output_format: str = Form("png"),
 ) -> ImageGenerationResponse:
-    image_bytes = await reference_image.read()
-    if not image_bytes:
-        raise HTTPException(status_code=422, detail="reference_image is required")
-
-    content_type = reference_image.content_type or "application/octet-stream"
-    if not content_type.startswith("image/"):
-        raise HTTPException(status_code=422, detail="reference_image must be an image")
+    reference_images = [await _image_tuple(reference_image, "reference_image")]
 
     try:
         request_data = PokemonImageGenerationInput(
+            prompt_template=prompt_template,
             trainer_name=trainer_name,
+            personal_characteristics=personal_characteristics,
             background=background,
             image_format=image_format,
             badges_enabled=badges_enabled,
@@ -66,9 +76,82 @@ async def generate_pokemon_image(
 
     try:
         return await generate_image_with_reference(
-            image_bytes=image_bytes,
-            image_filename=reference_image.filename or "reference.png",
-            image_content_type=content_type,
+            reference_images=reference_images,
+            prompt=prompt,
+            request_data=request_data,
+        )
+    except OpenAIImageGenerationTimeout as exc:
+        raise HTTPException(status_code=504, detail=str(exc)) from exc
+    except OpenAIImageGenerationError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@router.post("/prompt", response_model=ImageGenerationResponse)
+async def generate_prompt_image(
+    reference_image: UploadFile | None = File(None),
+    face_image: UploadFile | None = File(None),
+    body_images: list[UploadFile] | None = File(None),
+    prompt_template: str = Form(...),
+    trainer_name: str = Form("Portugal"),
+    personal_characteristics: str = Form(""),
+    background: str = Form("#1A1A2E"),
+    image_format: str = Form("Quadrado 1:1"),
+    outfit_mode: str = Form("photo"),
+    torso: str = Form(""),
+    legs: str = Form(""),
+    shoes: str = Form(""),
+    hat: str = Form(""),
+    glasses: str = Form("Sem óculos"),
+    size: str = Form("1024x1024"),
+    quality: str = Form("high"),
+    output_format: str = Form("png"),
+) -> ImageGenerationResponse:
+    if prompt_template == "couple":
+        if not face_image:
+            raise HTTPException(status_code=422, detail="face_image is required")
+        if not body_images:
+            raise HTTPException(status_code=422, detail="body_images requires at least 1 file")
+        if body_images and len(body_images) > 2:
+            raise HTTPException(status_code=422, detail="body_images accepts at most 2 files")
+        reference_images = [await _image_tuple(face_image, "face_image")]
+        for image in body_images or []:
+            reference_images.append(await _image_tuple(image, "body_images"))
+        reference_notes = "foto 1 é close do rosto; fotos seguintes são corpo inteiro do casal."
+    else:
+        if not reference_image:
+            raise HTTPException(status_code=422, detail="reference_image is required")
+        reference_images = [await _image_tuple(reference_image, "reference_image")]
+        reference_notes = ""
+
+    try:
+        request_data = PokemonImageGenerationInput(
+            prompt_template=prompt_template,
+            trainer_name=trainer_name,
+            personal_characteristics=personal_characteristics,
+            reference_image_notes=reference_notes,
+            background=background,
+            image_format=image_format,
+            badges_enabled=False,
+            outfit={
+                "mode": outfit_mode,
+                "torso": torso,
+                "legs": legs,
+                "shoes": shoes,
+                "hat": hat,
+                "glasses": glasses,
+            },
+            pokemon=[],
+            size=size,
+            quality=quality,
+            output_format=output_format,
+        )
+    except ValidationError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    prompt = build_pokemon_prompt(request_data)
+    try:
+        return await generate_image_with_reference(
+            reference_images=reference_images,
             prompt=prompt,
             request_data=request_data,
         )

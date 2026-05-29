@@ -12,8 +12,9 @@ import {
   defaultPokemonOutfit,
   universes,
 } from "@/features/image-forge/constants";
-import { generatePokemonImage } from "@/features/image-forge/lib/image-generation-api";
+import { generateImage } from "@/features/image-forge/lib/image-generation-api";
 import type {
+  CoupleReferences,
   Format,
   ImageGenerationResult,
   PokemonConfig,
@@ -27,8 +28,13 @@ export default function Home() {
   const [background, setBackground] = useState(backgroundColors[2]);
   const [format, setFormat] = useState<Format>("Automático");
   const [badgesEnabled, setBadgesEnabled] = useState(true);
+  const [coupleReferences, setCoupleReferences] = useState<CoupleReferences>({
+    face: null,
+    bodies: [],
+  });
   const [referenceImage, setReferenceImage] = useState<File | null>(null);
   const [uploadedName, setUploadedName] = useState("Nenhuma imagem selecionada");
+  const [personalCharacteristics, setPersonalCharacteristics] = useState("");
   const [generationResult, setGenerationResult] = useState<ImageGenerationResult | null>(null);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [generationLoading, setGenerationLoading] = useState(false);
@@ -47,12 +53,19 @@ export default function Home() {
   );
 
   async function handleGenerate() {
-    if (selectedUniverse.name !== "Pokemon") {
+    if (selectedUniverse.promptTemplate === "couple" && !coupleReferences.face) {
+      setGenerationError("Selecione uma foto focada do rosto para gerar o casal.");
       setStep("preview");
       return;
     }
 
-    if (!referenceImage) {
+    if (selectedUniverse.promptTemplate === "couple" && !coupleReferences.bodies[0]) {
+      setGenerationError("Selecione a primeira foto de corpo inteiro para gerar o casal.");
+      setStep("preview");
+      return;
+    }
+
+    if (selectedUniverse.promptTemplate !== "couple" && !referenceImage) {
       setGenerationError("Selecione uma imagem de rosto antes de gerar.");
       setStep("preview");
       return;
@@ -64,11 +77,14 @@ export default function Home() {
     setStep("preview");
 
     try {
-      const result = await generatePokemonImage({
+      const result = await generateImage({
         background,
         badgesEnabled,
+        coupleReferences,
         format,
         pokemonConfig,
+        personalCharacteristics,
+        promptTemplate: selectedUniverse.promptTemplate,
         referenceImage,
       });
       setGenerationResult(result);
@@ -104,16 +120,21 @@ export default function Home() {
         <SettingsStep
           background={background}
           badgesEnabled={badgesEnabled}
+          coupleReferences={coupleReferences}
           format={format}
+          personalCharacteristics={personalCharacteristics}
           pokemonConfig={pokemonConfig}
+          referenceImage={referenceImage}
           selectedUniverse={selectedUniverse}
           uploadedName={uploadedName}
           onBack={() => setStep("universe")}
           onBackgroundChange={setBackground}
           onBadgesChange={setBadgesEnabled}
+          onCoupleReferencesChange={setCoupleReferences}
           onFileChange={handleFileChange}
           onFormatChange={setFormat}
           onGenerate={handleGenerate}
+          onPersonalCharacteristicsChange={setPersonalCharacteristics}
           onPokemonConfigChange={setPokemonConfig}
         />
       )}
