@@ -1,10 +1,14 @@
 import json
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from pydantic import ValidationError
 
+from app.firebase.dependencies import get_current_user
 from app.image_generation.prompt import build_pokemon_prompt
-from app.image_generation.schemas import ImageGenerationResponse, PokemonImageGenerationInput
+from app.image_generation.schemas import (
+    ImageGenerationResponse,
+    PokemonImageGenerationInput,
+)
 from app.image_generation.service import (
     OpenAIImageGenerationError,
     OpenAIImageGenerationTimeout,
@@ -28,6 +32,7 @@ async def _image_tuple(upload: UploadFile, field_name: str) -> tuple[str, bytes,
 
 @router.post("/pokemon", response_model=ImageGenerationResponse)
 async def generate_pokemon_image(
+    current_user: dict = Depends(get_current_user),
     reference_image: UploadFile = File(...),
     prompt_template: str = Form("pokemon"),
     trainer_name: str = Form("Portugal"),
@@ -88,6 +93,7 @@ async def generate_pokemon_image(
 
 @router.post("/prompt", response_model=ImageGenerationResponse)
 async def generate_prompt_image(
+    current_user: dict = Depends(get_current_user),
     reference_image: UploadFile | None = File(None),
     face_image: UploadFile | None = File(None),
     body_images: list[UploadFile] | None = File(None),
@@ -110,13 +116,19 @@ async def generate_prompt_image(
         if not face_image:
             raise HTTPException(status_code=422, detail="face_image is required")
         if not body_images:
-            raise HTTPException(status_code=422, detail="body_images requires at least 1 file")
+            raise HTTPException(
+                status_code=422, detail="body_images requires at least 1 file"
+            )
         if body_images and len(body_images) > 2:
-            raise HTTPException(status_code=422, detail="body_images accepts at most 2 files")
+            raise HTTPException(
+                status_code=422, detail="body_images accepts at most 2 files"
+            )
         reference_images = [await _image_tuple(face_image, "face_image")]
         for image in body_images or []:
             reference_images.append(await _image_tuple(image, "body_images"))
-        reference_notes = "foto 1 é close do rosto; fotos seguintes são corpo inteiro do casal."
+        reference_notes = (
+            "foto 1 é close do rosto; fotos seguintes são corpo inteiro do casal."
+        )
     else:
         if not reference_image:
             raise HTTPException(status_code=422, detail="reference_image is required")
