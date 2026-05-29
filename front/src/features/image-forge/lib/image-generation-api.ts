@@ -1,3 +1,5 @@
+import { auth } from "@/lib/firebase";
+
 import { API_URL } from "../constants";
 import type {
   CoupleReferences,
@@ -49,8 +51,14 @@ export async function generateImage({
   formData.set("quality", "high");
   formData.set("output_format", "png");
 
+  const token = await auth.currentUser?.getIdToken();
+  if (!token) {
+    throw new Error("Sessão expirada. Faça login novamente.");
+  }
+
   const response = await fetch(`${API_URL}/image-generations/prompt`, {
     method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
     body: formData,
   });
 

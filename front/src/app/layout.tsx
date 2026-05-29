@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Space_Grotesk, Manrope, Inter, Geist } from 'next/font/google';
 import './globals.css';
 import { cn } from "@/lib/utils";
+import { AuthProvider } from "@/contexts/auth-context";
+import { AuthGate } from "@/components/auth/auth-gate";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -36,7 +38,9 @@ export default async function RootLayout({
   return (
     <html lang="pt-BR" className={cn("dark", "font-sans", geist.variable)}>
       <body className={`${spaceGrotesk.variable} ${manrope.variable} ${inter.variable} antialiased`}>
-        {children}
+        <AuthProvider>
+          <AuthGate>{children}</AuthGate>
+        </AuthProvider>
       </body>
     </html>
   );

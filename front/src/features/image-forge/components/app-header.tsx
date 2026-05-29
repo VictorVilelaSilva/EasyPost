@@ -1,10 +1,14 @@
-import { Wand2 } from "lucide-react";
+"use client";
+
+import { LogOut, Wand2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/auth-context";
 
 import type { Step } from "../types";
 
 export function AppHeader({ step }: { step: Step }) {
+  const { user, logout } = useAuth();
   const current = {
     dashboard: "Dashboard",
     universe: "Escolha",
@@ -37,16 +41,18 @@ export function AppHeader({ step }: { step: Step }) {
         </nav>
 
         <div className="flex shrink-0 items-center gap-3">
+          <span className="hidden max-w-[12rem] truncate text-sm text-[#a3a3a3] sm:inline">
+            {user?.displayName ?? user?.email ?? ""}
+          </span>
           <Button
             type="button"
             variant="outline"
-            className="hidden rounded-lg border border-[#2a2a2a] px-3 py-2 text-sm text-[#a3a3a3] transition hover:bg-[#181818] hover:text-[#f5f5f5] sm:inline-flex"
+            onClick={() => void logout()}
+            className="flex items-center gap-2 rounded-lg border border-[#2a2a2a] px-3 py-2 text-sm text-[#a3a3a3] transition hover:bg-[#181818] hover:text-[#f5f5f5]"
           >
-            Histórico
+            <LogOut className="size-4" aria-hidden="true" />
+            <span className="hidden sm:inline">Sair</span>
           </Button>
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f5f5f5] text-sm font-semibold text-[#050505]">
-            VF
-          </div>
         </div>
       </div>
     </header>
