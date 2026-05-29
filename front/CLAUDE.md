@@ -79,7 +79,9 @@ Do not use raw `fetch` for backend calls — always use `apiFetch()`.
 
 ### Authentication
 
-Steam OpenID flow: user is redirected to Steam → callback lands at `/auth/callback` → backend sets httpOnly refresh cookie and returns access token → stored for use in `apiFetch()`. The `/onboarding` page is required before a user can create listings (needs trade URL).
+Firebase login (Google only). `src/lib/firebase.ts` initializes the client SDK; `src/contexts/auth-context.tsx` provides `AuthProvider` + `useAuth()` (`{ user, loading, logout }`) via `onAuthStateChanged`. `src/components/auth/auth-gate.tsx` gates the whole app — it shows a spinner while loading, `LoginScreen` (`signInWithPopup`) when signed out, and the app once authenticated. Both are wired in `src/app/layout.tsx`.
+
+On first login, `src/lib/user-service.ts:createUserIfNotExists` writes the profile to Firestore `users/{uid}` (`email`, `name`, `createdAt`). The image-generation request (`src/features/image-forge/lib/image-generation-api.ts`) attaches the Firebase ID token as `Authorization: Bearer <token>`; the FastAPI backend verifies it.
 
 ---
 
@@ -87,4 +89,10 @@ Steam OpenID flow: user is redirected to Steam → callback lands at `/auth/call
 
 | Variable | Purpose |
 |----------|---------|
-| `NEXT_PUBLIC_API_URL` | Backend URL — defaults to `http://localhost:8000/api` |
+| `NEXT_PUBLIC_API_URL` | Backend URL — defaults to `http://localhost:8004` |
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase web config |
+| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Firebase web config |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Firebase web config |
+| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Firebase web config |
+| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Firebase web config |
+| `NEXT_PUBLIC_FIREBASE_APP_ID` | Firebase web config |

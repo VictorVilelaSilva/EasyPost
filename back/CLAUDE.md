@@ -8,19 +8,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 uv sync                      # Install dependencies
-task dev                     # Dev server — port 8000, hot-reload
-task test                    # Run tests with HTML coverage report
+task dev                     # Dev server — port 8004, hot-reload
+task test                    # Run tests with coverage
 task cov                     # Coverage report
-task migrate                 # alembic upgrade head
-task rev "description"       # Create new migration (autogenerate)
-task seed                    # Run seed script
 ```
 
 **Run a single test:**
 ```bash
-uv run pytest tests/test_trade.py::TestStateMachine::test_happy_path -v
-uv run pytest tests/test_trade.py -v        # All in file
-uv run pytest -k "test_create_listing" -v  # By name pattern
+uv run pytest tests/test_auth.py -v
+uv run pytest -k "get_current_user" -v   # By name pattern
 ```
 
 **Lint/format:**
@@ -29,64 +25,31 @@ uv run ruff check .
 uv run ruff format .
 ```
 
-Tests use in-memory SQLite (`sqlite+aiosqlite:///:memory:`) — no PostgreSQL or Redis needed.
+Tests run without external services (no DB, no Redis, no network — OpenAI/PokéAPI calls are mocked, and the Firebase auth dependency is overridden in `tests/conftest.py`).
 
 ---
 
 ## Architecture
 
-### Domain Structure
-
-Each domain follows: `router.py` → `service.py` → `models.py` → `schemas.py`
+Stateless FastAPI app. `app/main.py` registers two routers (`pokemon`, `image_generation`) plus a `/health` endpoint. CORS allowed origins come from `settings.allowed_origins`.
 
 ```
 app/
-├── main.py           # FastAPI app, lifespan (starts background workers)
-├── config.py         # Settings via pydantic-settings (reads .env)
-├── database.py       # SQLAlchemy async engine + session factory
-├── auth/             # Steam OpenID login, JWT generation/refresh
-├── inventory/        # Steam API item fetch, Redis caching
-├── listings/         # Listing CRUD
-├── trade/            # Core escrow logic + state machine
-├── payment/          # Asaas/Pix integration, webhook handler
-├── worker/           # Background asyncio tasks
-└── common/           # get_current_user dependency, custom exceptions
+├── main.py                 # FastAPI app + /health
+├── config.py               # Settings via pydantic-settings (reads .env, extra="ignore")
+├── firebase/               # Firebase Admin init + get_current_user dependency
+├── pokemon/                # PokéAPI caching proxy (in-memory cache)
+└── image_generation/       # OpenAI image-generation proxy
 ```
 
-### Transaction State Machine
-
-Core of the business logic — `app/trade/service.py`. `_check_transition()` enforces legal transitions:
-
-```
-pending_payment → paid → trade_pending → trade_sent → completed
-                                       ↘           ↗
-                                        cancelled → refunded
-```
-
-| Trigger | Transition |
-|---------|-----------|
-| Asaas webhook `PAYMENT_RECEIVED` | `pending_payment → paid` |
-| Automatic (post-payment) | `paid → trade_pending` |
-| Seller registers `trade_offer_id` | `trade_pending → trade_sent` |
-| Steam poller: offer Accepted | `trade_sent → completed` |
-| Steam poller: offer Declined/Expired | `trade_sent → cancelled` |
-| Background cron: 12h deadline elapsed | `trade_pending → cancelled` |
-| Automatic after cancel | `cancelled → refunded` |
-
-### Background Worker (`app/worker/steam_poller.py`)
-
-Runs as asyncio tasks via `lifespan` in `main.py`:
-- **Every 2 min** — polls Steam API for `trade_sent` transactions; state `3` = Accepted → `completed`, states `6/7/8/11` → `cancelled`
-- **Every 5 min** — cancels `trade_pending` transactions past 12h deadline
-- **Every 5 min** — processes Asaas refunds for `cancelled` transactions
+- `app/pokemon/` — thin proxy over the PokéAPI with an in-memory TTL cache (`cache.py`).
+- `app/image_generation/` — `router.py` exposes `POST /image-generations/pokemon` and `POST /image-generations/prompt` (multipart). `prompt.py` builds the prompt; `service.py` calls OpenAI `/images/edits`.
 
 ### Authentication
 
-Steam OpenID → JWT access token (short-lived) + refresh token (httpOnly cookie). `app/common/dependencies.py` provides the `get_current_user` FastAPI dependency injected into protected routes.
+Login happens entirely on the frontend via Firebase (Google sign-in). The backend is a pure gatekeeper: `app/firebase/dependencies.py:get_current_user` reads the `Authorization: Bearer <idToken>` header and verifies it with `firebase-admin` (`app/firebase/admin.py`). It is injected into both `/image-generations/*` routes — requests without a valid token get `401`. The PokéAPI proxy is public.
 
-### Caching
-
-Redis for Steam API responses. TTLs: inventory 300s, item details 1800s. Configured via `REDIS_URL`.
+The Admin SDK initializes from env vars (`FIREBASE_ADMIN_*`); initialization is wrapped so a missing credential never crashes import (e.g. in tests). User profiles live in Firestore (`users/{uid}`), written by the frontend on first login — the backend does not write to Firestore.
 
 ---
 
@@ -94,13 +57,13 @@ Redis for Steam API responses. TTLs: inventory 300s, item details 1800s. Configu
 
 | Variable | Purpose |
 |----------|---------|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `JWT_SECRET` | Token signing key |
-| `STEAM_API_KEY` | Fallback system Steam key (users provide their own) |
-| `ASAAS_API_KEY` | Payment processor |
-| `ASAAS_BASE_URL` | `https://sandbox.asaas.com/api/v3` (dev) or production |
-| `ASAAS_WEBHOOK_TOKEN` | Webhook HMAC validation |
-| `FRONTEND_URL` | CORS allowed origin |
-| `REDIS_URL` | Cache backend |
-| `TRADE_DEADLINE_HOURS` | Default: 12 |
-| `PAYOUT_HOLD_HOURS` | Default: 24 |
+| `FIREBASE_ADMIN_PROJECT_ID` | Firebase project id (token verification) |
+| `FIREBASE_ADMIN_CLIENT_EMAIL` | Service account email |
+| `FIREBASE_ADMIN_PRIVATE_KEY` | Service account private key (`\n`-escaped) |
+| `OPENAI_API_KEY` | Required for image generation; without it the endpoint returns 502 |
+| `OPENAI_IMAGE_MODEL` | Defaults to `gpt-image-2` |
+| `OPENAI_IMAGE_TIMEOUT_SECONDS` | OpenAI read timeout (default 300s) |
+| `ALLOWED_ORIGINS` | CORS list (default `http://localhost:8005`) |
+| `POKEMON_API_BASE_URL` / `POKEMON_CACHE_TTL_SECONDS` | PokéAPI proxy |
+
+`config.py` uses `extra="ignore"`, so leftover legacy keys in `.env` are harmless.

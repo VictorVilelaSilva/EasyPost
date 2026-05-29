@@ -1,0 +1,82 @@
+{
+  "planPath": "docs/superpowers/plans/2026-05-29-firebase-auth-integration.md",
+  "tasks": [
+    {
+      "id": 1,
+      "subject": "Task 1: Cache em memória no proxy Pokémon",
+      "status": "completed",
+      "description": "**Goal:** Remover dependência de Redis movendo o cache para app/pokemon/cache.py (in-memory TTL), mantendo interface get/set(ex=).\n\n```json:metadata\n{\"files\": [\"back/app/pokemon/cache.py\", \"back/app/pokemon/service.py\"], \"verifyCommand\": \"cd back && uv run pytest tests/test_pokemon.py -v\", \"acceptanceCriteria\": [\"service nao importa app.common.cache\", \"sem import de redis\", \"tests de pokemon passam\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 2,
+      "subject": "Task 2: Remover banco SQL e módulos legados",
+      "status": "completed",
+      "blockedBy": [
+        1
+      ],
+      "description": "**Goal:** Apagar módulos legados, database.py, alembic; limpar config.py e pyproject.toml.\n\n```json:metadata\n{\"files\": [\"back/app/config.py\", \"back/pyproject.toml\"], \"verifyCommand\": \"cd back && uv sync && uv run python -c \\\"import app.main\\\" && uv run pytest -v\", \"acceptanceCriteria\": [\"modulos legados removidos\", \"config limpa + firebase\", \"deps SQL/redis removidas\", \"app importa e testes passam\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 3,
+      "subject": "Task 3: Firebase Admin + get_current_user",
+      "status": "completed",
+      "blockedBy": [
+        2
+      ],
+      "description": "**Goal:** Inicializar firebase-admin a partir de envs e prover dependência FastAPI que verifica ID token.\n\n```json:metadata\n{\"files\": [\"back/app/firebase/admin.py\", \"back/app/firebase/dependencies.py\", \"back/tests/test_auth.py\"], \"verifyCommand\": \"cd back && uv run pytest tests/test_auth.py -v\", \"acceptanceCriteria\": [\"import resiliente\", \"token valido retorna uid/email\", \"header ausente 401\", \"token invalido 401\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 4,
+      "subject": "Task 4: Proteger rotas de geração + conftest",
+      "status": "completed",
+      "blockedBy": [
+        3
+      ],
+      "description": "**Goal:** Exigir login nas rotas /image-generations/pokemon e /prompt; manter testes via override autouse.\n\n```json:metadata\n{\"files\": [\"back/app/image_generation/router.py\", \"back/tests/conftest.py\"], \"verifyCommand\": \"cd back && uv run pytest -v && uv run ruff check .\", \"acceptanceCriteria\": [\"ambas rotas exigem auth\", \"conftest override autouse\", \"suite passa\", \"ruff sem erros\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 5,
+      "subject": "Task 5: Firebase client + user-service (frontend)",
+      "status": "completed",
+      "description": "**Goal:** Adicionar dep firebase, inicializar SDK client e criar serviço que grava users/{uid} no Firestore.\n\n```json:metadata\n{\"files\": [\"front/package.json\", \"front/src/lib/firebase.ts\", \"front/src/lib/user-service.ts\"], \"verifyCommand\": \"cd front && npm run lint\", \"acceptanceCriteria\": [\"firebase instalado\", \"firebase.ts exporta auth/googleProvider/db\", \"createUserIfNotExists criado\", \"lint passa\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 6,
+      "subject": "Task 6: AuthContext (frontend)",
+      "status": "completed",
+      "blockedBy": [
+        5
+      ],
+      "description": "**Goal:** Estado global de auth: onAuthStateChanged, createUserIfNotExists no primeiro login, expõe {user,loading,logout}.\n\n```json:metadata\n{\"files\": [\"front/src/contexts/auth-context.tsx\"], \"verifyCommand\": \"cd front && npm run lint\", \"acceptanceCriteria\": [\"AuthProvider onAuthStateChanged\", \"cria perfil no primeiro login\", \"useAuth expoe user/loading/logout\", \"lint passa\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 7,
+      "subject": "Task 7: LoginScreen + AuthGate + layout",
+      "status": "completed",
+      "blockedBy": [
+        6
+      ],
+      "description": "**Goal:** Tela de login (Google); AuthGate libera wizard só após login; envolver app no layout.tsx.\n\n```json:metadata\n{\"files\": [\"front/src/components/auth/login-screen.tsx\", \"front/src/components/auth/auth-gate.tsx\", \"front/src/app/layout.tsx\"], \"verifyCommand\": \"cd front && npm run lint\", \"acceptanceCriteria\": [\"AuthGate spinner/login/children\", \"LoginScreen signInWithPopup\", \"layout envolve AuthProvider+AuthGate\", \"lint passa\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 8,
+      "subject": "Task 8: Token nas chamadas + logout no header",
+      "status": "completed",
+      "blockedBy": [
+        7
+      ],
+      "description": "**Goal:** Enviar ID token nas requisições de geração e adicionar usuário/logout ao AppHeader.\n\n```json:metadata\n{\"files\": [\"front/src/features/image-forge/lib/image-generation-api.ts\", \"front/src/features/image-forge/components/app-header.tsx\"], \"verifyCommand\": \"cd front && npm run lint\", \"acceptanceCriteria\": [\"generateImage anexa Bearer\", \"erro claro sem token\", \"header mostra usuario e logout\", \"lint passa\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 9,
+      "subject": "Task 9: Atualizar CLAUDE.md (back e front)",
+      "status": "completed",
+      "blockedBy": [
+        4,
+        8
+      ],
+      "description": "**Goal:** Alinhar back/CLAUDE.md e front/CLAUDE.md à nova realidade (auth Firebase, sem banco SQL).\n\n```json:metadata\n{\"files\": [\"back/CLAUDE.md\", \"front/CLAUDE.md\"], \"verifyCommand\": \"git diff --stat back/CLAUDE.md front/CLAUDE.md\", \"acceptanceCriteria\": [\"back doc auth Firebase + env novas\", \"front doc login Google + AuthGate\", \"comandos migracao removidos\"], \"requiresUserVerification\": false}\n```"
+    }
+  ],
+  "lastUpdated": "2026-05-29T16:44:11.648841"
+}
