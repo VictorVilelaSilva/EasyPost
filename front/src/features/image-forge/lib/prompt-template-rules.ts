@@ -1,18 +1,11 @@
 import type { PromptTemplate } from "../types";
 
-const personalCharacteristicsTemplates = new Set<PromptTemplate>([
-  "anime-general",
-  "avatar",
-  "bleach",
-  "couple",
-  "monster_high",
-  "rick_morty",
-]);
+const noBackgroundTemplates = new Set<PromptTemplate>(["lego"]);
 
-export function needsPersonalCharacteristics(template: PromptTemplate) {
-  return personalCharacteristicsTemplates.has(template);
+export function hasBackground(template: PromptTemplate) {
+  return !noBackgroundTemplates.has(template);
 }
 
-export function needsCoupleReferences(template: PromptTemplate) {
-  return template === "couple";
+export function hasBadges(template: PromptTemplate) {
+  return template === "pokemon";
 }
