@@ -1,4 +1,7 @@
-import { needsCoupleReferences, needsPersonalCharacteristics } from "../lib/prompt-template-rules";
+import {
+  hasBadges,
+  hasBackground,
+} from "../lib/prompt-template-rules";
 import type { CoupleReferences, Format, PokemonConfig, UniverseOption } from "../types";
 import { StepIntro } from "./common";
 import { BackgroundPanel } from "./settings/background-panel";
@@ -50,8 +53,10 @@ export function SettingsStep({
   onPokemonConfigChange: (config: PokemonConfig) => void;
 }) {
   const isPokemon = selectedUniverse.name === "Pokemon";
-  const showPersonalCharacteristics = needsPersonalCharacteristics(selectedUniverse.promptTemplate);
-  const showCoupleReferences = needsCoupleReferences(selectedUniverse.promptTemplate);
+  const showPersonalCharacteristics = new Set(["anime-general", "avatar", "bleach", "couple", "monster_high", "rick_morty"]).has(selectedUniverse.promptTemplate);
+  const showCoupleReferences = selectedUniverse.promptTemplate === "couple";
+  const showBackground = hasBackground(selectedUniverse.promptTemplate);
+  const showBadges = hasBadges(selectedUniverse.promptTemplate);
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
@@ -81,7 +86,9 @@ export function SettingsStep({
               onChange={onPersonalCharacteristicsChange}
             />
           )}
-          <BackgroundPanel background={background} onBackgroundChange={onBackgroundChange} />
+          {showBackground && (
+            <BackgroundPanel background={background} onBackgroundChange={onBackgroundChange} />
+          )}
           {isPokemon && (
             <>
               <PokemonPosterPanel
@@ -97,6 +104,7 @@ export function SettingsStep({
           <GenerationOptionsPanel
             badgesEnabled={badgesEnabled}
             format={format}
+            showBadges={showBadges}
             onBadgesChange={onBadgesChange}
             onFormatChange={onFormatChange}
           />
