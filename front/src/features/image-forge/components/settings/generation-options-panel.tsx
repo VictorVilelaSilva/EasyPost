@@ -18,32 +18,36 @@ import { AspectIcon, Panel, SectionTitle } from "../common";
 export function GenerationOptionsPanel({
   badgesEnabled,
   format,
+  showBadges = true,
   onBadgesChange,
   onFormatChange,
 }: {
   badgesEnabled: boolean;
   format: Format;
+  showBadges?: boolean;
   onBadgesChange: (enabled: boolean) => void;
   onFormatChange: (format: Format) => void;
 }) {
   return (
     <Panel>
       <div className="grid min-w-0 gap-5 md:grid-cols-2">
-        <div className="min-w-0">
-          <SectionTitle icon={BadgeCheck} title="Gerar insígnias" />
-          <div className="mt-4 flex items-center gap-3">
-            <Switch
-              checked={badgesEnabled}
-              onCheckedChange={onBadgesChange}
-              className="border border-[#2a2a2a] data-[state=checked]:bg-[#f5f5f5] data-[state=unchecked]:bg-[#101010] [&_[data-slot=switch-thumb]]:data-[state=checked]:bg-[#050505]"
-            />
-            <span className="text-sm text-[#a3a3a3]">
-              {badgesEnabled ? "Ativado" : "Desativado"}
-            </span>
+        {showBadges && (
+          <div className="min-w-0">
+            <SectionTitle icon={BadgeCheck} title="Gerar insígnias" />
+            <div className="mt-4 flex items-center gap-3">
+              <Switch
+                checked={badgesEnabled}
+                onCheckedChange={onBadgesChange}
+                className="border border-[#2a2a2a] data-[state=checked]:bg-[#f5f5f5] data-[state=unchecked]:bg-[#101010] [&_[data-slot=switch-thumb]]:data-[state=checked]:bg-[#050505]"
+              />
+              <span className="text-sm text-[#a3a3a3]">
+                {badgesEnabled ? "Ativado" : "Desativado"}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="min-w-0">
+        <div className={showBadges ? "min-w-0" : "min-w-0 md:col-span-2"}>
           <SectionTitle icon={ImageIcon} title="Formato da imagem" />
           <Select value={format} onValueChange={(value) => onFormatChange(value as Format)}>
             <SelectTrigger className="mt-4 h-10 w-full border-[#2a2a2a] bg-[#101010] text-[#f5f5f5] hover:bg-[#181818]">
