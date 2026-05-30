@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import { useAuth } from "@/contexts/auth-context";
 import { AppHeader } from "@/features/image-forge/components/app-header";
 import { Dashboard } from "@/features/image-forge/components/dashboard";
 import { PreviewStep } from "@/features/image-forge/components/preview-step";
@@ -21,8 +22,10 @@ import type {
   Step,
   Universe,
 } from "@/features/image-forge/types";
+import { saveGeneration } from "@/lib/generation-service";
 
 export default function Home() {
+  const { user } = useAuth();
   const [step, setStep] = useState<Step>("dashboard");
   const [universe, setUniverse] = useState<Universe>("Pokemon");
   const [background, setBackground] = useState(backgroundColors[2]);
@@ -88,6 +91,15 @@ export default function Home() {
         referenceImage,
       });
       setGenerationResult(result);
+      if (user) {
+        void saveGeneration({
+          userId: user.uid,
+          imageBase64: result.image_base64,
+          mimeType: result.mime_type,
+          universeLabel: selectedUniverse.label,
+          format,
+        }).catch(console.error);
+      }
     } catch (error) {
       setGenerationError(error instanceof Error ? error.message : "Falha ao gerar imagem.");
     } finally {

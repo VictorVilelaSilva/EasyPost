@@ -1,0 +1,40 @@
+{
+  "planPath": "docs/superpowers/plans/2026-05-30-universe-settings-components.md",
+  "tasks": [
+    {
+      "id": 1,
+      "subject": "Task 1: Tipo compartilhado + prompt-template-rules",
+      "status": "pending",
+      "description": "**Goal:** Criar UniverseSettingsProps e simplificar prompt-template-rules.ts.\n\n**Files:**\n- Create: front/src/features/image-forge/components/settings/universes/universe-settings-props.ts\n- Modify: front/src/features/image-forge/lib/prompt-template-rules.ts\n\n**Verify:** cd front && npx tsc --noEmit\n\n```json:metadata\n{\"files\": [\"front/src/features/image-forge/components/settings/universes/universe-settings-props.ts\", \"front/src/features/image-forge/lib/prompt-template-rules.ts\"], \"verifyCommand\": \"cd front && npx tsc --noEmit\", \"acceptanceCriteria\": [\"UniverseSettingsProps com 15 props\", \"hasBadges só true para pokemon\", \"funções antigas removidas\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 2,
+      "subject": "Task 2: Componentes únicos — Pokemon, LEGO, Casal",
+      "status": "pending",
+      "blockedBy": [1],
+      "description": "**Goal:** Criar os 3 componentes com layout exclusivo.\n\n**Files:**\n- Create: front/src/features/image-forge/components/settings/universes/pokemon-settings.tsx\n- Create: front/src/features/image-forge/components/settings/universes/lego-settings.tsx\n- Create: front/src/features/image-forge/components/settings/universes/casal-settings.tsx\n\n**Verify:** cd front && npx tsc --noEmit\n\n```json:metadata\n{\"files\": [\"front/src/features/image-forge/components/settings/universes/pokemon-settings.tsx\", \"front/src/features/image-forge/components/settings/universes/lego-settings.tsx\", \"front/src/features/image-forge/components/settings/universes/casal-settings.tsx\"], \"verifyCommand\": \"cd front && npx tsc --noEmit\", \"acceptanceCriteria\": [\"PokemonSettings tem insígnias\", \"LegoSettings sem Background\", \"CasalSettings usa CoupleReferencePanel\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 3,
+      "subject": "Task 3: Componentes com PersonalChar (8 universos)",
+      "status": "pending",
+      "blockedBy": [1],
+      "description": "**Goal:** Criar Kimetsu, Naruto, Digimon, Avatar, Anime Geral, Bleach, Monster High, Rick and Morty.\n\n**Verify:** cd front && npx tsc --noEmit\n\n```json:metadata\n{\"files\": [\"front/src/features/image-forge/components/settings/universes/kimetsu-settings.tsx\", \"front/src/features/image-forge/components/settings/universes/naruto-settings.tsx\", \"front/src/features/image-forge/components/settings/universes/digimon-settings.tsx\", \"front/src/features/image-forge/components/settings/universes/avatar-settings.tsx\", \"front/src/features/image-forge/components/settings/universes/anime-geral-settings.tsx\", \"front/src/features/image-forge/components/settings/universes/bleach-settings.tsx\", \"front/src/features/image-forge/components/settings/universes/monster-high-settings.tsx\", \"front/src/features/image-forge/components/settings/universes/rick-morty-settings.tsx\"], \"verifyCommand\": \"cd front && npx tsc --noEmit\", \"acceptanceCriteria\": [\"8 componentes criados com PersonalChar\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 4,
+      "subject": "Task 4: Componentes Copa e San Andreas",
+      "status": "completed",
+      "blockedBy": [1],
+      "description": "**Goal:** Criar os 2 componentes padrão sem PersonalChar.\n\n**Verify:** cd front && npx tsc --noEmit\n\n```json:metadata\n{\"files\": [\"front/src/features/image-forge/components/settings/universes/copa-settings.tsx\", \"front/src/features/image-forge/components/settings/universes/san-andreas-settings.tsx\"], \"verifyCommand\": \"cd front && npx tsc --noEmit\", \"acceptanceCriteria\": [\"CopaSettings e SanAndreasSettings sem PersonalChar\"], \"requiresUserVerification\": false}\n```"
+    },
+    {
+      "id": 5,
+      "subject": "Task 5: Dispatcher — refatorar settings-step.tsx",
+      "status": "pending",
+      "blockedBy": [2, 3, 4],
+      "description": "**Goal:** Substituir lógica condicional pelo mapa UNIVERSE_SETTINGS.\n\n**Files:**\n- Modify: front/src/features/image-forge/components/settings-step.tsx\n\n**Verify:** cd front && npx tsc --noEmit && npm run lint\n\n```json:metadata\n{\"files\": [\"front/src/features/image-forge/components/settings-step.tsx\"], \"verifyCommand\": \"cd front && npx tsc --noEmit && npm run lint\", \"acceptanceCriteria\": [\"UNIVERSE_SETTINGS com 13 entradas\", \"sem lógica condicional\", \"tsc e lint sem erros\"], \"requiresUserVerification\": false}\n```"
+    }
+  ],
+  "lastUpdated": "2026-05-30T00:00:00Z"
+}
