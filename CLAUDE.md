@@ -22,7 +22,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Frontend** (`front/`):
 ```bash
 npm install
-npm run dev      # Dev server on port 8005 (not 3000)
+npm run dev      # Dev server on port 3000
 npm run build
 npm run lint
 ```
@@ -43,15 +43,16 @@ Tests run without external services (no DB, no Redis, no network — OpenAI/Pok�
 ```bash
 docker-compose up
 ```
-This builds **only** the frontend (`Dockerfile` at repo root) and exposes it on host port **3002 → container 3000**. There is no backend service in `docker-compose.yml`; run the backend with `task dev` locally.
+This builds the backend (`./back`) and frontend (`./front`). The backend exposes port **8004** and persists generated user images through the bind mount `./storage/user-files:/app/storage/user-files`. The frontend maps host port **3002** to container port **3000**.
 
 ## Ports at a glance
 
 | Process | Port |
 |---------|------|
-| Frontend dev (`npm run dev`) | 8005 |
-| Frontend Docker | 3002 |
+| Frontend dev (`npm run dev`) | 3000 |
+| Frontend Docker | 3002 → 3000 |
 | Backend dev (`task dev`) | 8004 |
+| Backend Docker | 8004 |
 
 The frontend's `NEXT_PUBLIC_API_URL` defaults to `http://localhost:8004` (`front/src/features/image-forge/constants.ts`).
 

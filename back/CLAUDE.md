@@ -63,7 +63,8 @@ The Admin SDK initializes from env vars (`FIREBASE_ADMIN_*`); initialization is 
 | `OPENAI_API_KEY` | Required for image generation; without it the endpoint returns 502 |
 | `OPENAI_IMAGE_MODEL` | Defaults to `gpt-image-2` |
 | `OPENAI_IMAGE_TIMEOUT_SECONDS` | OpenAI read timeout (default 300s) |
-| `ALLOWED_ORIGINS` | CORS list (default `http://localhost:8005`) |
+| `USER_FILES_DIR` | Local generated-image storage root (default `storage/user-files`) |
+| `ALLOWED_ORIGINS` | CORS list (includes `http://localhost:3000` by default) |
 | `POKEMON_API_BASE_URL` / `POKEMON_CACHE_TTL_SECONDS` | PokéAPI proxy |
 
 `config.py` uses `extra="ignore"`, so leftover legacy keys in `.env` are harmless.

@@ -4,18 +4,35 @@ import { fetchRecentGenerations, type RecentGeneration } from "@/lib/generation-
 
 // null = not yet fetched; [] = fetched but empty; [...] = has results
 export function useRecentGenerations(userId: string | null) {
-  const [generations, setGenerations] = useState<RecentGeneration[] | null>(null);
+  const [state, setState] = useState<{
+    generations: RecentGeneration[];
+    userId: string | null;
+  }>({ generations: [], userId: null });
 
   useEffect(() => {
     if (!userId) return;
+
+    let ignore = false;
     fetchRecentGenerations(userId)
-      .then(setGenerations)
-      .catch(console.error);
+      .then((items) => {
+        if (!ignore) setState({ generations: items, userId });
+      })
+      .catch(() => {
+        if (!ignore) setState({ generations: [], userId });
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, [userId]);
 
+  if (!userId) {
+    return { generations: [], loading: false };
+  }
+
   return {
-    generations: generations ?? [],
-    loading: !!userId && generations === null,
+    generations: state.userId === userId ? state.generations : [],
+    loading: state.userId !== userId,
   };
 }
 

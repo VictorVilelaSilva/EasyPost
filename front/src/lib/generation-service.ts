@@ -1,16 +1,6 @@
-import {
-  addDoc,
-  collection,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  Timestamp,
-  where,
-} from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { auth } from "@/lib/firebase";
 
-import { db, storage } from "./firebase";
+import { API_URL } from "@/features/image-forge/constants";
 
 export type RecentGeneration = {
   id: string;
@@ -33,54 +23,72 @@ export async function saveGeneration({
   universeLabel: string;
   format: string;
 }): Promise<void> {
-  const imageId = `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-  const storageRef = ref(storage, `generations/${userId}/${imageId}`);
-  const blob = base64ToBlob(imageBase64, mimeType);
-  await uploadBytes(storageRef, blob, { contentType: mimeType });
-  const imageUrl = await getDownloadURL(storageRef);
+  void userId;
 
-  await addDoc(collection(db, "generations"), {
-    userId,
-    universeLabel,
-    format,
-    imageUrl,
-    createdAt: Timestamp.now(),
+  const token = await auth.currentUser?.getIdToken();
+  if (!token) {
+    throw new Error("Sessão expirada. Faça login novamente.");
+  }
+
+  const response = await fetch(`${API_URL}/generations`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      image_base64: imageBase64,
+      mime_type: mimeType,
+      universe_label: universeLabel,
+      format,
+    }),
   });
+
+  if (!response.ok) throw new Error(await responseErrorMessage(response));
 }
 
 export async function fetchRecentGenerations(
   userId: string,
   count = 3,
 ): Promise<RecentGeneration[]> {
-  const q = query(
-    collection(db, "generations"),
-    where("userId", "==", userId),
-    orderBy("createdAt", "desc"),
-    limit(count),
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map((docSnap) => {
-    const data = docSnap.data() as {
-      universeLabel: string;
-      format: string;
-      imageUrl: string;
-      createdAt: Timestamp;
-    };
-    return {
-      id: docSnap.id,
-      universeLabel: data.universeLabel,
-      format: data.format,
-      imageUrl: data.imageUrl,
-      createdAt: data.createdAt.toDate(),
-    };
+  void userId;
+
+  const token = await auth.currentUser?.getIdToken();
+  if (!token) return [];
+
+  const params = new URLSearchParams({ limit: String(count) });
+  const response = await fetch(`${API_URL}/generations/recent?${params.toString()}`, {
+    headers: { Authorization: `Bearer ${token}` },
   });
+
+  if (!response.ok) throw new Error(await responseErrorMessage(response));
+
+  const payload = (await response.json()) as {
+    generations: {
+      id: string;
+      universe_label: string;
+      format: string;
+      image_url: string;
+      created_at: string;
+    }[];
+  };
+
+  return payload.generations.map((item) => ({
+    id: item.id,
+    universeLabel: item.universe_label,
+    format: item.format,
+    imageUrl: item.image_url,
+    createdAt: new Date(item.created_at),
+  }));
 }
 
-function base64ToBlob(base64: string, mimeType: string): Blob {
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
+async function responseErrorMessage(response: Response) {
+  try {
+    const payload = (await response.json()) as { detail?: unknown };
+    if (typeof payload.detail === "string") return payload.detail;
+  } catch {
+    // Fall back to status text below.
   }
-  return new Blob([bytes], { type: mimeType });
+
+  return `Falha ao salvar geração (${response.status})`;
 }

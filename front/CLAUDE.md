@@ -93,6 +93,5 @@ On first login, `src/lib/user-service.ts:createUserIfNotExists` writes the profi
 | `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase web config |
 | `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Firebase web config |
 | `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Firebase web config |
-| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Firebase web config |
 | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Firebase web config |
 | `NEXT_PUBLIC_FIREBASE_APP_ID` | Firebase web config |

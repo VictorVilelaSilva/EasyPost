@@ -7,8 +7,15 @@ class Settings(BaseSettings):
     )
 
     # CORS / frontend
-    allowed_origins: list[str] = ["http://localhost:8005"]
-    frontend_url: str = "http://localhost:8005"
+    allowed_origins: list[str] = [
+        "http://localhost:8005",
+        "http://127.0.0.1:8005",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:3002",
+        "http://127.0.0.1:3002",
+    ]
+    frontend_url: str = "http://localhost:3000"
     environment: str = "production"
 
     # PokéAPI proxy
@@ -20,6 +27,9 @@ class Settings(BaseSettings):
     openai_base_url: str = "https://api.openai.com/v1"
     openai_image_model: str = "gpt-image-2"
     openai_image_timeout_seconds: float = 300.0
+
+    # Local user files
+    user_files_dir: str = "storage/user-files"
 
     # Firebase Admin (verificação de ID token)
     firebase_admin_project_id: str = ""
