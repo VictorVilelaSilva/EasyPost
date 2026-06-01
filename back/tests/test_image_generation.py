@@ -122,7 +122,7 @@ def test_san_andreas_prompt_ignores_personal_characteristics():
         )
     )
 
-    assert "Yo como personaje jugable femenina" in prompt
+    assert "Yo como personaje jugable" in prompt
     assert "Resumo pessoal" not in prompt
     assert "não deve aparecer no prompt" not in prompt
 
@@ -191,7 +191,7 @@ async def test_generate_prompt_image_route_uses_selected_prompt(monkeypatch):
     assert "português do Brasil" in request["data"]["prompt"]
 
 
-async def test_generate_couple_prompt_accepts_face_and_two_body_images(monkeypatch):
+async def test_generate_couple_prompt_accepts_single_full_body_image(monkeypatch):
     monkeypatch.setattr(settings, "openai_api_key", "test-key")
     monkeypatch.setattr(service.httpx, "AsyncClient", _FakeOpenAIClient)
 
@@ -199,27 +199,25 @@ async def test_generate_couple_prompt_accepts_face_and_two_body_images(monkeypat
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.post(
             "/image-generations/prompt",
-            data={"prompt_template": "couple"},
-            files=[
-                ("face_image", ("face.png", b"face", "image/png")),
-                ("body_images", ("body-1.png", b"body-1", "image/png")),
-                ("body_images", ("body-2.png", b"body-2", "image/png")),
-            ],
+            data={
+                "prompt_template": "couple",
+                "personal_characteristics": "amo o sorriso e o jeito carinhoso",
+            },
+            files={"reference_image": ("full-body.png", b"full-body", "image/png")},
         )
 
     assert response.status_code == 200
     request = _FakeOpenAIClient.last_request
     assert request is not None
-    assert [item[1][0] for item in request["files"]] == [
-        "face.png",
-        "body-1.png",
-        "body-2.png",
-    ]
-    assert "foto 1 é close do rosto da pessoa presenteada" in request["data"]["prompt"]
+    assert [item[1][0] for item in request["files"]] == ["full-body.png"]
+    assert "obsessed fan artist filled an entire sketchbook page" in request["data"]["prompt"]
+    assert "foto enviada é uma referência de corpo inteiro" in request["data"]["prompt"]
+    assert "amo o sorriso e o jeito carinhoso" in request["data"]["prompt"]
+    assert "Fundo/cor/direção visual" not in request["data"]["prompt"]
     assert "corpo inteiro do casal" not in request["data"]["prompt"]
 
 
-async def test_generate_couple_prompt_requires_first_body_image(monkeypatch):
+async def test_generate_couple_prompt_requires_reference_image(monkeypatch):
     monkeypatch.setattr(settings, "openai_api_key", "test-key")
 
     transport = ASGITransport(app=app)
@@ -227,11 +225,10 @@ async def test_generate_couple_prompt_requires_first_body_image(monkeypatch):
         response = await client.post(
             "/image-generations/prompt",
             data={"prompt_template": "couple"},
-            files={"face_image": ("face.png", b"face", "image/png")},
         )
 
     assert response.status_code == 422
-    assert "body_images requires at least 1 file" in response.json()["detail"]
+    assert "reference_image is required" in response.json()["detail"]
 
 
 async def test_generate_pokemon_image_route_handles_openai_timeout(monkeypatch):

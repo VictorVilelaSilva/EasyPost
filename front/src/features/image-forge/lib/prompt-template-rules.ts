@@ -1,6 +1,6 @@
 import type { PromptTemplate } from "../types";
 
-const noBackgroundTemplates = new Set<PromptTemplate>(["lego"]);
+const noBackgroundTemplates = new Set<PromptTemplate>(["couple", "lego"]);
 
 export function hasBackground(template: PromptTemplate) {
   return !noBackgroundTemplates.has(template);

@@ -115,29 +115,15 @@ async def generate_prompt_image(
     quality: str = Form("high"),
     output_format: str = Form("png"),
 ) -> ImageGenerationResponse:
-    if prompt_template == "couple":
-        if not face_image:
-            raise HTTPException(status_code=422, detail="face_image is required")
-        if not body_images:
-            raise HTTPException(
-                status_code=422, detail="body_images requires at least 1 file"
-            )
-        if body_images and len(body_images) > 2:
-            raise HTTPException(
-                status_code=422, detail="body_images accepts at most 2 files"
-            )
-        reference_images = [await _image_tuple(face_image, "face_image")]
-        for image in body_images or []:
-            reference_images.append(await _image_tuple(image, "body_images"))
-        reference_notes = (
-            "foto 1 é close do rosto da pessoa presenteada; fotos seguintes são "
-            "referências de corpo inteiro da pessoa presenteada."
-        )
-    else:
-        if not reference_image:
-            raise HTTPException(status_code=422, detail="reference_image is required")
-        reference_images = [await _image_tuple(reference_image, "reference_image")]
-        reference_notes = ""
+    if not reference_image:
+        raise HTTPException(status_code=422, detail="reference_image is required")
+
+    reference_images = [await _image_tuple(reference_image, "reference_image")]
+    reference_notes = (
+        "foto enviada é uma referência de corpo inteiro da pessoa presenteada."
+        if prompt_template == "couple"
+        else ""
+    )
 
     try:
         request_data = PokemonImageGenerationInput(

@@ -2,7 +2,6 @@ import { auth } from "@/lib/firebase";
 
 import { API_URL } from "../constants";
 import type {
-  CoupleReferences,
   Format,
   ImageGenerationResult,
   PokemonConfig,
@@ -12,7 +11,6 @@ import type {
 type GenerateImageInput = {
   background: string;
   badgesEnabled: boolean;
-  coupleReferences: CoupleReferences;
   format: Format;
   personalCharacteristics: string;
   pokemonConfig: PokemonConfig;
@@ -24,7 +22,6 @@ type GenerateImageInput = {
 export async function generateImage({
   background,
   badgesEnabled,
-  coupleReferences,
   format,
   personalCharacteristics,
   pokemonConfig,
@@ -35,7 +32,7 @@ export async function generateImage({
   const formData = new FormData();
   const outfit = pokemonConfig.outfit.custom;
 
-  appendReferenceImages(formData, promptTemplate, referenceImage, coupleReferences);
+  appendReferenceImages(formData, referenceImage);
   formData.set("prompt_template", promptTemplate);
   formData.set("universe_label", universeLabel);
   formData.set("trainer_name", pokemonConfig.title || "Portugal");
@@ -78,16 +75,8 @@ function activePokemon(pokemon: PokemonConfig["pokemon"]) {
 
 function appendReferenceImages(
   formData: FormData,
-  promptTemplate: PromptTemplate,
   referenceImage: File | null,
-  coupleReferences: CoupleReferences,
 ) {
-  if (promptTemplate === "couple") {
-    if (coupleReferences.face) formData.set("face_image", coupleReferences.face);
-    coupleReferences.bodies.slice(0, 2).forEach((file) => formData.append("body_images", file));
-    return;
-  }
-
   if (referenceImage) formData.set("reference_image", referenceImage);
 }
 

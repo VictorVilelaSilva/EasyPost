@@ -31,6 +31,7 @@ def generic_variables_block(
     background: str,
     outfit: PokemonOutfit,
     include_personal_fallback: bool = True,
+    include_background: bool = True,
 ) -> str:
     reference_line = (
         f"- Referências enviadas: {reference_image_notes.strip()}."
@@ -41,6 +42,11 @@ def generic_variables_block(
         personal_characteristics=personal_characteristics,
         include_fallback=include_personal_fallback,
     )
+    background_line = (
+        f"- Fundo/cor/direção visual escolhida: {background}."
+        if include_background
+        else ""
+    )
 
     return f"""VARIÁVEIS DESTA GERAÇÃO:
 - A imagem enviada pelo usuário é a referência principal para rosto, identidade, pele, cabelo, estrutura facial e semelhança.
@@ -49,7 +55,7 @@ def generic_variables_block(
 - Nome/título do personagem, quando o template pedir: {trainer_name or "Portugal"}.
 {personal_line}
 - Formato de composição: {image_format}.
-- Fundo/cor/direção visual escolhida: {background}.
+{background_line}
 - Roupa: {outfit_prompt(outfit)}."""
 
 

@@ -12,8 +12,8 @@ def build_prompt(
     background: str,
     outfit: PokemonOutfit,
 ) -> str:
-    return f"""Yo como personaje jugable femenina, ilustración estilo portada de GTA San Andreas. 
-Chaqueta bomber, top deportivo, jeans holgados, cadenas, gorra ladeada. 
+    return f"""Yo como personaje jugable, ilustración estilo portada de GTA San Andreas, respetando el sexo, los rasgos faciales y la apariencia de la persona de la foto enviada como referencia principal.
+Chaqueta bomber, camiseta urbana, jeans holgados, cadenas, gorra ladeada.
 Actitud desafiante, brazos cruzados, fondo de ciudad con letreros de neón, palmeras, autos clásicos. 
 Paleta de colores cálidos: naranja, morado, amarillo. 
 Estilo arte digital de portada de juego de 2004, trazo limpio, sombras marcadas, vibe callejera. 

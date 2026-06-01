@@ -1,1 +1,3 @@
-Descreva os personagens da imagem , sua foto original, “(seu nome/personagem)”, em um estilo de coleção de esboços rabiscados e grosseiros. Sobre um fundo de papel branco bem claro, distribua pela página uma imagem de corpo inteiro, um grande close-up do rosto, um pequeno rabisco, um esboço rústico de corpo inteiro e uma versão chibi/deformada, de modo que a página consiga transmitir a atmosfera e a personalidade do personagem.
+Draw me as if an obsessed fan artist filled an entire sketchbook page - messy, overlapping, full-body poses, tiny chibi doodles, exaggerated expressions, and random close-ups of their hands or eyes.
+White background. No grid, no order. Pure chaos energy.
+With (color) aesthetic clothes 

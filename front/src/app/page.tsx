@@ -56,20 +56,12 @@ export default function Home() {
   );
 
   async function handleGenerate() {
-    if (selectedUniverse.promptTemplate === "couple" && !coupleReferences.face) {
-      setGenerationError("Selecione uma foto focada do rosto da pessoa presenteada.");
-      setStep("preview");
-      return;
-    }
-
-    if (selectedUniverse.promptTemplate === "couple" && !coupleReferences.bodies[0]) {
-      setGenerationError("Selecione uma foto de corpo inteiro da pessoa presenteada.");
-      setStep("preview");
-      return;
-    }
-
-    if (selectedUniverse.promptTemplate !== "couple" && !referenceImage) {
-      setGenerationError("Selecione uma imagem de rosto antes de gerar.");
+    if (!referenceImage) {
+      setGenerationError(
+        selectedUniverse.promptTemplate === "couple"
+          ? "Selecione uma foto de corpo inteiro da pessoa presenteada."
+          : "Selecione uma imagem de rosto antes de gerar.",
+      );
       setStep("preview");
       return;
     }
@@ -83,7 +75,6 @@ export default function Home() {
       const result = await generateImage({
         background,
         badgesEnabled,
-        coupleReferences,
         format,
         pokemonConfig,
         personalCharacteristics,
