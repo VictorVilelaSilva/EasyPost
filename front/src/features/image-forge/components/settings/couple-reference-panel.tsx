@@ -16,27 +16,27 @@ export function CoupleReferencePanel({
 }) {
   return (
     <Panel>
-      <SectionTitle icon={Images} title="Referências do casal" />
+      <SectionTitle icon={Images} title="Referências do parceiro(a)" />
       <div className="mt-4 grid gap-3 md:grid-cols-3">
         <UploadBox
-          label="Foto focada do rosto"
-          hint="Close do rosto obrigatório"
+          label="Rosto do parceiro(a)"
+          hint="Close obrigatório da pessoa presenteada"
           files={references.face ? [references.face] : []}
-          value={references.face?.name ?? "Selecionar foto de rosto"}
+          value={references.face?.name ?? "Selecionar rosto do parceiro(a)"}
           onFiles={(files) => onChange({ ...references, face: files[0] ?? null })}
         />
         <UploadBox
-          label="Corpo inteiro 1"
-          hint="Foto obrigatória"
+          label="Corpo inteiro"
+          hint="Referência obrigatória da pessoa presenteada"
           files={references.bodies[0] ? [references.bodies[0]] : []}
           value={references.bodies[0]?.name ?? "Selecionar corpo inteiro"}
           onFiles={(files) => onChange({ ...references, bodies: setBodyAt(references.bodies, 0, files[0]) })}
         />
         <UploadBox
-          label="Corpo inteiro 2"
-          hint="Foto opcional"
+          label="Referência extra"
+          hint="Foto opcional da pessoa presenteada"
           files={references.bodies[1] ? [references.bodies[1]] : []}
-          value={references.bodies[1]?.name ?? "Selecionar segunda foto"}
+          value={references.bodies[1]?.name ?? "Selecionar foto extra"}
           onFiles={(files) => onChange({ ...references, bodies: setBodyAt(references.bodies, 1, files[0]) })}
         />
       </div>

@@ -25,7 +25,7 @@ export async function saveGeneration({
 }): Promise<void> {
   void userId;
 
-  const token = await auth.currentUser?.getIdToken();
+  const token = await auth.currentUser?.getIdToken(true);
   if (!token) {
     throw new Error("Sessão expirada. Faça login novamente.");
   }
@@ -53,7 +53,7 @@ export async function fetchRecentGenerations(
 ): Promise<RecentGeneration[]> {
   void userId;
 
-  const token = await auth.currentUser?.getIdToken();
+  const token = await auth.currentUser?.getIdToken(true);
   if (!token) return [];
 
   const params = new URLSearchParams({ limit: String(count) });

@@ -36,6 +36,7 @@ class PokemonOutfit(BaseModel):
 
 class PokemonImageGenerationInput(BaseModel):
     prompt_template: PromptTemplate = "pokemon"
+    universe_label: str = Field(default="Pokémon", max_length=80)
     trainer_name: str = Field(default="Portugal", max_length=80)
     personal_characteristics: str = Field(default="", max_length=1200)
     reference_image_notes: str = Field(default="", max_length=800)

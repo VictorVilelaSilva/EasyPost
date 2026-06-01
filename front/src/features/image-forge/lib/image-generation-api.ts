@@ -18,6 +18,7 @@ type GenerateImageInput = {
   pokemonConfig: PokemonConfig;
   promptTemplate: PromptTemplate;
   referenceImage: File | null;
+  universeLabel: string;
 };
 
 export async function generateImage({
@@ -29,12 +30,14 @@ export async function generateImage({
   pokemonConfig,
   promptTemplate,
   referenceImage,
+  universeLabel,
 }: GenerateImageInput): Promise<ImageGenerationResult> {
   const formData = new FormData();
   const outfit = pokemonConfig.outfit.custom;
 
   appendReferenceImages(formData, promptTemplate, referenceImage, coupleReferences);
   formData.set("prompt_template", promptTemplate);
+  formData.set("universe_label", universeLabel);
   formData.set("trainer_name", pokemonConfig.title || "Portugal");
   formData.set("background", background);
   formData.set("image_format", format);
@@ -51,7 +54,7 @@ export async function generateImage({
   formData.set("quality", "high");
   formData.set("output_format", "png");
 
-  const token = await auth.currentUser?.getIdToken();
+  const token = await auth.currentUser?.getIdToken(true);
   if (!token) {
     throw new Error("Sessão expirada. Faça login novamente.");
   }

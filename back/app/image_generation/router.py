@@ -35,6 +35,7 @@ async def generate_pokemon_image(
     current_user: dict = Depends(get_current_user),
     reference_image: UploadFile = File(...),
     prompt_template: str = Form("pokemon"),
+    universe_label: str = Form("Pokémon"),
     trainer_name: str = Form("Portugal"),
     personal_characteristics: str = Form(""),
     background: str = Form("#1A1A2E"),
@@ -56,6 +57,7 @@ async def generate_pokemon_image(
     try:
         request_data = PokemonImageGenerationInput(
             prompt_template=prompt_template,
+            universe_label=universe_label,
             trainer_name=trainer_name,
             personal_characteristics=personal_characteristics,
             background=background,
@@ -98,6 +100,7 @@ async def generate_prompt_image(
     face_image: UploadFile | None = File(None),
     body_images: list[UploadFile] | None = File(None),
     prompt_template: str = Form(...),
+    universe_label: str = Form(""),
     trainer_name: str = Form("Portugal"),
     personal_characteristics: str = Form(""),
     background: str = Form("#1A1A2E"),
@@ -127,7 +130,8 @@ async def generate_prompt_image(
         for image in body_images or []:
             reference_images.append(await _image_tuple(image, "body_images"))
         reference_notes = (
-            "foto 1 é close do rosto; fotos seguintes são corpo inteiro do casal."
+            "foto 1 é close do rosto da pessoa presenteada; fotos seguintes são "
+            "referências de corpo inteiro da pessoa presenteada."
         )
     else:
         if not reference_image:
@@ -138,6 +142,7 @@ async def generate_prompt_image(
     try:
         request_data = PokemonImageGenerationInput(
             prompt_template=prompt_template,
+            universe_label=universe_label,
             trainer_name=trainer_name,
             personal_characteristics=personal_characteristics,
             reference_image_notes=reference_notes,

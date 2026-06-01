@@ -57,13 +57,13 @@ export default function Home() {
 
   async function handleGenerate() {
     if (selectedUniverse.promptTemplate === "couple" && !coupleReferences.face) {
-      setGenerationError("Selecione uma foto focada do rosto para gerar o casal.");
+      setGenerationError("Selecione uma foto focada do rosto da pessoa presenteada.");
       setStep("preview");
       return;
     }
 
     if (selectedUniverse.promptTemplate === "couple" && !coupleReferences.bodies[0]) {
-      setGenerationError("Selecione a primeira foto de corpo inteiro para gerar o casal.");
+      setGenerationError("Selecione uma foto de corpo inteiro da pessoa presenteada.");
       setStep("preview");
       return;
     }
@@ -89,6 +89,7 @@ export default function Home() {
         personalCharacteristics,
         promptTemplate: selectedUniverse.promptTemplate,
         referenceImage,
+        universeLabel: selectedUniverse.label,
       });
       setGenerationResult(result);
       if (user) {

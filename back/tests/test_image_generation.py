@@ -88,6 +88,7 @@ def test_build_generic_prompt_uses_selected_template_and_pt_br_text_rule():
     prompt = build_pokemon_prompt(
         PokemonImageGenerationInput(
             prompt_template="lego",
+            universe_label="LEGO",
             trainer_name="Victor",
             background="#E8E2D8",
             image_format="Retrato 3:4",
@@ -95,8 +96,9 @@ def test_build_generic_prompt_uses_selected_template_and_pt_br_text_rule():
     )
 
     assert "universo LEGO" in prompt
+    assert "Universo/estilo escolhido: LEGO" in prompt
     assert "Nome/título do personagem" in prompt
-    assert "Características pessoais" not in prompt
+    assert "Resumo pessoal" in prompt
     assert "português do Brasil" in prompt
 
 
@@ -108,8 +110,21 @@ def test_build_generic_prompt_adds_personal_characteristics_only_when_needed():
         )
     )
 
-    assert "Características pessoais informadas pelo usuário" in prompt
+    assert "Resumo pessoal informado pelo usuário" in prompt
     assert "criativa, tímida, coleciona acessórios antigos" in prompt
+
+
+def test_san_andreas_prompt_ignores_personal_characteristics():
+    prompt = build_pokemon_prompt(
+        PokemonImageGenerationInput(
+            prompt_template="san_andreas",
+            personal_characteristics="não deve aparecer no prompt",
+        )
+    )
+
+    assert "Yo como personaje jugable femenina" in prompt
+    assert "Resumo pessoal" not in prompt
+    assert "não deve aparecer no prompt" not in prompt
 
 
 async def test_generate_pokemon_image_route_calls_openai(monkeypatch):
@@ -160,6 +175,7 @@ async def test_generate_prompt_image_route_uses_selected_prompt(monkeypatch):
             "/image-generations/prompt",
             data={
                 "prompt_template": "rick_morty",
+                "universe_label": "Rick and Morty",
                 "trainer_name": "Victor",
                 "personal_characteristics": "irônico, curioso e fã de tecnologia",
             },
@@ -169,6 +185,7 @@ async def test_generate_prompt_image_route_uses_selected_prompt(monkeypatch):
     assert response.status_code == 200
     request = _FakeOpenAIClient.last_request
     assert request is not None
+    assert "Universo/estilo escolhido: Rick and Morty" in request["data"]["prompt"]
     assert "Rick and Morty" in request["data"]["prompt"]
     assert "irônico, curioso e fã de tecnologia" in request["data"]["prompt"]
     assert "português do Brasil" in request["data"]["prompt"]
@@ -198,7 +215,8 @@ async def test_generate_couple_prompt_accepts_face_and_two_body_images(monkeypat
         "body-1.png",
         "body-2.png",
     ]
-    assert "foto 1 é close do rosto" in request["data"]["prompt"]
+    assert "foto 1 é close do rosto da pessoa presenteada" in request["data"]["prompt"]
+    assert "corpo inteiro do casal" not in request["data"]["prompt"]
 
 
 async def test_generate_couple_prompt_requires_first_body_image(monkeypatch):

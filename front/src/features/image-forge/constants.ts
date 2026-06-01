@@ -69,8 +69,8 @@ export const universes: UniverseOption[] = [
   },
   {
     name: "Casal",
-    label: "Casal",
-    description: "Coleção de esboços rabiscados com poses e versões chibi.",
+    label: "Para parceiro(a)",
+    description: "Presente em esboços rabiscados para namorado(a) ou parceiro(a).",
     code: "CPL",
     image: "/sketch_persona.png",
     promptTemplate: "couple",
