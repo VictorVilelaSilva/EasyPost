@@ -1,3 +1,6 @@
+from functools import lru_cache
+from pathlib import Path
+
 from app.image_generation.prompts.shared import final_instruction, generic_variables_block
 from app.image_generation.schemas import PokemonOutfit
 
@@ -11,9 +14,22 @@ def build_prompt(
     image_format: str,
     background: str,
     outfit: PokemonOutfit,
+    copa_name: str,
+    copa_birth_date: str,
+    copa_height: str,
+    copa_weight: str,
+    copa_club: str,
 ) -> str:
-    return f"""Crie uma figurinha esportiva personalizada inspirada em álbum de copa, usando a foto enviada como referência principal da pessoa. Mantenha a estética colecionável da figurinha, com nome, dados fictícios, brasão, uniforme, número da camisa e elementos gráficos coerentes com o resumo pessoal informado.
-Quando o usuário informar um nome ou título, use "{trainer_name or "Rezende"}" como nome principal da figurinha. Use o universo/estilo "{universe_label}" como direção visual.
+    base_prompt = _load_copa_prompt()
+    prompt = base_prompt.format(
+        nome=copa_name.strip() or trainer_name or "Rezende",
+        nascimento=copa_birth_date.strip() or "não informado",
+        altura=_with_unit(copa_height, "m"),
+        peso=_with_unit(copa_weight, "kg"),
+        clube=copa_club.strip() or "não informado",
+    )
+
+    return f"""{prompt}
 
 {generic_variables_block(
     universe_label=universe_label,
@@ -26,3 +42,16 @@ Quando o usuário informar um nome ou título, use "{trainer_name or "Rezende"}"
 )}
 
 {final_instruction()}"""
+
+
+@lru_cache
+def _load_copa_prompt() -> str:
+    prompt_path = Path(__file__).resolve().parents[4] / "copa.md"
+    return prompt_path.read_text(encoding="utf-8").strip()
+
+
+def _with_unit(value: str, unit: str) -> str:
+    value = value.strip()
+    if not value:
+        return "não informado"
+    return value if value.lower().endswith(unit) else f"{value}{unit}"

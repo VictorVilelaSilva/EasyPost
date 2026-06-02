@@ -191,6 +191,59 @@ async def test_generate_prompt_image_route_uses_selected_prompt(monkeypatch):
     assert "português do Brasil" in request["data"]["prompt"]
 
 
+async def test_generate_copa_prompt_adds_fixed_reference_and_player_fields(monkeypatch):
+    monkeypatch.setattr(settings, "openai_api_key", "test-key")
+    monkeypatch.setattr(service.httpx, "AsyncClient", _FakeOpenAIClient)
+
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.post(
+            "/image-generations/prompt",
+            data={
+                "prompt_template": "copa",
+                "universe_label": "Copa",
+                "copa_name": "NEYMAR JR",
+                "copa_birth_date": "5-2-1992",
+                "copa_height": "1,75",
+                "copa_weight": "68kg",
+                "copa_club": "SANTOS FUTEBOL CLUBE (BRA)",
+            },
+            files={"reference_image": ("person.png", b"person", "image/png")},
+        )
+
+    assert response.status_code == 200
+    request = _FakeOpenAIClient.last_request
+    assert request is not None
+    assert [item[1][0] for item in request["files"]] == [
+        "exemplar_copa.jpeg",
+        "person.png",
+    ]
+    assert {item[0] for item in request["files"]} == {"image[]"}
+    assert request["data"]["size"] == "1024x1536"
+    assert "Na parte do nome coloque NEYMAR JR" in request["data"]["prompt"]
+    assert "Formato de composição: Retrato 3:4" in request["data"]["prompt"]
+    assert "data de nascimento 5-2-1992" in request["data"]["prompt"]
+    assert "altura 1,75m" in request["data"]["prompt"]
+    assert "peso 68kg" in request["data"]["prompt"]
+    assert "time coloque SANTOS FUTEBOL CLUBE (BRA)" in request["data"]["prompt"]
+    assert "{nome}" not in request["data"]["prompt"]
+
+
+async def test_generate_copa_prompt_requires_player_fields(monkeypatch):
+    monkeypatch.setattr(settings, "openai_api_key", "test-key")
+
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.post(
+            "/image-generations/prompt",
+            data={"prompt_template": "copa", "copa_name": "NEYMAR JR"},
+            files={"reference_image": ("person.png", b"person", "image/png")},
+        )
+
+    assert response.status_code == 422
+    assert response.json()["detail"] == "copa fields are required"
+
+
 async def test_generate_couple_prompt_accepts_up_to_three_reference_images(monkeypatch):
     monkeypatch.setattr(settings, "openai_api_key", "test-key")
     monkeypatch.setattr(service.httpx, "AsyncClient", _FakeOpenAIClient)
@@ -218,6 +271,7 @@ async def test_generate_couple_prompt_accepts_up_to_three_reference_images(monke
         "full-body-2.png",
         "full-body-3.png",
     ]
+    assert {item[0] for item in request["files"]} == {"image[]"}
     assert "obsessed fan artist filled an entire sketchbook page" in request["data"]["prompt"]
     assert "3 foto(s) enviada(s) como referência de corpo inteiro" in request["data"]["prompt"]
     assert "amo o sorriso e o jeito carinhoso" in request["data"]["prompt"]

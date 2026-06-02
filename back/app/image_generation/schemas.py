@@ -40,6 +40,11 @@ class PokemonImageGenerationInput(BaseModel):
     trainer_name: str = Field(default="Portugal", max_length=80)
     personal_characteristics: str = Field(default="", max_length=1200)
     reference_image_notes: str = Field(default="", max_length=800)
+    copa_name: str = Field(default="", max_length=80)
+    copa_birth_date: str = Field(default="", max_length=20)
+    copa_height: str = Field(default="", max_length=20)
+    copa_weight: str = Field(default="", max_length=20)
+    copa_club: str = Field(default="", max_length=80)
     background: str = Field(default="#1A1A2E", max_length=80)
     image_format: str = Field(default="Quadrado 1:1", max_length=40)
     badges_enabled: bool = True

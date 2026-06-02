@@ -5,6 +5,7 @@ from pydantic import ValidationError
 
 from app.firebase.dependencies import get_current_user
 from app.image_generation.prompt import build_pokemon_prompt
+from app.image_generation.reference_images import image_tuple, prompt_reference_images
 from app.image_generation.schemas import (
     ImageGenerationResponse,
     PokemonImageGenerationInput,
@@ -18,18 +19,6 @@ from app.image_generation.service import (
 router = APIRouter(prefix="/image-generations", tags=["image-generations"])
 
 
-async def _image_tuple(upload: UploadFile, field_name: str) -> tuple[str, bytes, str]:
-    image_bytes = await upload.read()
-    if not image_bytes:
-        raise HTTPException(status_code=422, detail=f"{field_name} is required")
-
-    content_type = upload.content_type or "application/octet-stream"
-    if not content_type.startswith("image/"):
-        raise HTTPException(status_code=422, detail=f"{field_name} must be an image")
-
-    return (upload.filename or f"{field_name}.png", image_bytes, content_type)
-
-
 @router.post("/pokemon", response_model=ImageGenerationResponse)
 async def generate_pokemon_image(
     current_user: dict = Depends(get_current_user),
@@ -38,6 +27,11 @@ async def generate_pokemon_image(
     universe_label: str = Form("Pokémon"),
     trainer_name: str = Form("Portugal"),
     personal_characteristics: str = Form(""),
+    copa_name: str = Form(""),
+    copa_birth_date: str = Form(""),
+    copa_height: str = Form(""),
+    copa_weight: str = Form(""),
+    copa_club: str = Form(""),
     background: str = Form("#1A1A2E"),
     image_format: str = Form("Quadrado 1:1"),
     badges_enabled: bool = Form(True),
@@ -52,7 +46,7 @@ async def generate_pokemon_image(
     quality: str = Form("high"),
     output_format: str = Form("png"),
 ) -> ImageGenerationResponse:
-    reference_images = [await _image_tuple(reference_image, "reference_image")]
+    reference_images = [await image_tuple(reference_image, "reference_image")]
 
     try:
         request_data = PokemonImageGenerationInput(
@@ -60,6 +54,11 @@ async def generate_pokemon_image(
             universe_label=universe_label,
             trainer_name=trainer_name,
             personal_characteristics=personal_characteristics,
+            copa_name=copa_name,
+            copa_birth_date=copa_birth_date,
+            copa_height=copa_height,
+            copa_weight=copa_weight,
+            copa_club=copa_club,
             background=background,
             image_format=image_format,
             badges_enabled=badges_enabled,
@@ -102,6 +101,11 @@ async def generate_prompt_image(
     universe_label: str = Form(""),
     trainer_name: str = Form("Portugal"),
     personal_characteristics: str = Form(""),
+    copa_name: str = Form(""),
+    copa_birth_date: str = Form(""),
+    copa_height: str = Form(""),
+    copa_weight: str = Form(""),
+    copa_club: str = Form(""),
     background: str = Form("#1A1A2E"),
     image_format: str = Form("Quadrado 1:1"),
     outfit_mode: str = Form("photo"),
@@ -114,28 +118,19 @@ async def generate_prompt_image(
     quality: str = Form("high"),
     output_format: str = Form("png"),
 ) -> ImageGenerationResponse:
-    if prompt_template == "couple":
-        if not reference_images:
-            raise HTTPException(
-                status_code=422, detail="reference_images requires at least 1 file"
-            )
-        if len(reference_images) > 3:
-            raise HTTPException(
-                status_code=422, detail="reference_images accepts at most 3 files"
-            )
-
-        reference_images_payload = [
-            await _image_tuple(image, "reference_images") for image in reference_images
-        ]
-        reference_notes = (
-            f"{len(reference_images_payload)} foto(s) enviada(s) como referência de "
-            "corpo inteiro da pessoa presenteada."
-        )
-    elif not reference_image:
-        raise HTTPException(status_code=422, detail="reference_image is required")
-    else:
-        reference_images_payload = [await _image_tuple(reference_image, "reference_image")]
-        reference_notes = ""
+    reference_images_payload, reference_notes = await prompt_reference_images(
+        prompt_template=prompt_template,
+        reference_image=reference_image,
+        reference_images=reference_images,
+    )
+    _validate_copa_fields(
+        prompt_template=prompt_template,
+        copa_name=copa_name,
+        copa_birth_date=copa_birth_date,
+        copa_height=copa_height,
+        copa_weight=copa_weight,
+        copa_club=copa_club,
+    )
 
     try:
         request_data = PokemonImageGenerationInput(
@@ -143,9 +138,14 @@ async def generate_prompt_image(
             universe_label=universe_label,
             trainer_name=trainer_name,
             personal_characteristics=personal_characteristics,
+            copa_name=copa_name,
+            copa_birth_date=copa_birth_date,
+            copa_height=copa_height,
+            copa_weight=copa_weight,
+            copa_club=copa_club,
             reference_image_notes=reference_notes,
             background=background,
-            image_format=image_format,
+            image_format=_effective_image_format(prompt_template, image_format),
             badges_enabled=False,
             outfit={
                 "mode": outfit_mode,
@@ -156,7 +156,7 @@ async def generate_prompt_image(
                 "glasses": glasses,
             },
             pokemon=[],
-            size=size,
+            size=_effective_image_size(prompt_template, size),
             quality=quality,
             output_format=output_format,
         )
@@ -174,3 +174,27 @@ async def generate_prompt_image(
         raise HTTPException(status_code=504, detail=str(exc)) from exc
     except OpenAIImageGenerationError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+def _effective_image_format(prompt_template: str, image_format: str) -> str:
+    return "Retrato 3:4" if prompt_template == "copa" else image_format
+
+
+def _effective_image_size(prompt_template: str, size: str) -> str:
+    return "1024x1536" if prompt_template == "copa" else size
+
+
+def _validate_copa_fields(
+    *,
+    prompt_template: str,
+    copa_name: str,
+    copa_birth_date: str,
+    copa_height: str,
+    copa_weight: str,
+    copa_club: str,
+) -> None:
+    if prompt_template != "copa":
+        return
+    if all(value.strip() for value in [copa_name, copa_birth_date, copa_height, copa_weight, copa_club]):
+        return
+    raise HTTPException(status_code=422, detail="copa fields are required")

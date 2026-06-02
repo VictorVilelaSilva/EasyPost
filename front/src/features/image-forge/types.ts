@@ -74,6 +74,14 @@ export type CoupleReferences = {
   images: File[];
 };
 
+export type CopaConfig = {
+  name: string;
+  birthDate: string;
+  height: string;
+  weight: string;
+  club: string;
+};
+
 export type PokemonSummary = {
   id: number;
   name: string;

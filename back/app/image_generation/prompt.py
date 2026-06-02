@@ -15,6 +15,22 @@ def build_pokemon_prompt(input_data: PokemonImageGenerationInput) -> str:
             pokemon=input_data.pokemon,
         )
 
+    if input_data.prompt_template == "copa":
+        return builder(
+            universe_label=_universe_label(input_data),
+            trainer_name=input_data.trainer_name,
+            personal_characteristics=input_data.personal_characteristics,
+            reference_image_notes=input_data.reference_image_notes,
+            image_format=input_data.image_format,
+            background=input_data.background,
+            outfit=input_data.outfit,
+            copa_name=input_data.copa_name,
+            copa_birth_date=input_data.copa_birth_date,
+            copa_height=input_data.copa_height,
+            copa_weight=input_data.copa_weight,
+            copa_club=input_data.copa_club,
+        )
+
     return builder(
         universe_label=_universe_label(input_data),
         trainer_name=input_data.trainer_name,

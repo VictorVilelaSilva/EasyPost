@@ -1,1 +1,7 @@
-Crie uma figurinha igual a da primeira imagem. Com a segunda, na parte do nome coloque Rezende, data de nascimento 24/01/2067, altura 1.67, peso 67kg e no time coloque YASMANA FC (BRA). Na blusa coloque o número 67, no brasão faça o desenho de uma menina de anime rindo e na blusa coloque uma cor rosa e vários desenhos bonecas de anime no tom branco
+Crie uma figurinha igual à primeira imagem de referência. Use a segunda imagem de referência como a pessoa que deve virar atleta da figurinha.
+
+Na parte do nome coloque {nome}, data de nascimento {nascimento}, altura {altura}, peso {peso} e no time coloque {clube}.
+
+Mantenha a estrutura visual de figurinha de copa: retrato central do jogador, camisa amarela de seleção brasileira, fundo verde e azul, emblemas esportivos, selo colecionável, faixa com nome, linha de dados e faixa inferior do clube.
+
+Os textos visíveis da figurinha devem usar exatamente os valores informados nas variáveis. Não invente outro nome, data, altura, peso ou clube.

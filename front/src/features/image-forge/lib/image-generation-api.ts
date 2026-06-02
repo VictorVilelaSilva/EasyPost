@@ -2,6 +2,7 @@ import { auth } from "@/lib/firebase";
 
 import { API_URL } from "../constants";
 import type {
+  CopaConfig,
   CoupleReferences,
   Format,
   ImageGenerationResult,
@@ -13,6 +14,7 @@ type GenerateImageInput = {
   background: string;
   badgesEnabled: boolean;
   coupleReferences: CoupleReferences;
+  copaConfig: CopaConfig;
   format: Format;
   personalCharacteristics: string;
   pokemonConfig: PokemonConfig;
@@ -25,6 +27,7 @@ export async function generateImage({
   background,
   badgesEnabled,
   coupleReferences,
+  copaConfig,
   format,
   personalCharacteristics,
   pokemonConfig,
@@ -34,14 +37,16 @@ export async function generateImage({
 }: GenerateImageInput): Promise<ImageGenerationResult> {
   const formData = new FormData();
   const outfit = pokemonConfig.outfit.custom;
+  const effectiveFormat = promptTemplate === "copa" ? "Retrato 3:4" : format;
 
   appendReferenceImages(formData, promptTemplate, referenceImage, coupleReferences);
   formData.set("prompt_template", promptTemplate);
   formData.set("universe_label", universeLabel);
   formData.set("trainer_name", pokemonConfig.title || "Portugal");
   formData.set("background", background);
-  formData.set("image_format", format);
+  formData.set("image_format", effectiveFormat);
   formData.set("personal_characteristics", personalCharacteristics.trim());
+  appendCopaFields(formData, copaConfig);
   formData.set("badges_enabled", String(badgesEnabled));
   formData.set("outfit_mode", pokemonConfig.outfit.mode);
   formData.set("torso", outfit.torso);
@@ -50,7 +55,7 @@ export async function generateImage({
   formData.set("hat", outfit.hat);
   formData.set("glasses", outfit.glasses);
   formData.set("pokemon", JSON.stringify(activePokemon(pokemonConfig.pokemon)));
-  formData.set("size", imageSizeFromFormat(format));
+  formData.set("size", imageSizeFromFormat(effectiveFormat));
   formData.set("quality", "high");
   formData.set("output_format", "png");
 
@@ -74,6 +79,14 @@ export async function generateImage({
 
 function activePokemon(pokemon: PokemonConfig["pokemon"]) {
   return pokemon.filter((item) => item.name.trim() && item.position.trim());
+}
+
+function appendCopaFields(formData: FormData, config: CopaConfig) {
+  formData.set("copa_name", config.name.trim());
+  formData.set("copa_birth_date", config.birthDate.trim());
+  formData.set("copa_height", config.height.trim());
+  formData.set("copa_weight", config.weight.trim());
+  formData.set("copa_club", config.club.trim());
 }
 
 function appendReferenceImages(

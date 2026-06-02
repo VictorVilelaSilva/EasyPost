@@ -33,7 +33,7 @@ async def generate_image_with_reference(
         "quality": request_data.quality,
         "output_format": request_data.output_format,
     }
-    files = [("image", image) for image in reference_images]
+    files = _image_files(reference_images)
     headers = {"Authorization": f"Bearer {settings.openai_api_key}"}
 
     timeout = httpx.Timeout(
@@ -87,3 +87,8 @@ def _openai_error_message(response: httpx.Response) -> str:
         pass
 
     return f"OpenAI image generation failed with status {response.status_code}"
+
+
+def _image_files(reference_images: list[ReferenceImage]) -> list[tuple[str, ReferenceImage]]:
+    field_name = "image" if len(reference_images) == 1 else "image[]"
+    return [(field_name, image) for image in reference_images]

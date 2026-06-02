@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 
-import type { CoupleReferences, Format, PokemonConfig, Universe, UniverseOption } from "../types";
+import type { CopaConfig, CoupleReferences, Format, PokemonConfig, Universe, UniverseOption } from "../types";
 import { StepIntro } from "./common";
 import { AnimeGeralSettings } from "./settings/universes/anime-geral-settings";
 import { AvatarSettings } from "./settings/universes/avatar-settings";
@@ -38,6 +38,7 @@ export function SettingsStep({
   background,
   badgesEnabled,
   coupleReferences,
+  copaConfig,
   format,
   personalCharacteristics,
   pokemonConfig,
@@ -48,6 +49,7 @@ export function SettingsStep({
   onBackgroundChange,
   onBadgesChange,
   onCoupleReferencesChange,
+  onCopaConfigChange,
   onFileChange,
   onFormatChange,
   onGenerate,
@@ -57,6 +59,7 @@ export function SettingsStep({
   background: string;
   badgesEnabled: boolean;
   coupleReferences: CoupleReferences;
+  copaConfig: CopaConfig;
   format: Format;
   personalCharacteristics: string;
   pokemonConfig: PokemonConfig;
@@ -67,6 +70,7 @@ export function SettingsStep({
   onBackgroundChange: (color: string) => void;
   onBadgesChange: (enabled: boolean) => void;
   onCoupleReferencesChange: (references: CoupleReferences) => void;
+  onCopaConfigChange: (config: CopaConfig) => void;
   onFileChange: (file: File) => void;
   onFormatChange: (format: Format) => void;
   onGenerate: () => void;
@@ -78,6 +82,7 @@ export function SettingsStep({
     background,
     badgesEnabled,
     coupleReferences,
+    copaConfig,
     format,
     personalCharacteristics,
     pokemonConfig,
@@ -86,6 +91,7 @@ export function SettingsStep({
     onBackgroundChange,
     onBadgesChange,
     onCoupleReferencesChange,
+    onCopaConfigChange,
     onFileChange,
     onFormatChange,
     onPersonalCharacteristicsChange,

@@ -15,6 +15,7 @@ import {
 } from "@/features/image-forge/constants";
 import { generateImage } from "@/features/image-forge/lib/image-generation-api";
 import type {
+  CopaConfig,
   CoupleReferences,
   Format,
   ImageGenerationResult,
@@ -33,6 +34,13 @@ export default function Home() {
   const [badgesEnabled, setBadgesEnabled] = useState(true);
   const [coupleReferences, setCoupleReferences] = useState<CoupleReferences>({
     images: [],
+  });
+  const [copaConfig, setCopaConfig] = useState<CopaConfig>({
+    name: "",
+    birthDate: "",
+    height: "",
+    weight: "",
+    club: "",
   });
   const [referenceImage, setReferenceImage] = useState<File | null>(null);
   const [uploadedName, setUploadedName] = useState("Nenhuma imagem selecionada");
@@ -53,6 +61,7 @@ export default function Home() {
     () => universes.find((item) => item.name === universe) ?? universes[1],
     [universe],
   );
+  const effectiveFormat: Format = selectedUniverse.promptTemplate === "copa" ? "Retrato 3:4" : format;
 
   async function handleGenerate() {
     if (selectedUniverse.promptTemplate === "couple" && !coupleReferences.images[0]) {
@@ -69,6 +78,12 @@ export default function Home() {
       return;
     }
 
+    if (selectedUniverse.promptTemplate === "copa" && !isCopaConfigComplete(copaConfig)) {
+      setGenerationError("Preencha nome, data de nascimento, altura, peso e clube.");
+      setStep("preview");
+      return;
+    }
+
     setGenerationLoading(true);
     setGenerationError(null);
     setGenerationResult(null);
@@ -79,7 +94,8 @@ export default function Home() {
         background,
         badgesEnabled,
         coupleReferences,
-        format,
+        copaConfig,
+        format: effectiveFormat,
         pokemonConfig,
         personalCharacteristics,
         promptTemplate: selectedUniverse.promptTemplate,
@@ -93,7 +109,7 @@ export default function Home() {
           imageBase64: result.image_base64,
           mimeType: result.mime_type,
           universeLabel: selectedUniverse.label,
-          format,
+          format: effectiveFormat,
         }).catch(console.error);
       }
     } catch (error) {
@@ -129,7 +145,8 @@ export default function Home() {
           background={background}
           badgesEnabled={badgesEnabled}
           coupleReferences={coupleReferences}
-          format={format}
+          copaConfig={copaConfig}
+          format={effectiveFormat}
           personalCharacteristics={personalCharacteristics}
           pokemonConfig={pokemonConfig}
           referenceImage={referenceImage}
@@ -139,6 +156,7 @@ export default function Home() {
           onBackgroundChange={setBackground}
           onBadgesChange={setBadgesEnabled}
           onCoupleReferencesChange={setCoupleReferences}
+          onCopaConfigChange={setCopaConfig}
           onFileChange={handleFileChange}
           onFormatChange={setFormat}
           onGenerate={handleGenerate}
@@ -151,7 +169,7 @@ export default function Home() {
         <PreviewStep
           background={background}
           badgesEnabled={badgesEnabled}
-          format={format}
+          format={effectiveFormat}
           generationError={generationError}
           generationLoading={generationLoading}
           generationResult={generationResult}
@@ -162,5 +180,15 @@ export default function Home() {
         />
       )}
     </main>
+  );
+}
+
+function isCopaConfigComplete(config: CopaConfig) {
+  return Boolean(
+    config.name.trim()
+      && config.birthDate.trim()
+      && config.height.trim()
+      && config.weight.trim()
+      && config.club.trim(),
   );
 }
