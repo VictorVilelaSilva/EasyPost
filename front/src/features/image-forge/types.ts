@@ -71,8 +71,7 @@ export type PokemonPlacement = {
 };
 
 export type CoupleReferences = {
-  face: File | null;
-  bodies: File[];
+  images: File[];
 };
 
 export type PokemonSummary = {

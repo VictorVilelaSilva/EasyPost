@@ -32,8 +32,7 @@ export default function Home() {
   const [format, setFormat] = useState<Format>("Automático");
   const [badgesEnabled, setBadgesEnabled] = useState(true);
   const [coupleReferences, setCoupleReferences] = useState<CoupleReferences>({
-    face: null,
-    bodies: [],
+    images: [],
   });
   const [referenceImage, setReferenceImage] = useState<File | null>(null);
   const [uploadedName, setUploadedName] = useState("Nenhuma imagem selecionada");
@@ -56,11 +55,15 @@ export default function Home() {
   );
 
   async function handleGenerate() {
-    if (!referenceImage) {
+    if (selectedUniverse.promptTemplate === "couple" && !coupleReferences.images[0]) {
+      setGenerationError("Selecione pelo menos uma foto de corpo inteiro da pessoa presenteada.");
+      setStep("preview");
+      return;
+    }
+
+    if (selectedUniverse.promptTemplate !== "couple" && !referenceImage) {
       setGenerationError(
-        selectedUniverse.promptTemplate === "couple"
-          ? "Selecione uma foto de corpo inteiro da pessoa presenteada."
-          : "Selecione uma imagem de rosto antes de gerar.",
+        "Selecione uma imagem de rosto antes de gerar.",
       );
       setStep("preview");
       return;
@@ -75,6 +78,7 @@ export default function Home() {
       const result = await generateImage({
         background,
         badgesEnabled,
+        coupleReferences,
         format,
         pokemonConfig,
         personalCharacteristics,

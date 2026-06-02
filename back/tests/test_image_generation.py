@@ -191,7 +191,7 @@ async def test_generate_prompt_image_route_uses_selected_prompt(monkeypatch):
     assert "português do Brasil" in request["data"]["prompt"]
 
 
-async def test_generate_couple_prompt_accepts_single_full_body_image(monkeypatch):
+async def test_generate_couple_prompt_accepts_up_to_three_reference_images(monkeypatch):
     monkeypatch.setattr(settings, "openai_api_key", "test-key")
     monkeypatch.setattr(service.httpx, "AsyncClient", _FakeOpenAIClient)
 
@@ -203,15 +203,23 @@ async def test_generate_couple_prompt_accepts_single_full_body_image(monkeypatch
                 "prompt_template": "couple",
                 "personal_characteristics": "amo o sorriso e o jeito carinhoso",
             },
-            files={"reference_image": ("full-body.png", b"full-body", "image/png")},
+            files=[
+                ("reference_images", ("full-body-1.png", b"full-body-1", "image/png")),
+                ("reference_images", ("full-body-2.png", b"full-body-2", "image/png")),
+                ("reference_images", ("full-body-3.png", b"full-body-3", "image/png")),
+            ],
         )
 
     assert response.status_code == 200
     request = _FakeOpenAIClient.last_request
     assert request is not None
-    assert [item[1][0] for item in request["files"]] == ["full-body.png"]
+    assert [item[1][0] for item in request["files"]] == [
+        "full-body-1.png",
+        "full-body-2.png",
+        "full-body-3.png",
+    ]
     assert "obsessed fan artist filled an entire sketchbook page" in request["data"]["prompt"]
-    assert "foto enviada é uma referência de corpo inteiro" in request["data"]["prompt"]
+    assert "3 foto(s) enviada(s) como referência de corpo inteiro" in request["data"]["prompt"]
     assert "amo o sorriso e o jeito carinhoso" in request["data"]["prompt"]
     assert "Fundo/cor/direção visual" not in request["data"]["prompt"]
     assert "corpo inteiro do casal" not in request["data"]["prompt"]
@@ -228,7 +236,27 @@ async def test_generate_couple_prompt_requires_reference_image(monkeypatch):
         )
 
     assert response.status_code == 422
-    assert "reference_image is required" in response.json()["detail"]
+    assert "reference_images requires at least 1 file" in response.json()["detail"]
+
+
+async def test_generate_couple_prompt_rejects_more_than_three_images(monkeypatch):
+    monkeypatch.setattr(settings, "openai_api_key", "test-key")
+
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.post(
+            "/image-generations/prompt",
+            data={"prompt_template": "couple"},
+            files=[
+                ("reference_images", ("full-body-1.png", b"full-body-1", "image/png")),
+                ("reference_images", ("full-body-2.png", b"full-body-2", "image/png")),
+                ("reference_images", ("full-body-3.png", b"full-body-3", "image/png")),
+                ("reference_images", ("full-body-4.png", b"full-body-4", "image/png")),
+            ],
+        )
+
+    assert response.status_code == 422
+    assert "reference_images accepts at most 3 files" in response.json()["detail"]
 
 
 async def test_generate_pokemon_image_route_handles_openai_timeout(monkeypatch):

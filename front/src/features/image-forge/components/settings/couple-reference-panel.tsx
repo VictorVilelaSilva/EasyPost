@@ -18,27 +18,22 @@ export function CoupleReferencePanel({
     <Panel>
       <SectionTitle icon={Images} title="Referências do parceiro(a)" />
       <div className="mt-4 grid gap-3 md:grid-cols-3">
-        <UploadBox
-          label="Rosto do parceiro(a)"
-          hint="Close obrigatório da pessoa presenteada"
-          files={references.face ? [references.face] : []}
-          value={references.face?.name ?? "Selecionar rosto do parceiro(a)"}
-          onFiles={(files) => onChange({ ...references, face: files[0] ?? null })}
-        />
-        <UploadBox
-          label="Corpo inteiro"
-          hint="Referência obrigatória da pessoa presenteada"
-          files={references.bodies[0] ? [references.bodies[0]] : []}
-          value={references.bodies[0]?.name ?? "Selecionar corpo inteiro"}
-          onFiles={(files) => onChange({ ...references, bodies: setBodyAt(references.bodies, 0, files[0]) })}
-        />
-        <UploadBox
-          label="Referência extra"
-          hint="Foto opcional da pessoa presenteada"
-          files={references.bodies[1] ? [references.bodies[1]] : []}
-          value={references.bodies[1]?.name ?? "Selecionar foto extra"}
-          onFiles={(files) => onChange({ ...references, bodies: setBodyAt(references.bodies, 1, files[0]) })}
-        />
+        {[0, 1, 2].map((index) => (
+          <UploadBox
+            key={index}
+            label={index === 0 ? "Corpo inteiro" : `Referência extra ${index}`}
+            hint={
+              index === 0
+                ? "Foto obrigatória da pessoa presenteada"
+                : "Foto opcional da pessoa presenteada"
+            }
+            files={references.images[index] ? [references.images[index]] : []}
+            value={references.images[index]?.name ?? uploadValue(index)}
+            onFiles={(files) =>
+              onChange({ images: setImageAt(references.images, index, files[0]) })
+            }
+          />
+        ))}
       </div>
     </Panel>
   );
@@ -77,8 +72,12 @@ function UploadBox({
   );
 }
 
-function setBodyAt(current: File[], index: number, file: File | undefined) {
+function setImageAt(current: File[], index: number, file: File | undefined) {
   const next = [...current];
   if (file) next[index] = file;
-  return next.filter(Boolean).slice(0, 2);
+  return next.filter(Boolean).slice(0, 3);
+}
+
+function uploadValue(index: number) {
+  return index === 0 ? "Selecionar foto de corpo inteiro" : "Selecionar foto extra";
 }

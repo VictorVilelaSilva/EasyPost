@@ -97,8 +97,7 @@ async def generate_pokemon_image(
 async def generate_prompt_image(
     current_user: dict = Depends(get_current_user),
     reference_image: UploadFile | None = File(None),
-    face_image: UploadFile | None = File(None),
-    body_images: list[UploadFile] | None = File(None),
+    reference_images: list[UploadFile] | None = File(None),
     prompt_template: str = Form(...),
     universe_label: str = Form(""),
     trainer_name: str = Form("Portugal"),
@@ -115,15 +114,28 @@ async def generate_prompt_image(
     quality: str = Form("high"),
     output_format: str = Form("png"),
 ) -> ImageGenerationResponse:
-    if not reference_image:
-        raise HTTPException(status_code=422, detail="reference_image is required")
+    if prompt_template == "couple":
+        if not reference_images:
+            raise HTTPException(
+                status_code=422, detail="reference_images requires at least 1 file"
+            )
+        if len(reference_images) > 3:
+            raise HTTPException(
+                status_code=422, detail="reference_images accepts at most 3 files"
+            )
 
-    reference_images = [await _image_tuple(reference_image, "reference_image")]
-    reference_notes = (
-        "foto enviada é uma referência de corpo inteiro da pessoa presenteada."
-        if prompt_template == "couple"
-        else ""
-    )
+        reference_images_payload = [
+            await _image_tuple(image, "reference_images") for image in reference_images
+        ]
+        reference_notes = (
+            f"{len(reference_images_payload)} foto(s) enviada(s) como referência de "
+            "corpo inteiro da pessoa presenteada."
+        )
+    elif not reference_image:
+        raise HTTPException(status_code=422, detail="reference_image is required")
+    else:
+        reference_images_payload = [await _image_tuple(reference_image, "reference_image")]
+        reference_notes = ""
 
     try:
         request_data = PokemonImageGenerationInput(
@@ -154,7 +166,7 @@ async def generate_prompt_image(
     prompt = build_pokemon_prompt(request_data)
     try:
         return await generate_image_with_reference(
-            reference_images=reference_images,
+            reference_images=reference_images_payload,
             prompt=prompt,
             request_data=request_data,
         )
