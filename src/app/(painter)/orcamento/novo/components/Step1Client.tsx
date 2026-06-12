@@ -7,6 +7,8 @@ interface Props {
   onNext: () => void
 }
 
+type StringClientKey = "clientName" | "clientPhone" | "clientAddress" | "clientNotes"
+
 export default function Step1Client({ state, update, onNext }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -17,16 +19,18 @@ export default function Step1Client({ state, update, onNext }: Props) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <h2 className="text-lg font-semibold">Dados do cliente</h2>
-      {[
-        { key: "clientName", label: "Nome do cliente *", required: true },
-        { key: "clientPhone", label: "Telefone", required: false },
-        { key: "clientAddress", label: "Endereço da obra", required: false },
-        { key: "clientNotes", label: "Observações gerais", required: false },
-      ].map(({ key, label, required }) => (
+      {(
+        [
+          { key: "clientName" as StringClientKey, label: "Nome do cliente *", required: true },
+          { key: "clientPhone" as StringClientKey, label: "Telefone", required: false },
+          { key: "clientAddress" as StringClientKey, label: "Endereço da obra", required: false },
+          { key: "clientNotes" as StringClientKey, label: "Observações gerais", required: false },
+        ] as const
+      ).map(({ key, label, required }) => (
         <div key={key}>
           <label className="text-sm font-medium block mb-1">{label}</label>
           <input
-            value={state[key as keyof WizardState] as string}
+            value={state[key]}
             onChange={(e) => update({ [key]: e.target.value })}
             required={required}
             className="w-full px-3 py-2 rounded-lg border text-sm"

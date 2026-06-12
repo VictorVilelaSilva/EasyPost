@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { saveBudget } from "@/lib/budget"
@@ -14,7 +14,7 @@ const STEPS = ["Cliente", "Área", "Materiais", "Resumo"]
 
 const INITIAL_STATE: WizardState = {
   clientName: "", clientPhone: "", clientAddress: "", clientNotes: "",
-  areas: [{ name: "Ambiente 1", mode: "known", knownArea: 0, coats: 2 }],
+  areas: [{ id: crypto.randomUUID(), name: "Ambiente 1", mode: "known", knownArea: 0, coats: 2 }],
   products: [], extraItems: [],
   laborValue: 0, laborDeadline: "", paymentMethod: "", laborNotes: "",
   totalMaterials: 0, totalValue: 0,
@@ -45,9 +45,9 @@ export default function BudgetWizard({ products }: { products: Product[] }) {
   })
   const [saving, setSaving] = useState(false)
 
-  function update(partial: Partial<WizardState>) {
+  const update = useCallback((partial: Partial<WizardState>) => {
     setState((s) => ({ ...s, ...partial }))
-  }
+  }, [])
 
   async function handleSave() {
     setSaving(true)

@@ -1,5 +1,4 @@
 "use client"
-import { useState } from "react"
 import { calcPaintableArea, calcAreaForPaint, parseDecimal } from "@/lib/calculations"
 import type { AreaInput } from "@/types"
 
@@ -9,14 +8,11 @@ interface Props {
 }
 
 export default function AreaCalculator({ area, onChange }: Props) {
-  const [mode, setMode] = useState<"known" | "calculate">(area.mode)
-
   function set(partial: Partial<AreaInput>) {
-    const updated = { ...area, ...partial, mode }
-    onChange(updated)
+    onChange({ ...area, ...partial })
   }
 
-  const paintable = calcPaintableArea({ ...area, mode })
+  const paintable = calcPaintableArea(area)
   const forPaint = calcAreaForPaint(paintable, area.coats)
 
   return (
@@ -36,12 +32,12 @@ export default function AreaCalculator({ area, onChange }: Props) {
           <button
             key={m}
             type="button"
-            onClick={() => { setMode(m); onChange({ ...area, mode: m }) }}
+            onClick={() => onChange({ ...area, mode: m })}
             className="flex-1 py-2 rounded-lg text-sm font-medium border"
             style={{
-              background: mode === m ? "var(--color-primary)" : "var(--color-surface)",
-              color: mode === m ? "white" : "var(--color-text-muted)",
-              borderColor: mode === m ? "var(--color-primary)" : "var(--color-border)",
+              background: area.mode === m ? "var(--color-primary)" : "var(--color-surface)",
+              color: area.mode === m ? "white" : "var(--color-text-muted)",
+              borderColor: area.mode === m ? "var(--color-primary)" : "var(--color-border)",
             }}
           >
             {m === "known" ? "Já sei a metragem" : "Calcular agora"}
@@ -49,7 +45,7 @@ export default function AreaCalculator({ area, onChange }: Props) {
         ))}
       </div>
 
-      {mode === "known" && (
+      {area.mode === "known" && (
         <div>
           <label className="text-sm font-medium block mb-1">Área total (m²)</label>
           <input
@@ -63,7 +59,7 @@ export default function AreaCalculator({ area, onChange }: Props) {
         </div>
       )}
 
-      {mode === "calculate" && (
+      {area.mode === "calculate" && (
         <div className="grid grid-cols-2 gap-3">
           {[
             { key: "wallHeight", label: "Altura parede (m)" },

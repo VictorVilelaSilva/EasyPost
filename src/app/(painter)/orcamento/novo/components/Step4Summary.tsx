@@ -28,7 +28,7 @@ export default function Step4Summary({ state, onBack, onSave, saving }: Props) {
           const paintable = calcPaintableArea(a)
           const forPaint = calcAreaForPaint(paintable, a.coats)
           return (
-            <div key={i} className="flex justify-between text-sm py-1">
+            <div key={a.id ?? i} className="flex justify-between text-sm py-1">
               <span>{a.name}</span>
               <span>{forPaint.toFixed(1)} m² ({a.coats} demãos)</span>
             </div>
@@ -38,14 +38,14 @@ export default function Step4Summary({ state, onBack, onSave, saving }: Props) {
 
       <div className="p-4 rounded-xl border" style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}>
         <p className="text-sm font-semibold mb-3">Materiais</p>
-        {state.products.map((p, i) => (
-          <div key={i} className="flex justify-between text-sm py-1">
+        {state.products.map((p) => (
+          <div key={p.productId} className="flex justify-between text-sm py-1">
             <span>{p.name} × {p.quantity}</span>
             <span>{formatCurrency(p.subtotal)}</span>
           </div>
         ))}
         {state.extraItems.map((e, i) => (
-          <div key={i} className="flex justify-between text-sm py-1">
+          <div key={e.id ?? i} className="flex justify-between text-sm py-1">
             <span>{e.name} × {e.quantity}</span>
             <span>{formatCurrency(e.subtotal)}</span>
           </div>

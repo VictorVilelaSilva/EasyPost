@@ -22,7 +22,7 @@ export default function Step2Area({ state, update, onBack, onNext }: Props) {
     update({
       areas: [
         ...state.areas,
-        { name: `Ambiente ${state.areas.length + 1}`, mode: "known", knownArea: 0, coats: 2 },
+        { id: crypto.randomUUID(), name: `Ambiente ${state.areas.length + 1}`, mode: "known", knownArea: 0, coats: 2 },
       ],
     })
   }
@@ -41,7 +41,7 @@ export default function Step2Area({ state, update, onBack, onNext }: Props) {
       <h2 className="text-lg font-semibold">Cálculo de área</h2>
 
       {state.areas.map((area, i) => (
-        <div key={i} className="relative">
+        <div key={area.id ?? i} className="relative">
           <AreaCalculator area={area} onChange={(u) => updateArea(i, u)} />
           {state.areas.length > 1 && (
             <button

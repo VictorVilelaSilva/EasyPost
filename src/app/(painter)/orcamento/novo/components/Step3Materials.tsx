@@ -27,8 +27,7 @@ export default function Step3Materials({ state, update, products, onBack, onNext
       return { ...p, quantity: qty, subtotal: qty * p.unitPrice }
     })
     update({ products: updated })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalAreaForPaint])
+  }, [totalAreaForPaint, update])
 
   function updateProductQty(index: number, qty: number) {
     const updated = [...state.products]
@@ -37,7 +36,7 @@ export default function Step3Materials({ state, update, products, onBack, onNext
   }
 
   function addExtra() {
-    update({ extraItems: [...state.extraItems, { name: "", quantity: 1, unitPrice: 0, subtotal: 0 }] })
+    update({ extraItems: [...state.extraItems, { id: crypto.randomUUID(), name: "", quantity: 1, unitPrice: 0, subtotal: 0 }] })
   }
 
   function updateExtra(index: number, partial: Partial<WizardExtraItem>) {
@@ -61,7 +60,7 @@ export default function Step3Materials({ state, update, products, onBack, onNext
       <div>
         <h3 className="text-sm font-semibold mb-3">Tinta principal</h3>
         {state.products.map((p, i) => (
-          <div key={i} className="p-4 rounded-xl border" style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}>
+          <div key={p.productId} className="p-4 rounded-xl border" style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}>
             <p className="font-medium text-sm">{p.name}</p>
             <p className="text-xs mt-0.5" style={{ color: "var(--color-text-muted)" }}>
               Rendimento: {p.yieldM2} m²/embalagem · {formatCurrency(p.unitPrice)}/embalagem
@@ -85,7 +84,7 @@ export default function Step3Materials({ state, update, products, onBack, onNext
       <div>
         <h3 className="text-sm font-semibold mb-3">Itens extras</h3>
         {state.extraItems.map((item, i) => (
-          <div key={i} className="flex gap-2 mb-2 items-start">
+          <div key={item.id ?? i} className="flex gap-2 mb-2 items-start">
             <input
               placeholder="Nome do item"
               value={item.name}
@@ -109,7 +108,7 @@ export default function Step3Materials({ state, update, products, onBack, onNext
               className="w-24 px-2 py-2 rounded-lg border text-sm"
               style={{ borderColor: "var(--color-border)" }}
             />
-            <button onClick={() => removeExtra(i)} className="p-2 text-red-400"><Trash2 size={14} /></button>
+            <button onClick={() => removeExtra(i)} className="p-2 text-red-400" aria-label="Remover item"><Trash2 size={14} /></button>
           </div>
         ))}
         <button
@@ -125,25 +124,34 @@ export default function Step3Materials({ state, update, products, onBack, onNext
       <div>
         <h3 className="text-sm font-semibold mb-3">Mão de obra</h3>
         <div className="flex flex-col gap-3">
-          {[
-            { key: "laborValue", label: "Valor do serviço (R$)" },
-            { key: "laborDeadline", label: "Prazo estimado" },
-            { key: "paymentMethod", label: "Forma de pagamento" },
-            { key: "laborNotes", label: "Observações do serviço" },
-          ].map(({ key, label }) => (
-            <div key={key}>
-              <label className="text-sm font-medium block mb-1">{label}</label>
-              <input
-                value={state[key as keyof WizardState] as string}
-                onChange={(e) => {
-                  const val = key === "laborValue" ? parseDecimal(e.target.value) : e.target.value
-                  update({ [key]: val })
-                }}
-                className="w-full px-3 py-2 rounded-lg border text-sm"
-                style={{ borderColor: "var(--color-border)" }}
-              />
-            </div>
-          ))}
+          <div key="laborValue">
+            <label className="text-sm font-medium block mb-1">Valor do serviço (R$)</label>
+            <input
+              value={String(state.laborValue || "")}
+              onChange={(e) => update({ laborValue: parseDecimal(e.target.value) })}
+              className="w-full px-3 py-2 rounded-lg border text-sm"
+              style={{ borderColor: "var(--color-border)" }}
+            />
+          </div>
+          {(["laborDeadline", "paymentMethod", "laborNotes"] as const).map((key) => {
+            type StringLaborKey = "laborDeadline" | "paymentMethod" | "laborNotes"
+            const labels: Record<StringLaborKey, string> = {
+              laborDeadline: "Prazo estimado",
+              paymentMethod: "Forma de pagamento",
+              laborNotes: "Observações do serviço",
+            }
+            return (
+              <div key={key}>
+                <label className="text-sm font-medium block mb-1">{labels[key]}</label>
+                <input
+                  value={state[key]}
+                  onChange={(e) => update({ [key]: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border text-sm"
+                  style={{ borderColor: "var(--color-border)" }}
+                />
+              </div>
+            )
+          })}
         </div>
       </div>
 

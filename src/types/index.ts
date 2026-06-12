@@ -2,6 +2,7 @@ export type BudgetStatus = "DRAFT" | "SENT" | "APPROVED" | "REJECTED"
 export type UserRole = "PAINTER" | "ADMIN"
 
 export interface AreaInput {
+  id?: string
   name: string
   mode: "known" | "calculate"
   // modo "known"
@@ -29,6 +30,7 @@ export interface WizardProduct {
 }
 
 export interface WizardExtraItem {
+  id?: string
   name: string
   quantity: number
   unitPrice: number
