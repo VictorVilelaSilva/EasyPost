@@ -7,8 +7,10 @@ const config: Record<BudgetStatus, { label: string; color: string; bg: string }>
   REJECTED: { label: "Recusado", color: "#991b1b", bg: "#fee2e2" },
 }
 
-export default function StatusBadge({ status }: { status: BudgetStatus }) {
-  const { label, color, bg } = config[status]
+export default function StatusBadge({ status }: { status: string }) {
+  const cfg = config[status as BudgetStatus]
+  if (!cfg) return null
+  const { label, color, bg } = cfg
   return (
     <span
       className="text-xs font-medium px-2 py-0.5 rounded-full"

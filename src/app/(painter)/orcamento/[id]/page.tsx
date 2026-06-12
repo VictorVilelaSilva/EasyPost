@@ -2,7 +2,6 @@ import { getBudgetById } from "@/lib/budget"
 import { notFound } from "next/navigation"
 import { formatCurrency } from "@/lib/calculations"
 import StatusBadge from "@/components/StatusBadge"
-import type { BudgetStatus } from "@/types"
 import Link from "next/link"
 import { ExternalLink } from "lucide-react"
 
@@ -21,7 +20,7 @@ export default async function OrcamentoPage({ params }: { params: Promise<{ id: 
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <StatusBadge status={budget.status as BudgetStatus} />
+          <StatusBadge status={budget.status} />
           <Link
             href={`/resumo/${budget.id}`}
             target="_blank"

@@ -1,13 +1,10 @@
-import { prisma } from "@/lib/prisma"
+import { getPublicBudgetById } from "@/lib/budget"
 import { notFound } from "next/navigation"
 import { formatCurrency } from "@/lib/calculations"
 
 export default async function ResumoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const budget = await prisma.budget.findUnique({
-    where: { id },
-    include: { areas: true, products: { include: { product: true } }, extraItems: true },
-  })
+  const budget = await getPublicBudgetById(id)
   if (!budget) notFound()
 
   return (

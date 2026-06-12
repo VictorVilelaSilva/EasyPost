@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { getPublicBudgetById } from "@/lib/budget"
 import { renderToBuffer } from "@react-pdf/renderer"
 import { BudgetPdfDocument } from "@/lib/pdf"
 import React from "react"
@@ -10,20 +10,22 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
-  const budget = await prisma.budget.findUnique({
-    where: { id },
-    include: { areas: true, products: { include: { product: true } }, extraItems: true },
-  })
+  const budget = await getPublicBudgetById(id)
   if (!budget) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
+  const safeName = budget.clientName
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .slice(0, 60)
+
   const buffer = await renderToBuffer(
-    React.createElement(BudgetPdfDocument, { budget }) as React.ReactElement<DocumentProps>
+    React.createElement(BudgetPdfDocument, { budget }) as unknown as React.ReactElement<DocumentProps>
   )
 
   return new NextResponse(new Uint8Array(buffer), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="orcamento-${budget.clientName.replace(/\s+/g, "-")}.pdf"`,
+      "Content-Disposition": `attachment; filename="orcamento-${safeName}.pdf"`,
     },
   })
 }

@@ -119,3 +119,12 @@ export async function getBudgetById(id: string) {
     },
   })
 }
+
+// Intentionally public — no session check.
+// Used by /resumo/[id] (public summary page) and /api/pdf/[id] (PDF export).
+export async function getPublicBudgetById(id: string) {
+  return prisma.budget.findUnique({
+    where: { id },
+    include: { areas: true, products: { include: { product: true } }, extraItems: true },
+  })
+}
