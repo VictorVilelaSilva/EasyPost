@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PAINTER
+  ADMIN
+}
+
+enum Status {
+  DRAFT
+  SENT
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  password  String
+  role      Role     @default(PAINTER)
+  createdAt DateTime @default(now())
+  budgets   Budget[]
+}
+
+model Product {
+  id             String          @id @default(cuid())
+  name           String
+  brand          String
+  line           String?
+  finish         String?
+  packageSize    Float
+  packageLabel   String
+  yieldM2        Float
+  price          Float
+  isActive       Boolean         @default(true)
+  notes          String?
+  budgetProducts BudgetProduct[]
+}
+
+model Budget {
+  id            String            @id @default(cuid())
+  painterId     String
+  painter       User              @relation(fields: [painterId], references: [id])
+  clientName    String
+  clientPhone   String?
+  clientAddress String?
+  clientNotes   String?
+  status        Status            @default(DRAFT)
+  laborValue    Float             @default(0)
+  laborDeadline String?
+  paymentMethod String?
+  laborNotes    String?
+  totalMaterials Float            @default(0)
+  totalValue    Float             @default(0)
+  validity      Int?
+  notes         String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  areas         BudgetArea[]
+  products      BudgetProduct[]
+  extraItems    BudgetExtraItem[]
+}
+
+model BudgetArea {
+  id           String @id @default(cuid())
+  budgetId     String
+  budget       Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  name         String
+  totalArea    Float
+  coats        Int    @default(2)
+  areaForPaint Float
+  notes        String?
+}
+
+model BudgetProduct {
+  id        String  @id @default(cuid())
+  budgetId  String
+  budget    Budget  @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Float
+  unitPrice Float
+  subtotal  Float
+}
+
+model BudgetExtraItem {
+  id        String @id @default(cuid())
+  budgetId  String
+  budget    Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  name      String
+  quantity  Float
+  unitPrice Float
+  subtotal  Float
+}
