@@ -2,8 +2,14 @@ import { prisma } from "@/lib/prisma"
 import ProductForm from "./components/ProductForm"
 import { formatCurrency } from "@/lib/calculations"
 import { toggleProduct } from "@/lib/products"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import { redirect } from "next/navigation"
 
 export default async function ProdutosPage() {
+  const session = await getServerSession(authOptions)
+  if (session?.user?.role !== "ADMIN") redirect("/dashboard")
+
   const products = await prisma.product.findMany({ orderBy: { name: "asc" } })
 
   return (

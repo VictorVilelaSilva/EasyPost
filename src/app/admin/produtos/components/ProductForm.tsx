@@ -3,6 +3,12 @@ import { useState } from "react"
 import { createProduct } from "@/lib/products"
 import { toast } from "sonner"
 
+function parseNum(v: FormDataEntryValue | null): number {
+  const n = parseFloat(String(v ?? ""))
+  if (isNaN(n)) throw new Error("Valor numérico inválido")
+  return n
+}
+
 export default function ProductForm() {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -17,10 +23,10 @@ export default function ProductForm() {
         brand: fd.get("brand"),
         line: fd.get("line") || undefined,
         finish: fd.get("finish") || undefined,
-        packageSize: parseFloat(fd.get("packageSize") as string),
+        packageSize: parseNum(fd.get("packageSize")),
         packageLabel: fd.get("packageLabel"),
-        yieldM2: parseFloat(fd.get("yieldM2") as string),
-        price: parseFloat(fd.get("price") as string),
+        yieldM2: parseNum(fd.get("yieldM2")),
+        price: parseNum(fd.get("price")),
         notes: fd.get("notes") || undefined,
       })
       toast.success("Produto criado!")

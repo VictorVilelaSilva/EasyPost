@@ -1,10 +1,22 @@
 import { prisma } from "@/lib/prisma"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import { redirect } from "next/navigation"
 
 export default async function PintoresPage() {
+  const session = await getServerSession(authOptions)
+  if (session?.user?.role !== "ADMIN") redirect("/dashboard")
+
   const painters = await prisma.user.findMany({
     where: { role: "PAINTER" },
     orderBy: { createdAt: "desc" },
-    include: { _count: { select: { budgets: true } } },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      phone: true,
+      _count: { select: { budgets: true } },
+    },
   })
 
   return (
