@@ -29,3 +29,4 @@
 {"source":"user-event","type":"click","text":"✓\n    Design completo aprovado","choice":"ok","id":null,"timestamp":1781286163941}
 {"source":"user-event","type":"click","text":"✓\n    Design completo aprovado","choice":"ok","id":null,"timestamp":1781286164109}
 {"source":"user-event","type":"click","text":"✓\n    Design completo aprovado","choice":"ok","id":null,"timestamp":1781286164821}
+{"type":"server-stopped","reason":"idle timeout"}
