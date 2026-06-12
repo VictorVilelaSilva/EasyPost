@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"
+import Link from "next/link"
 import LoginForm from "./components/LoginForm"
 
 export default async function LoginPage() {
@@ -18,9 +19,9 @@ export default async function LoginPage() {
         <LoginForm />
         <p className="text-center text-sm mt-4" style={{ color: "var(--color-text-muted)" }}>
           Não tem conta?{" "}
-          <a href="/register" style={{ color: "var(--color-primary)" }}>
+          <Link href="/register" style={{ color: "var(--color-primary)" }}>
             Cadastre-se
-          </a>
+          </Link>
         </p>
       </div>
     </div>

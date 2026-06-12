@@ -12,18 +12,23 @@ export default function LoginForm() {
     e.preventDefault()
     setError("")
     setLoading(true)
-    const data = new FormData(e.currentTarget)
-    const result = await signIn("credentials", {
-      email: data.get("email"),
-      password: data.get("password"),
-      redirect: false,
-    })
-    setLoading(false)
-    if (result?.error) {
-      setError("Email ou senha incorretos.")
-      return
+    try {
+      const data = new FormData(e.currentTarget)
+      const result = await signIn("credentials", {
+        email: data.get("email"),
+        password: data.get("password"),
+        redirect: false,
+      })
+      if (result?.error) {
+        setError("Email ou senha incorretos.")
+        return
+      }
+      router.push("/dashboard")
+    } catch {
+      setError("Erro de conexão. Tente novamente.")
+    } finally {
+      setLoading(false)
     }
-    router.push("/dashboard")
   }
 
   return (

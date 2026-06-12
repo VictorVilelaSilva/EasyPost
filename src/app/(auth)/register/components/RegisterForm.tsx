@@ -12,25 +12,30 @@ export default function RegisterForm() {
     e.preventDefault()
     setError("")
     setLoading(true)
-    const data = new FormData(e.currentTarget)
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: data.get("name"),
-        email: data.get("email"),
-        phone: data.get("phone") || undefined,
-        password: data.get("password"),
-      }),
-    })
-    setLoading(false)
-    if (!res.ok) {
-      const body = await res.json()
-      setError(body.error ?? "Erro ao criar conta.")
-      return
+    try {
+      const data = new FormData(e.currentTarget)
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          email: data.get("email"),
+          phone: data.get("phone") || undefined,
+          password: data.get("password"),
+        }),
+      })
+      if (!res.ok) {
+        const body = await res.json()
+        setError(body.error ?? "Erro ao criar conta.")
+        return
+      }
+      toast.success("Conta criada! Faça login.")
+      router.push("/login")
+    } catch {
+      setError("Erro de conexão. Tente novamente.")
+    } finally {
+      setLoading(false)
     }
-    toast.success("Conta criada! Faça login.")
-    router.push("/login")
   }
 
   return (
