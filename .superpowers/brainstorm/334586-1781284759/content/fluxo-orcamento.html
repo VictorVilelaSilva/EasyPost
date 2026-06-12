@@ -1,0 +1,145 @@
+<h2>Fluxo de Criação do Orçamento</h2>
+<p class="subtitle">4 etapas lineares — mobile-first, progresso sempre visível</p>
+
+<div class="section">
+  <h3>Barra de Progresso</h3>
+  <div class="mockup">
+    <div class="mockup-header">Topo da tela em /orcamento/novo</div>
+    <div class="mockup-body">
+      <div style="display:flex;align-items:center;gap:0;margin:8px 0">
+        <div style="flex:1;text-align:center">
+          <div style="width:32px;height:32px;border-radius:50%;background:#7f0df2;color:white;display:flex;align-items:center;justify-content:center;margin:0 auto;font-weight:bold">1</div>
+          <p style="font-size:11px;margin-top:4px;color:#7f0df2">Cliente</p>
+        </div>
+        <div style="flex:1;height:2px;background:rgba(127,13,242,0.3)"></div>
+        <div style="flex:1;text-align:center">
+          <div style="width:32px;height:32px;border-radius:50%;background:rgba(127,13,242,0.3);color:#aaa;display:flex;align-items:center;justify-content:center;margin:0 auto;font-weight:bold">2</div>
+          <p style="font-size:11px;margin-top:4px;color:#aaa">Área</p>
+        </div>
+        <div style="flex:1;height:2px;background:rgba(255,255,255,0.1)"></div>
+        <div style="flex:1;text-align:center">
+          <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.1);color:#aaa;display:flex;align-items:center;justify-content:center;margin:0 auto;font-weight:bold">3</div>
+          <p style="font-size:11px;margin-top:4px;color:#aaa">Materiais</p>
+        </div>
+        <div style="flex:1;height:2px;background:rgba(255,255,255,0.1)"></div>
+        <div style="flex:1;text-align:center">
+          <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.1);color:#aaa;display:flex;align-items:center;justify-content:center;margin:0 auto;font-weight:bold">4</div>
+          <p style="font-size:11px;margin-top:4px;color:#aaa">Resumo</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Etapa 1 — Dados do Cliente</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="padding:16px">
+      <div style="font-size:14px;font-weight:600;margin-bottom:12px">Dados do cliente</div>
+      <input class="mock-input" placeholder="Nome do cliente *" style="width:100%;margin-bottom:8px">
+      <input class="mock-input" placeholder="Telefone" style="width:100%;margin-bottom:8px">
+      <input class="mock-input" placeholder="Endereço da obra" style="width:100%;margin-bottom:8px">
+      <textarea class="mock-input" placeholder="Observações gerais" style="width:100%;height:60px;resize:none"></textarea>
+      <button class="mock-button" style="width:100%;margin-top:12px">Próximo →</button>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Etapa 2 — Cálculo de Área</h3>
+  <div class="mockup">
+    <div class="mockup-header">Calculadora (Client Component interativo)</div>
+    <div class="mockup-body" style="padding:16px">
+      <div style="font-size:14px;font-weight:600;margin-bottom:12px">Já sabe a metragem?</div>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <button class="mock-button" style="flex:1;background:#7f0df2">✓ Já sei a metragem</button>
+        <button class="mock-button" style="flex:1;background:rgba(255,255,255,0.1)">Calcular agora</button>
+      </div>
+      <div style="border:1px solid rgba(127,13,242,0.4);border-radius:8px;padding:12px;font-size:13px">
+        <p style="font-weight:600;margin-bottom:8px">Modo: Já sei a metragem</p>
+        <input class="mock-input" placeholder="Área total (m²) — ex: 25,5" style="width:100%;margin-bottom:8px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div>
+            <p style="font-size:11px;color:#aaa;margin-bottom:4px">Demãos</p>
+            <input class="mock-input" placeholder="2" style="width:100%">
+          </div>
+          <div>
+            <p style="font-size:11px;color:#aaa;margin-bottom:4px">Nome do ambiente</p>
+            <input class="mock-input" placeholder="Sala" style="width:100%">
+          </div>
+        </div>
+        <button style="background:none;border:1px dashed rgba(255,255,255,0.3);color:#aaa;padding:8px;border-radius:6px;width:100%;margin-top:8px;cursor:pointer">+ Adicionar outro ambiente</button>
+      </div>
+      <div style="background:rgba(127,13,242,0.1);border-radius:6px;padding:10px;margin-top:12px;font-size:13px">
+        <strong>Área total para tinta: 51,0 m²</strong> (25,5 m² × 2 demãos)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Etapa 3 — Materiais e Mão de Obra</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="padding:16px;font-size:13px">
+      <p style="font-weight:600;margin-bottom:8px">Tinta principal</p>
+      <div style="background:rgba(127,13,242,0.1);border-radius:6px;padding:10px;margin-bottom:12px">
+        <p><strong>Tinta Coral Padrão</strong> · R$ 89,90 / lata</p>
+        <p style="color:#aaa">Rendimento: 50 m² por lata</p>
+        <p style="margin-top:6px">51 m² ÷ 50 = <strong>2 latas</strong> · Subtotal: R$ 179,80</p>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+          <p style="font-size:11px;color:#aaa">Ajustar quantidade:</p>
+          <input class="mock-input" value="2" style="width:60px;text-align:center">
+        </div>
+      </div>
+
+      <p style="font-weight:600;margin-bottom:8px">Itens extras</p>
+      <div style="background:rgba(255,255,255,0.05);border-radius:6px;padding:10px;margin-bottom:8px">
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:6px;font-size:12px">
+          <input class="mock-input" placeholder="Nome do item">
+          <input class="mock-input" placeholder="Qtd">
+          <input class="mock-input" placeholder="R$ unit.">
+        </div>
+      </div>
+      <button style="background:none;border:1px dashed rgba(255,255,255,0.3);color:#aaa;padding:8px;border-radius:6px;width:100%;cursor:pointer">+ Adicionar item extra</button>
+
+      <p style="font-weight:600;margin:12px 0 8px">Mão de obra</p>
+      <input class="mock-input" placeholder="Valor do serviço (R$)" style="width:100%;margin-bottom:8px">
+      <input class="mock-input" placeholder="Prazo estimado" style="width:100%;margin-bottom:8px">
+      <input class="mock-input" placeholder="Forma de pagamento" style="width:100%">
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Etapa 4 — Resumo Final</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="padding:16px;font-size:13px">
+      <p style="font-weight:600;margin-bottom:8px">Cliente: João Silva · Rua das Flores, 123</p>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-top:8px">
+        <p>Sala — 25,5 m² · 2 demãos → 51 m²</p>
+        <p style="margin-top:6px">Tinta Coral Padrão · 2 latas · R$ 179,80</p>
+        <p>Massa corrida · 1 × R$ 45,00 · R$ 45,00</p>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-top:8px">
+        <p>Subtotal materiais: <strong>R$ 224,80</strong></p>
+        <p>Mão de obra: <strong>R$ 600,00</strong></p>
+        <p style="margin-top:6px;font-size:15px;color:#7f0df2"><strong>TOTAL: R$ 824,80</strong></p>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="mock-button" style="flex:1;background:#7f0df2">Salvar orçamento</button>
+        <button class="mock-button" style="flex:1;background:rgba(255,255,255,0.1)">Exportar PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="options" style="margin-top:16px">
+  <div class="option" data-choice="ok" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content"><h3>Fluxo aprovado</h3></div>
+  </div>
+  <div class="option" data-choice="ajuste" onclick="toggleSelect(this)">
+    <div class="letter">?</div>
+    <div class="content"><h3>Quero ajustar</h3></div>
+  </div>
+</div>

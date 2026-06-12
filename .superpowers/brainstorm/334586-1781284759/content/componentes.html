@@ -1,0 +1,96 @@
+<h2>Estrutura de Componentes e Código</h2>
+<p class="subtitle">Seção 4 de 4 — Como o código se organiza</p>
+
+<div class="section">
+  <h3>Organização de Pastas</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:1.9">
+      <div style="color:#7f0df2">src/</div>
+      <div style="padding-left:12px">
+        <div style="color:#7f0df2">app/</div>
+        <div style="padding-left:12px">
+          <div><span style="color:#aaa">(auth)/login/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Server Component + form client</span></div>
+          <div><span style="color:#aaa">(auth)/register/ &nbsp;&nbsp;→ Server Component + form client</span></div>
+          <div><span style="color:#aaa">(painter)/dashboard/ → Server Component (lista orçamentos)</span></div>
+          <div><span style="color:#aaa">(painter)/orcamento/novo/ → Client Component (wizard)</span></div>
+          <div><span style="color:#aaa">(painter)/orcamento/[id]/ → Server Component</span></div>
+          <div><span style="color:#aaa">resumo/[id]/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Server Component público</span></div>
+          <div><span style="color:#aaa">admin/produtos/ &nbsp;&nbsp;&nbsp;→ Server + forms client</span></div>
+          <div><span style="color:#aaa">api/pdf/[id]/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ API Route (gera PDF)</span></div>
+          <div><span style="color:#aaa">api/auth/[...nextauth]/ → NextAuth handler</span></div>
+        </div>
+        <div style="color:#7f0df2;margin-top:4px">components/</div>
+        <div style="padding-left:12px">
+          <div><span style="color:#aaa">BudgetWizard.tsx &nbsp;&nbsp;&nbsp;→ Client: controla etapas 1-4</span></div>
+          <div><span style="color:#aaa">AreaCalculator.tsx &nbsp;→ Client: calculadora interativa</span></div>
+          <div><span style="color:#aaa">MaterialsForm.tsx &nbsp;&nbsp;→ Client: tinta + extras + mão de obra</span></div>
+          <div><span style="color:#aaa">BudgetSummary.tsx &nbsp;&nbsp;→ Server/Client: resumo final</span></div>
+          <div><span style="color:#aaa">ProductSelector.tsx &nbsp;→ Client: dropdown de tintas</span></div>
+          <div><span style="color:#aaa">StatusBadge.tsx &nbsp;&nbsp;&nbsp;&nbsp;→ badge RASCUNHO/ENVIADO/etc</span></div>
+        </div>
+        <div style="color:#7f0df2;margin-top:4px">lib/</div>
+        <div style="padding-left:12px">
+          <div><span style="color:#aaa">prisma.ts &nbsp;&nbsp;&nbsp;→ singleton PrismaClient</span></div>
+          <div><span style="color:#aaa">auth.ts &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ NextAuth config</span></div>
+          <div><span style="color:#aaa">budget.ts &nbsp;&nbsp;&nbsp;→ Server Actions (create, update, delete)</span></div>
+          <div><span style="color:#aaa">calculations.ts → lógica de cálculo (pura, testável)</span></div>
+          <div><span style="color:#aaa">pdf.ts &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ geração do PDF com react-pdf</span></div>
+        </div>
+        <div style="color:#7f0df2;margin-top:4px">types/index.ts</div>
+        <div style="color:#7f0df2">prisma/</div>
+        <div style="padding-left:12px">
+          <div><span style="color:#aaa">schema.prisma</span></div>
+          <div><span style="color:#aaa">seed.ts &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ seed: Tinta Coral Padrão + admin inicial</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Lógica de Cálculo (lib/calculations.ts)</h3>
+  <div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:8px;font-size:13px">
+    <p>Funções puras, sem efeitos colaterais — fácil de testar isoladamente:</p>
+    <ul style="margin-top:8px;line-height:2">
+      <li><code>calcPaintableArea(walls, doors, windows)</code> → m² descontado</li>
+      <li><code>calcAreaForPaint(paintableArea, coats)</code> → m² × demãos</li>
+      <li><code>calcPackages(areaForPaint, yieldM2)</code> → Math.ceil()</li>
+      <li><code>calcTotals(products, extraItems, laborValue)</code> → totais</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Server Actions (lib/budget.ts)</h3>
+  <div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:8px;font-size:13px">
+    <ul style="line-height:2">
+      <li><code>createBudget(data)</code> → cria rascunho, retorna id</li>
+      <li><code>updateBudget(id, data)</code> → atualiza qualquer etapa</li>
+      <li><code>updateBudgetStatus(id, status)</code> → muda status</li>
+      <li><code>deleteBudget(id)</code> → soft delete</li>
+    </ul>
+    <p style="margin-top:8px;color:#aaa">Todas validadas com Zod antes de chamar Prisma.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Seed inicial</h3>
+  <div style="background:rgba(127,13,242,0.1);border-radius:8px;padding:12px;font-size:13px;border:1px solid rgba(127,13,242,0.3)">
+    <p>O seed cria automaticamente:</p>
+    <ul style="margin-top:6px;line-height:2">
+      <li>Produto: <strong>Tinta Coral Padrão Inicial</strong> · 18L · 50 m²/lata · R$ 0,00 (editável)</li>
+      <li>Usuário admin: <strong>admin@easypost.com</strong> / senha temporária</li>
+    </ul>
+  </div>
+</div>
+
+<div class="options" style="margin-top:16px">
+  <div class="option" data-choice="ok" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content"><h3>Design completo aprovado</h3></div>
+  </div>
+  <div class="option" data-choice="ajuste" onclick="toggleSelect(this)">
+    <div class="letter">?</div>
+    <div class="content"><h3>Quero ajustar</h3></div>
+  </div>
+</div>

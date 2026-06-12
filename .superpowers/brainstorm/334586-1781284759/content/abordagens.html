@@ -1,0 +1,45 @@
+<h2>Abordagens para a Refatoração</h2>
+<p class="subtitle">3 formas de estruturar o novo sistema de orçamentos</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Server Actions + App Router (Recomendado)</h3>
+      <p>Usa Server Components do Next.js 16 para leitura de dados e Server Actions para mutações. API routes só para PDF. Menos código cliente, mais rápido, sem estado global.</p>
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Prós</h4><ul><li>Menos boilerplate</li><li>Sem fetch manual na maioria das rotas</li><li>Formulários com action= nativo</li></ul></div>
+        <div class="cons"><h4>Contras</h4><ul><li>Padrão mais novo, menos exemplos</li><li>Mudança em relação ao código atual</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>API Routes + Client Components</h3>
+      <p>Mantém o padrão atual do EasyPost: API routes em <code>/api/*</code>, client components que fazem fetch. Familiar, previsível, mais fácil de debugar.</p>
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Prós</h4><ul><li>Padrão já usado no projeto</li><li>Fácil de testar APIs separado</li><li>Mais controle sobre loading states</li></ul></div>
+        <div class="cons"><h4>Contras</h4><ul><li>Mais arquivos (route.ts pra tudo)</li><li>Fetch manual + loading/error em todo lugar</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Híbrido: Server Components + API só pra PDF</h3>
+      <p>Pages e listas como Server Components (leitura direta do Prisma). Formulários como Client Components com Server Actions. API route só para geração do PDF.</p>
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Prós</h4><ul><li>Melhor dos dois mundos</li><li>Performance boa sem complexidade extra</li><li>Fácil de evoluir</li></ul></div>
+        <div class="cons"><h4>Contras</h4><ul><li>Mistura dois padrões</li><li>Requer entender Server vs Client components</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:24px;padding:16px;background:rgba(127,13,242,0.1);border-radius:8px;border:1px solid rgba(127,13,242,0.3)">
+  <p class="label">Minha recomendação</p>
+  <p>Opção <strong>C (Híbrido)</strong> — aproveita o melhor do Next.js 16 sem abandonar Client Components onde fazem sentido (calculadora interativa, editor de orçamento). Simples de entender e manter.</p>
+</div>

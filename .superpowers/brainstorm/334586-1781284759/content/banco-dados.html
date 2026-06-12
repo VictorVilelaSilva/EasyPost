@@ -1,0 +1,114 @@
+<h2>Banco de Dados — Schema Prisma</h2>
+<p class="subtitle">Todas as tabelas e relacionamentos — confirme antes de avançar</p>
+
+<div class="section">
+  <h3>Usuários e Autenticação</h3>
+  <div class="mockup">
+    <div class="mockup-header">User + Session (NextAuth)</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:1.8">
+      <div><span style="color:#7f0df2">model</span> User {</div>
+      <div style="padding-left:16px">id &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String &nbsp;&nbsp;@id @default(cuid())</div>
+      <div style="padding-left:16px">name &nbsp;&nbsp;&nbsp;&nbsp;String</div>
+      <div style="padding-left:16px">email &nbsp;&nbsp;&nbsp;String &nbsp;&nbsp;@unique</div>
+      <div style="padding-left:16px">phone &nbsp;&nbsp;&nbsp;String?</div>
+      <div style="padding-left:16px">password String</div>
+      <div style="padding-left:16px">role &nbsp;&nbsp;&nbsp;&nbsp;Role &nbsp;&nbsp;&nbsp;@default(PAINTER)</div>
+      <div style="padding-left:16px">createdAt DateTime @default(now())</div>
+      <div style="padding-left:16px;color:#aaa">budgets  Budget[]</div>
+      <div>}</div>
+      <div style="margin-top:8px"><span style="color:#7f0df2">enum</span> Role { PAINTER &nbsp;ADMIN }</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Produtos / Tintas</h3>
+  <div class="mockup">
+    <div class="mockup-header">Product</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:1.8">
+      <div><span style="color:#7f0df2">model</span> Product {</div>
+      <div style="padding-left:16px">id &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String &nbsp;@id @default(cuid())</div>
+      <div style="padding-left:16px">name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String &nbsp;&nbsp;<span style="color:#aaa">// "Tinta Coral Padrão"</span></div>
+      <div style="padding-left:16px">brand &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String &nbsp;&nbsp;<span style="color:#aaa">// "Coral"</span></div>
+      <div style="padding-left:16px">line &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String? &nbsp;<span style="color:#aaa">// "premium", "lavável"...</span></div>
+      <div style="padding-left:16px">finish &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String? &nbsp;<span style="color:#aaa">// "acetinado", "fosco"...</span></div>
+      <div style="padding-left:16px">packageSize &nbsp;Float &nbsp;&nbsp;<span style="color:#aaa">// tamanho em litros/kg</span></div>
+      <div style="padding-left:16px">packageLabel String &nbsp;&nbsp;<span style="color:#aaa">// "lata 18L", "galão 3,6L"</span></div>
+      <div style="padding-left:16px">yieldM2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Float &nbsp;&nbsp;<span style="color:#aaa">// rendimento m² por embalagem</span></div>
+      <div style="padding-left:16px">price &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Float &nbsp;&nbsp;<span style="color:#aaa">// preço unitário R$</span></div>
+      <div style="padding-left:16px">isActive &nbsp;&nbsp;&nbsp;&nbsp;Boolean @default(true)</div>
+      <div style="padding-left:16px">notes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String?</div>
+      <div>}</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Orçamentos</h3>
+  <div class="mockup">
+    <div class="mockup-header">Budget + BudgetArea + BudgetProduct + BudgetExtraItem</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:12px;line-height:1.8">
+      <div><span style="color:#7f0df2">model</span> Budget {</div>
+      <div style="padding-left:16px">id &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String &nbsp;&nbsp;@id @default(cuid())</div>
+      <div style="padding-left:16px">painterId &nbsp;String &nbsp;&nbsp;<span style="color:#aaa">// dono do orçamento</span></div>
+      <div style="padding-left:16px"><span style="color:#aaa">// dados do cliente (inline, sem tabela separada no MVP)</span></div>
+      <div style="padding-left:16px">clientName &nbsp;&nbsp;String</div>
+      <div style="padding-left:16px">clientPhone &nbsp;String?</div>
+      <div style="padding-left:16px">clientAddress String?</div>
+      <div style="padding-left:16px">status &nbsp;&nbsp;&nbsp;&nbsp;Status &nbsp;@default(DRAFT)</div>
+      <div style="padding-left:16px">laborValue &nbsp;Float &nbsp;&nbsp;@default(0)</div>
+      <div style="padding-left:16px">totalMaterials Float @default(0)</div>
+      <div style="padding-left:16px">totalValue &nbsp;Float &nbsp;&nbsp;@default(0)</div>
+      <div style="padding-left:16px">validity &nbsp;&nbsp;Int? &nbsp;&nbsp;&nbsp;<span style="color:#aaa">// dias de validade</span></div>
+      <div style="padding-left:16px">deadline &nbsp;&nbsp;String?</div>
+      <div style="padding-left:16px">paymentMethod String?</div>
+      <div style="padding-left:16px">notes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String?</div>
+      <div style="padding-left:16px">createdAt &nbsp;DateTime @default(now())</div>
+      <div style="padding-left:16px;color:#aaa">areas &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BudgetArea[]</div>
+      <div style="padding-left:16px;color:#aaa">products &nbsp;&nbsp;BudgetProduct[]</div>
+      <div style="padding-left:16px;color:#aaa">extraItems BudgetExtraItem[]</div>
+      <div>}</div>
+      <div style="margin-top:6px"><span style="color:#7f0df2">enum</span> Status { DRAFT SENT APPROVED REJECTED }</div>
+      <br/>
+      <div><span style="color:#7f0df2">model</span> BudgetArea { <span style="color:#aaa">// ambiente calculado</span></div>
+      <div style="padding-left:16px">name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String &nbsp;<span style="color:#aaa">// "Sala", "Quarto 1"...</span></div>
+      <div style="padding-left:16px">totalArea Float &nbsp;&nbsp;<span style="color:#aaa">// m² final pintável</span></div>
+      <div style="padding-left:16px">coats &nbsp;&nbsp;&nbsp;&nbsp;Int &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#aaa">// demãos</span></div>
+      <div style="padding-left:16px">areaForPaint Float &nbsp;<span style="color:#aaa">// totalArea × coats</span></div>
+      <div style="padding-left:16px">notes &nbsp;&nbsp;&nbsp;&nbsp;String?</div>
+      <div>}</div>
+      <br/>
+      <div><span style="color:#7f0df2">model</span> BudgetProduct { <span style="color:#aaa">// tinta usada</span></div>
+      <div style="padding-left:16px">productId &nbsp;String</div>
+      <div style="padding-left:16px">quantity &nbsp;&nbsp;Float &nbsp;&nbsp;<span style="color:#aaa">// embalagens (arredondado pra cima)</span></div>
+      <div style="padding-left:16px">unitPrice &nbsp;Float</div>
+      <div style="padding-left:16px">subtotal &nbsp;&nbsp;Float</div>
+      <div>}</div>
+      <br/>
+      <div><span style="color:#7f0df2">model</span> BudgetExtraItem { <span style="color:#aaa">// itens extras</span></div>
+      <div style="padding-left:16px">name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String &nbsp;<span style="color:#aaa">// "massa corrida", "selador"...</span></div>
+      <div style="padding-left:16px">quantity &nbsp;Float</div>
+      <div style="padding-left:16px">unitPrice Float</div>
+      <div style="padding-left:16px">subtotal &nbsp;Float</div>
+      <div>}</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Decisão: Cliente inline no Budget</h3>
+  <div style="background:rgba(127,13,242,0.1);padding:12px;border-radius:8px;border:1px solid rgba(127,13,242,0.3);font-size:14px">
+    <p>No MVP, dados do cliente ficam <strong>diretamente no orçamento</strong> (sem tabela Client separada). Isso simplifica o schema e o fluxo. Uma tabela Client pode entrar na v2 se o pintor precisar reusar clientes entre orçamentos.</p>
+  </div>
+</div>
+
+<div class="options" style="margin-top:16px">
+  <div class="option" data-choice="ok" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content"><h3>Schema aprovado</h3></div>
+  </div>
+  <div class="option" data-choice="ajuste" onclick="toggleSelect(this)">
+    <div class="letter">?</div>
+    <div class="content"><h3>Quero ajustar</h3></div>
+  </div>
+</div>

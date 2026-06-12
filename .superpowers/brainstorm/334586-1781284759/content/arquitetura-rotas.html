@@ -1,0 +1,72 @@
+<h2>Arquitetura Geral</h2>
+<p class="subtitle">Stack, rotas e estrutura de pastas — confirme antes de avançar</p>
+
+<div class="section">
+  <h3>Stack</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+    <div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:8px">
+      <p class="label">Mantém</p>
+      <ul><li>Next.js 16 (App Router)</li><li>Tailwind v4</li><li>TypeScript</li><li>Lucide React</li><li>Sonner (toasts)</li></ul>
+    </div>
+    <div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:8px">
+      <p class="label">Entra</p>
+      <ul><li>Prisma + SQLite</li><li>NextAuth.js v5</li><li>bcryptjs (senha)</li><li>@react-pdf/renderer (PDF)</li></ul>
+    </div>
+    <div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:8px">
+      <p class="label">Sai</p>
+      <ul><li>Firebase + firebase-admin</li><li>@google/genai</li><li>@ai-sdk/google</li><li>Stripe</li><li>sharp, jszip</li><li>framer-motion</li></ul>
+    </div>
+    <div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:8px">
+      <p class="label">Talvez fique</p>
+      <ul><li>Zod (validação)</li><li>file-saver (download PDF)</li></ul>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Rotas da Aplicação</h3>
+  <div class="mockup" style="margin-top:8px">
+    <div class="mockup-header">src/app/</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:13px;line-height:2">
+      <div style="color:#7f0df2">▸ (auth)/</div>
+      <div style="padding-left:16px">login/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#aaa">→ Tela de login</span></div>
+      <div style="padding-left:16px">register/ &nbsp;&nbsp;<span style="color:#aaa">→ Cadastro do pintor</span></div>
+      <div style="color:#7f0df2;margin-top:4px">▸ (painter)/</div>
+      <div style="padding-left:16px">dashboard/ &nbsp;<span style="color:#aaa">→ Painel com lista de orçamentos</span></div>
+      <div style="padding-left:16px">orcamento/novo/ &nbsp;<span style="color:#aaa">→ Criar orçamento (multi-step)</span></div>
+      <div style="padding-left:16px">orcamento/[id]/ &nbsp;<span style="color:#aaa">→ Ver/editar orçamento</span></div>
+      <div style="color:#7f0df2;margin-top:4px">▸ resumo/[id]/</div>
+      <div style="padding-left:16px"><span style="color:#aaa">→ Página pública de resumo (compartilhar com cliente)</span></div>
+      <div style="color:#7f0df2;margin-top:4px">▸ admin/</div>
+      <div style="padding-left:16px">page.tsx &nbsp;&nbsp;&nbsp;<span style="color:#aaa">→ Dashboard admin</span></div>
+      <div style="padding-left:16px">produtos/ &nbsp;&nbsp;<span style="color:#aaa">→ CRUD de tintas e rendimentos</span></div>
+      <div style="padding-left:16px">pintores/ &nbsp;&nbsp;<span style="color:#aaa">→ Lista de pintores cadastrados</span></div>
+      <div style="color:#7f0df2;margin-top:4px">▸ api/</div>
+      <div style="padding-left:16px">pdf/[id]/ &nbsp;&nbsp;<span style="color:#aaa">→ Gera e retorna PDF do orçamento</span></div>
+      <div style="padding-left:16px">auth/[...nextauth]/ &nbsp;<span style="color:#aaa">→ NextAuth handler</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Proteção de Rotas</h3>
+  <div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:8px;font-size:14px">
+    <p>• <strong>(auth)/</strong> — público, redireciona pra dashboard se já logado</p>
+    <p>• <strong>(painter)/</strong> — requer sessão NextAuth, qualquer role</p>
+    <p>• <strong>admin/</strong> — requer <code>role === "ADMIN"</code></p>
+    <p>• <strong>resumo/[id]/</strong> — público (link compartilhável)</p>
+    <p>• Middleware Next.js cuida de tudo isso em <code>middleware.ts</code></p>
+  </div>
+</div>
+
+<p style="margin-top:16px;font-size:13px;color:#aaa">Esse design parece certo? Clique em "Parece certo" para avançar para o banco de dados.</p>
+<div class="options" style="margin-top:12px">
+  <div class="option" data-choice="ok" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content"><h3>Parece certo, avança</h3></div>
+  </div>
+  <div class="option" data-choice="ajuste" onclick="toggleSelect(this)">
+    <div class="letter">?</div>
+    <div class="content"><h3>Tenho ajustes</h3></div>
+  </div>
+</div>

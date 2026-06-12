@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Sora, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { Toaster } from "sonner";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -16,33 +16,9 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "EasyPost — Gerador de Carrossel para Instagram com IA",
-  description: "Gere carrosséis incríveis para Instagram com IA. Digite seu nicho, escolha um tema e receba 5 slides prontos para postar com legenda em segundos.",
-  metadataBase: new URL('https://easypost.app'),
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    title: 'EasyPost — Carrosséis para Instagram com IA',
-    description: 'Crie carrosséis profissionais para Instagram em segundos. IA gera imagens, textos e legendas para seu nicho.',
-    url: 'https://easypost.app',
-    siteName: 'EasyPost',
-    locale: 'pt_BR',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'EasyPost — Carrosséis para Instagram com IA',
-    description: 'Crie carrosséis profissionais para Instagram em segundos com IA.',
-  },
-  other: {
-    'theme-color': '#0d1117',
-  },
+  title: "Pintores — Orçamentos",
+  description: "Plataforma de orçamentos para pintores.",
 };
-
-import GlobalHeader from "@/components/GlobalHeader";
-import { PreviewProvider } from "@/contexts/PreviewContext";
-import { Toaster } from "sonner";
 
 export default function RootLayout({
   children,
@@ -55,29 +31,8 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${sora.variable} ${spaceGrotesk.variable} antialiased`}
       >
-        {/* Animated gradient mesh background */}
-        <div className="gradient-mesh" aria-hidden="true" />
-        {/* Grain overlay */}
-        <div className="grain-overlay" aria-hidden="true" />
-        <AuthProvider>
-          <PreviewProvider>
-            <GlobalHeader />
-            {children}
-          </PreviewProvider>
-        </AuthProvider>
-        <Toaster
-          theme="dark"
-          position="top-right"
-          richColors
-          toastOptions={{
-            style: {
-              background: 'rgba(22, 10, 38, 0.9)',
-              border: '1px solid rgba(168, 85, 247, 0.2)',
-              backdropFilter: 'blur(12px)',
-              fontFamily: 'var(--font-body)',
-            },
-          }}
-        />
+        {children}
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   );
