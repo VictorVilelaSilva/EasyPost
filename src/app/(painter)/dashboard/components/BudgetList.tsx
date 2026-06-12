@@ -7,9 +7,9 @@ import Link from "next/link"
 interface Budget {
   id: string
   clientName: string
-  status: string
+  status: BudgetStatus
   totalValue: number
-  createdAt: Date
+  createdAt: string
 }
 
 export default function BudgetList({ budgets }: { budgets: Budget[] }) {
@@ -39,7 +39,7 @@ export default function BudgetList({ budgets }: { budgets: Budget[] }) {
           </div>
           <div className="flex items-center gap-3">
             <span className="text-sm font-semibold">{formatCurrency(b.totalValue)}</span>
-            <StatusBadge status={b.status as BudgetStatus} />
+            <StatusBadge status={b.status} />
           </div>
         </Link>
       ))}

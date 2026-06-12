@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
-import { calcPaintableArea, calcAreaForPaint } from "@/lib/calculations"
+import { calcPaintableArea, calcAreaForPaint, calcTotals } from "@/lib/calculations"
 import type { WizardState } from "@/types"
 
 async function getSession() {
@@ -30,7 +30,6 @@ export async function getMyBudgets() {
 export async function saveBudget(state: WizardState) {
   const session = await getSession()
 
-  const { calcTotals } = await import("@/lib/calculations")
   const { totalMaterials, totalValue } = calcTotals(state.products, state.extraItems, state.laborValue)
 
   const budget = await prisma.budget.create({
@@ -86,17 +85,27 @@ export async function updateBudgetStatus(
   status: "DRAFT" | "SENT" | "APPROVED" | "REJECTED"
 ) {
   const session = await getSession()
-  await prisma.budget.update({
-    where: { id, painterId: session.user.id },
-    data: { status },
-  })
-  revalidatePath("/dashboard")
+  try {
+    await prisma.budget.update({
+      where: { id, painterId: session.user.id },
+      data: { status },
+    })
+    revalidatePath("/dashboard")
+    return {}
+  } catch {
+    return { error: "Orçamento não encontrado ou sem permissão" }
+  }
 }
 
 export async function deleteBudget(id: string) {
   const session = await getSession()
-  await prisma.budget.delete({ where: { id, painterId: session.user.id } })
-  revalidatePath("/dashboard")
+  try {
+    await prisma.budget.delete({ where: { id, painterId: session.user.id } })
+    revalidatePath("/dashboard")
+    return {}
+  } catch {
+    return { error: "Orçamento não encontrado ou sem permissão" }
+  }
 }
 
 export async function getBudgetById(id: string) {

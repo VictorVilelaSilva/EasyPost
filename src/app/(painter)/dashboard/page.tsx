@@ -4,7 +4,8 @@ import Link from "next/link"
 import { Plus } from "lucide-react"
 
 export default async function DashboardPage() {
-  const budgets = await getMyBudgets()
+  const rawBudgets = await getMyBudgets()
+  const budgets = rawBudgets.map((b) => ({ ...b, createdAt: b.createdAt.toISOString() }))
 
   return (
     <div>
