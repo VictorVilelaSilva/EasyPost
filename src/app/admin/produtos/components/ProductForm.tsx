@@ -16,7 +16,8 @@ export default function ProductForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
-    const fd = new FormData(e.currentTarget)
+    const form = e.currentTarget
+    const fd = new FormData(form)
     try {
       await createProduct({
         name: fd.get("name"),
@@ -30,6 +31,7 @@ export default function ProductForm() {
         notes: fd.get("notes") || undefined,
       })
       toast.success("Produto criado!")
+      form.reset()
       setOpen(false)
     } catch {
       toast.error("Erro ao criar produto.")

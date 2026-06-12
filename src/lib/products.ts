@@ -30,13 +30,6 @@ export async function createProduct(data: unknown) {
   revalidatePath("/admin/produtos")
 }
 
-export async function updateProduct(id: string, data: unknown) {
-  await requireAdmin()
-  const parsed = productSchema.partial().parse(data)
-  await prisma.product.update({ where: { id }, data: parsed })
-  revalidatePath("/admin/produtos")
-}
-
 export async function toggleProduct(id: string, isActive: boolean) {
   await requireAdmin()
   await prisma.product.update({ where: { id }, data: { isActive } })
