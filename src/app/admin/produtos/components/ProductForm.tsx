@@ -1,7 +1,11 @@
 "use client"
 import { useState } from "react"
+import { Plus } from "lucide-react"
 import { createProduct } from "@/lib/products"
 import { toast } from "sonner"
+
+const inputClass =
+  "w-full px-4 py-2 rounded-lg border border-[#e2e8f0] text-sm outline-none transition-all focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20"
 
 function parseNum(v: FormDataEntryValue | null): number {
   const n = parseFloat(String(v ?? ""))
@@ -44,51 +48,86 @@ export default function ProductForm() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="px-4 py-2 rounded-lg text-sm font-medium text-white"
+        className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white flex items-center gap-2 shadow-sm transition-all hover:brightness-110 active:scale-95"
         style={{ background: "var(--color-primary)" }}
       >
-        + Novo produto
+        <Plus size={18} /> Novo produto
       </button>
     )
   }
 
   const fields = [
-    { name: "name", label: "Nome *", required: true },
-    { name: "brand", label: "Marca *", required: true },
-    { name: "line", label: "Linha" },
-    { name: "finish", label: "Acabamento" },
-    { name: "packageSize", label: "Tamanho embalagem (L ou kg) *", type: "number", required: true },
-    { name: "packageLabel", label: "Label embalagem (ex: lata 18L) *", required: true },
-    { name: "yieldM2", label: "Rendimento (m²/embalagem) *", type: "number", required: true },
-    { name: "price", label: "Preço R$ *", type: "number", required: true },
-    { name: "notes", label: "Observações" },
+    { name: "name", label: "Nome *", required: true, placeholder: "Ex: Tinta Acrílica Premium" },
+    { name: "brand", label: "Marca *", required: true, placeholder: "Ex: Coral" },
+    { name: "line", label: "Linha", placeholder: "Ex: Rende Muito" },
+    { name: "finish", label: "Acabamento", placeholder: "Ex: Fosco, Acetinado" },
+    { name: "packageSize", label: "Tamanho embalagem (L ou kg) *", type: "number", required: true, placeholder: "Ex: 18" },
+    { name: "packageLabel", label: "Label embalagem *", required: true, placeholder: "Ex: lata 18L" },
+    { name: "yieldM2", label: "Rendimento (m²/embalagem) *", type: "number", required: true, placeholder: "Ex: 50" },
+    { name: "price", label: "Preço R$ *", type: "number", required: true, placeholder: "0,00" },
   ]
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 rounded-xl border flex flex-col gap-3"
-      style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}>
-      <h3 className="font-semibold">Novo produto</h3>
-      <div className="grid grid-cols-2 gap-3">
-        {fields.map(({ name, label, type, required }) => (
-          <div key={name}>
-            <label className="text-xs font-medium block mb-1" htmlFor={name}>{label}</label>
-            <input
-              id={name}
-              name={name}
-              type={type ?? "text"}
-              required={required}
-              step={type === "number" ? "0.01" : undefined}
-              className="w-full px-3 py-2 rounded-lg border text-sm"
-              style={{ borderColor: "var(--color-border)" }}
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-xl border shadow-sm overflow-hidden"
+      style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}
+    >
+      <div className="px-6 py-4 border-b" style={{ borderColor: "var(--color-border)" }}>
+        <h3 className="font-headline font-bold text-lg">Novo produto</h3>
+      </div>
+
+      <div className="p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+          {fields.map(({ name, label, type, required, placeholder }) => (
+            <div key={name}>
+              <label className="block text-sm font-medium mb-1.5" htmlFor={name} style={{ color: "var(--color-text-muted)" }}>
+                {label}
+              </label>
+              <input
+                id={name}
+                name={name}
+                type={type ?? "text"}
+                required={required}
+                step={type === "number" ? "0.01" : undefined}
+                placeholder={placeholder}
+                className={inputClass}
+              />
+            </div>
+          ))}
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium mb-1.5" htmlFor="notes" style={{ color: "var(--color-text-muted)" }}>
+              Observações
+            </label>
+            <textarea
+              id="notes"
+              name="notes"
+              rows={3}
+              placeholder="Informações adicionais sobre o uso ou aplicação"
+              className={`${inputClass} resize-none`}
             />
           </div>
-        ))}
+        </div>
       </div>
-      <div className="flex gap-2">
-        <button type="button" onClick={() => setOpen(false)} className="flex-1 py-2 rounded-lg text-sm border" style={{ borderColor: "var(--color-border)" }}>
+
+      <div
+        className="px-6 py-4 border-t flex justify-end gap-3"
+        style={{ borderColor: "var(--color-border)", background: "var(--color-surface-secondary)" }}
+      >
+        <button
+          type="button"
+          onClick={() => setOpen(false)}
+          className="px-5 py-2 rounded-lg text-sm font-medium border transition-colors hover:bg-[var(--color-surface)]"
+          style={{ borderColor: "var(--color-border)", color: "var(--color-text-muted)" }}
+        >
           Cancelar
         </button>
-        <button type="submit" disabled={loading} className="flex-1 py-2 rounded-lg text-sm font-medium text-white" style={{ background: "var(--color-primary)" }}>
+        <button
+          type="submit"
+          disabled={loading}
+          className="px-8 py-2 rounded-lg text-sm font-semibold text-white shadow-sm transition-all hover:brightness-110 active:scale-95 disabled:opacity-60"
+          style={{ background: "var(--color-primary)" }}
+        >
           {loading ? "Salvando..." : "Salvar produto"}
         </button>
       </div>
