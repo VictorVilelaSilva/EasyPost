@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 :root {
-  --font-body: "Inter", system-ui, sans-serif;
   --color-primary: #2563eb;
   --color-primary-hover: #1d4ed8;
   --color-surface: #ffffff;
@@ -12,7 +11,15 @@
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-body), system-ui, sans-serif;
   background: var(--color-surface-secondary);
   color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-headline,
+h1,
+h2,
+h3 {
+  font-family: var(--font-headline), var(--font-body), system-ui, sans-serif;
 }
