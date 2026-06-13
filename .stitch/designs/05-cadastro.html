@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Criar Conta - PaintPro Quote</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#fff7f6",
+                        "tertiary-container": "#34b5fa",
+                        "on-secondary": "#f7f9ff",
+                        "surface-tint": "#0053dc",
+                        "error-container": "#fa746f",
+                        "surface-container-low": "#f0f4f7",
+                        "secondary": "#506076",
+                        "on-tertiary-container": "#003047",
+                        "surface-variant": "#dce4e8",
+                        "surface-container-highest": "#dce4e8",
+                        "on-primary-fixed": "#ffffff",
+                        "inverse-surface": "#0b0f10",
+                        "on-primary": "#faf8ff",
+                        "secondary-container": "#d3e4fe",
+                        "primary-fixed-dim": "#2d68f0",
+                        "surface-bright": "#f7f9fb",
+                        "primary": "#0053dc",
+                        "primary-container": "#3e76fe",
+                        "on-tertiary-fixed-variant": "#003954",
+                        "on-secondary-fixed-variant": "#4d5d73",
+                        "inverse-primary": "#618bff",
+                        "on-primary-container": "#000000",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#435368",
+                        "on-primary-fixed-variant": "#f9f7ff",
+                        "error-dim": "#67040d",
+                        "background": "#f7f9fb",
+                        "on-background": "#2c3437",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-surface": "#2c3437",
+                        "on-surface-variant": "#596064",
+                        "error": "#a83836",
+                        "tertiary-fixed-dim": "#17a8ec",
+                        "surface-container": "#eaeff2",
+                        "tertiary-fixed": "#34b5fa",
+                        "tertiary": "#006592",
+                        "secondary-fixed-dim": "#c5d6f0",
+                        "outline": "#747c80",
+                        "primary-dim": "#0049c2",
+                        "on-tertiary": "#f5f9ff",
+                        "primary-fixed": "#3e76fe",
+                        "surface-container-high": "#e3e9ed",
+                        "tertiary-dim": "#005980",
+                        "surface": "#f7f9fb",
+                        "secondary-dim": "#44546a",
+                        "on-secondary-fixed": "#314055",
+                        "on-error-container": "#6e0a12",
+                        "inverse-on-surface": "#9a9d9f",
+                        "surface-dim": "#d4dbdf",
+                        "outline-variant": "#acb3b7",
+                        "on-tertiary-fixed": "#00121e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .font-headline {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .input-focus-ring:focus-within {
+            box-shadow: 0 0 0 2px #3e76fe;
+        }
+        .transition-standard {
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 bg-surface">
+<div class="w-full max-w-[420px] flex flex-col items-center">
+<!-- Header Brand Mark -->
+<header class="mb-10 text-center">
+<div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary-container text-on-primary-fixed mb-4 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-4xl" data-icon="format_paint">format_paint</span>
+</div>
+<h1 class="text-2xl font-headline font-extrabold text-primary tracking-tight">
+                Orçamento de Pintura
+            </h1>
+</header>
+<!-- Main Card -->
+<main class="w-full bg-surface-container-lowest border border-surface-variant rounded-xl shadow-sm p-8 transition-standard">
+<div class="mb-8 text-center">
+<h2 class="text-xl font-headline font-bold text-on-background mb-1">Criar conta</h2>
+<p class="text-on-surface-variant text-sm">Preencha os dados para começar</p>
+</div>
+<form class="space-y-5" id="registrationForm">
+<!-- Nome Completo -->
+<div class="space-y-1.5">
+<label class="text-sm font-medium text-on-surface" for="name">Nome completo</label>
+<div class="relative group input-focus-ring rounded-lg border border-outline-variant transition-standard bg-surface">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-standard" data-icon="person">person</span>
+<input class="w-full pl-10 pr-4 py-3 bg-transparent border-none focus:ring-0 text-on-background placeholder:text-outline/50 text-sm" id="name" placeholder="Seu nome" required="" type="text"/>
+</div>
+</div>
+<!-- Email -->
+<div class="space-y-1.5">
+<label class="text-sm font-medium text-on-surface" for="email">Email</label>
+<div class="relative group input-focus-ring rounded-lg border border-outline-variant transition-standard bg-surface">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-standard" data-icon="mail">mail</span>
+<input class="w-full pl-10 pr-4 py-3 bg-transparent border-none focus:ring-0 text-on-background placeholder:text-outline/50 text-sm" id="email" placeholder="exemplo@email.com" required="" type="email"/>
+</div>
+</div>
+<!-- Telefone -->
+<div class="space-y-1.5">
+<label class="text-sm font-medium text-on-surface" for="phone">Telefone</label>
+<div class="relative group input-focus-ring rounded-lg border border-outline-variant transition-standard bg-surface">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-standard" data-icon="phone">phone</span>
+<input class="w-full pl-10 pr-4 py-3 bg-transparent border-none focus:ring-0 text-on-background placeholder:text-outline/50 text-sm" id="phone" placeholder="(00) 00000-0000" required="" type="tel"/>
+</div>
+</div>
+<!-- Senha -->
+<div class="space-y-1.5">
+<label class="text-sm font-medium text-on-surface" for="password">Senha</label>
+<div class="relative group input-focus-ring rounded-lg border border-outline-variant transition-standard bg-surface">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-standard" data-icon="lock">lock</span>
+<input class="w-full pl-10 pr-12 py-3 bg-transparent border-none focus:ring-0 text-on-background placeholder:text-outline/50 text-sm" id="password" placeholder="Crie uma senha forte" required="" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-standard focus:outline-none" onclick="togglePasswordVisibility()" type="button">
+<span class="material-symbols-outlined" data-icon="visibility" id="password-toggle-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Submit Action -->
+<button class="w-full bg-primary hover:bg-primary-dim text-on-primary font-medium py-3.5 rounded-lg transition-standard active:scale-[0.98] shadow-md shadow-primary/10 mt-4" type="submit">
+                    Criar conta
+                </button>
+</form>
+<footer class="mt-8 pt-6 border-t border-surface-variant text-center">
+<p class="text-sm text-on-surface-variant">
+                    Já tem conta? 
+                    <a class="text-primary font-semibold hover:underline transition-standard decoration-2 underline-offset-4" href="#">Entrar</a>
+</p>
+</footer>
+</main>
+<!-- Simple Trust Footer -->
+<div class="mt-8 flex items-center gap-6 text-outline text-xs opacity-60">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="verified_user">verified_user</span>
+<span>Dados protegidos</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span>Setup em 2 min</span>
+</div>
+</div>
+</div>
+<script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('password-toggle-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.innerText = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.innerText = 'visibility';
+            }
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = '<div class="flex items-center justify-center gap-2"><div class="w-4 h-4 border-2 border-on-primary border-t-transparent rounded-full animate-spin"></div> Criando...</div>';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                alert('Conta criada com sucesso! Redirecionando para o dashboard...');
+                btn.innerHTML = 'Criar conta';
+                btn.disabled = false;
+            }, 1500);
+        });
+    </script>
+</body></html>

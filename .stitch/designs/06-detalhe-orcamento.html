@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Orçamento de Pintura - Ricardo Silva</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#ffffff",
+                        "inverse-primary": "#618bff",
+                        "secondary-container": "#d3e4fe",
+                        "outline-variant": "#acb3b7",
+                        "on-tertiary-container": "#003047",
+                        "primary-fixed-dim": "#2d68f0",
+                        "surface-variant": "#dce4e8",
+                        "on-primary": "#faf8ff",
+                        "inverse-on-surface": "#9a9d9f",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#00121e",
+                        "primary-container": "#3e76fe",
+                        "error-container": "#fa746f",
+                        "secondary-fixed": "#d3e4fe",
+                        "primary": "#0053dc",
+                        "on-primary-fixed-variant": "#f9f7ff",
+                        "error-dim": "#67040d",
+                        "on-surface-variant": "#596064",
+                        "surface-container": "#eaeff2",
+                        "tertiary-dim": "#005980",
+                        "surface-tint": "#0053dc",
+                        "primary-fixed": "#3e76fe",
+                        "on-secondary": "#f7f9ff",
+                        "on-error-container": "#6e0a12",
+                        "on-surface": "#2c3437",
+                        "on-primary-container": "#000000",
+                        "error": "#a83836",
+                        "tertiary": "#006592",
+                        "primary-dim": "#0049c2",
+                        "inverse-surface": "#0b0f10",
+                        "tertiary-fixed-dim": "#17a8ec",
+                        "secondary": "#506076",
+                        "surface-container-high": "#e3e9ed",
+                        "on-tertiary-fixed-variant": "#003954",
+                        "on-secondary-fixed": "#314055",
+                        "tertiary-fixed": "#34b5fa",
+                        "secondary-dim": "#44546a",
+                        "surface": "#f7f9fb",
+                        "secondary-fixed-dim": "#c5d6f0",
+                        "outline": "#747c80",
+                        "background": "#f7f9fb",
+                        "surface-dim": "#d4dbdf",
+                        "on-secondary-fixed-variant": "#4d5d73",
+                        "on-background": "#2c3437",
+                        "on-secondary-container": "#435368",
+                        "surface-container-low": "#f0f4f7",
+                        "on-tertiary": "#f5f9ff",
+                        "tertiary-container": "#34b5fa",
+                        "surface-bright": "#f7f9fb",
+                        "on-error": "#fff7f6",
+                        "surface-container-highest": "#dce4e8"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .brand-logo { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        .wizard-step-active { color: #0053dc; border-color: #0053dc; }
+        .wizard-step-inactive { color: #747c80; border-color: #747c80; }
+        
+        /* Subtle card border transition */
+        .hover-card { transition: all 0.2s ease-in-out; }
+        .hover-card:hover { border-color: #3e76fe; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface-dim docked full-width top-0 sticky z-50 border-b border-outline-variant dark:border-outline shadow-sm">
+<div class="flex justify-between items-center w-full px-6 py-3 max-w-7xl mx-auto">
+<div class="flex items-center gap-2 text-lg font-headline font-bold text-on-surface dark:text-surface-bright">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="format_paint">format_paint</span>
+<span>Orçamento de Pintura</span>
+</div>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors font-body text-label-sm tracking-wide" href="#">Meus Orçamentos</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors font-body text-label-sm tracking-wide" href="#">Clientes</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors font-body text-label-sm tracking-wide" href="#">Materiais</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-3 pr-4 border-r border-outline-variant">
+<span class="text-sm font-medium text-on-surface">Ricardo Silva</span>
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-primary font-bold text-xs">RS</div>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 text-sm font-medium">
+<span class="material-symbols-outlined text-sm" data-icon="logout">logout</span>
+                    Sair
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-[720px] mx-auto px-4 py-8">
+<!-- Navigation Back -->
+<a class="inline-flex items-center gap-2 text-primary hover:gap-3 transition-all font-medium mb-6 group" href="#">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+            Voltar ao painel
+        </a>
+<!-- Header Information -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+<div class="space-y-1">
+<div class="flex items-center gap-3 mb-2">
+<span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="edit">edit</span>
+                        Rascunho
+                    </span>
+<span class="text-on-surface-variant text-sm font-medium">Criação: 15 de maio de 2024</span>
+</div>
+<h1 class="text-3xl md:text-4xl font-extrabold text-on-surface tracking-tight">João Silva</h1>
+<p class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-lg" data-icon="location_on">location_on</span>
+                    Rua das Flores, 123 — São Paulo
+                </p>
+</div>
+<button class="flex items-center justify-center gap-2 px-5 py-2.5 border-2 border-outline hover:border-primary hover:text-primary transition-all rounded-xl font-semibold text-sm bg-surface">
+<span class="material-symbols-outlined" data-icon="open_in_new">open_in_new</span>
+                Ver resumo
+            </button>
+</section>
+<!-- Management Toolbar -->
+<div class="bg-white border border-outline-variant rounded-xl p-4 mb-8 shadow-sm flex flex-wrap items-center justify-between gap-4">
+<div class="flex flex-col gap-1.5 w-full md:w-auto">
+<label class="text-[10px] font-bold text-outline uppercase tracking-widest pl-1">Status do Orçamento</label>
+<select class="rounded-lg border-outline-variant focus:ring-primary focus:border-primary text-sm font-medium pr-10">
+<option selected="">Rascunho</option>
+<option>Enviado</option>
+<option>Aprovado</option>
+<option>Recusado</option>
+</select>
+</div>
+<div class="flex items-center gap-2 ml-auto">
+<button class="flex items-center gap-2 px-4 py-2 hover:bg-surface-container rounded-lg text-secondary font-medium transition-colors text-sm">
+<span class="material-symbols-outlined" data-icon="link">link</span>
+                    Compartilhar
+                </button>
+<div class="w-px h-6 bg-outline-variant mx-1"></div>
+<button class="flex items-center gap-2 px-4 py-2 hover:bg-error-container hover:text-on-error-container rounded-lg text-error font-medium transition-colors text-sm">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+                    Excluir
+                </button>
+</div>
+</div>
+<!-- Details Grid -->
+<div class="grid grid-cols-1 gap-6">
+<!-- Areas Card -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden hover-card">
+<div class="px-6 py-4 border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<h3 class="font-bold flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-primary" data-icon="square_foot">square_foot</span>
+                        Áreas
+                    </h3>
+<span class="text-xs font-semibold text-on-surface-variant bg-white px-2 py-1 rounded border border-outline-variant">Total: 98,5 m²</span>
+</div>
+<div class="p-6">
+<ul class="divide-y divide-outline-variant/30">
+<li class="py-3 flex justify-between items-center group">
+<span class="text-on-surface font-medium">Sala de estar</span>
+<span class="text-on-surface-variant font-body">51,0 m²</span>
+</li>
+<li class="py-3 flex justify-between items-center">
+<span class="text-on-surface font-medium">Quarto</span>
+<span class="text-on-surface-variant font-body">32,5 m²</span>
+</li>
+<li class="py-3 flex justify-between items-center">
+<span class="text-on-surface font-medium">Cozinha</span>
+<span class="text-on-surface-variant font-body">15,0 m²</span>
+</li>
+</ul>
+<button class="w-full mt-4 py-2 border border-dashed border-outline-variant text-outline hover:border-primary hover:text-primary rounded-lg text-sm transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        Adicionar área
+                    </button>
+</div>
+</div>
+<!-- Materials Card -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden hover-card">
+<div class="px-6 py-4 border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<h3 class="font-bold flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-primary" data-icon="format_color_fill">format_color_fill</span>
+                        Materiais
+                    </h3>
+<span class="text-xs font-semibold text-on-surface-variant bg-white px-2 py-1 rounded border border-outline-variant">Preços sugeridos</span>
+</div>
+<div class="p-6">
+<ul class="space-y-4">
+<li class="flex justify-between items-start">
+<div>
+<p class="text-on-surface font-medium">Tinta Coral Padrão</p>
+<p class="text-xs text-on-surface-variant">Quantidade: 2 latas</p>
+</div>
+<span class="text-on-surface font-semibold font-body">R$ 179,80</span>
+</li>
+<li class="flex justify-between items-start">
+<div>
+<p class="text-on-surface font-medium">Massa corrida</p>
+<p class="text-xs text-on-surface-variant">Quantidade: 1 barrica</p>
+</div>
+<span class="text-on-surface font-semibold font-body">R$ 45,00</span>
+</li>
+<li class="flex justify-between items-start">
+<div>
+<p class="text-on-surface font-medium">Selador</p>
+<p class="text-xs text-on-surface-variant">Quantidade: 1 lata</p>
+</div>
+<span class="text-on-surface font-semibold font-body">R$ 38,00</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Totals Card -->
+<div class="bg-primary text-on-primary-fixed rounded-xl p-8 shadow-lg relative overflow-hidden">
+<!-- Decorative background elements -->
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-9xl" data-icon="receipt_long">receipt_long</span>
+</div>
+<div class="relative z-10 space-y-4">
+<div class="flex justify-between items-center text-sm opacity-80">
+<span>Subtotal materiais</span>
+<span class="font-body">R$ 262,80</span>
+</div>
+<div class="flex justify-between items-center text-sm opacity-80">
+<span>Mão de obra</span>
+<span class="font-body">R$ 600,00</span>
+</div>
+<div class="h-px bg-on-primary-fixed/20 my-2"></div>
+<div class="flex justify-between items-end">
+<div class="space-y-1">
+<span class="text-xs uppercase font-bold tracking-widest opacity-70">Total Estimado</span>
+<h2 class="text-4xl font-extrabold font-headline">R$ 862,80</h2>
+</div>
+<button class="bg-white text-primary px-6 py-3 rounded-lg font-bold hover:bg-primary-fixed-dim hover:text-white transition-all active:scale-95 shadow-md">
+                            Finalizar Orçamento
+                        </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Spacing -->
+<div class="h-16"></div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-inverse-surface full-width mt-auto border-t border-outline-variant dark:border-outline flat no shadows">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-8 py-6 max-w-7xl mx-auto gap-4">
+<div class="text-on-surface dark:text-surface-bright font-headline font-semibold text-sm">
+                Orçamento de Pintura
+            </div>
+<div class="text-on-surface-variant dark:text-on-surface-variant font-body text-label-xs text-center md:text-left">
+                © 2024 Orçamento de Pintura - Profissionalismo e Precisão
+            </div>
+<div class="flex gap-4">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-all font-body text-label-xs hover:underline" href="#">Suporte</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-all font-body text-label-xs hover:underline" href="#">Termos de Uso</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-all font-body text-label-xs hover:underline" href="#">Contato</a>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interaction: Smooth state change for the dropdown
+        const statusSelect = document.querySelector('select');
+        statusSelect.addEventListener('change', (e) => {
+            const statusPill = document.querySelector('.bg-amber-100');
+            if (e.target.value === 'Aprovado') {
+                statusPill.className = 'bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1';
+                statusPill.innerHTML = '<span class="material-symbols-outlined text-xs">check_circle</span> Aprovado';
+            } else if (e.target.value === 'Recusado') {
+                statusPill.className = 'bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1';
+                statusPill.innerHTML = '<span class="material-symbols-outlined text-xs">cancel</span> Recusado';
+            } else if (e.target.value === 'Enviado') {
+                statusPill.className = 'bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1';
+                statusPill.innerHTML = '<span class="material-symbols-outlined text-xs">send</span> Enviado';
+            } else {
+                statusPill.className = 'bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1';
+                statusPill.innerHTML = '<span class="material-symbols-outlined text-xs">edit</span> Rascunho';
+            }
+        });
+    </script>
+</body></html>

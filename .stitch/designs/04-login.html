@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | Orçamento de Pintura</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#006592",
+                    "on-surface-variant": "#596064",
+                    "on-surface": "#2c3437",
+                    "on-primary": "#faf8ff",
+                    "surface-container-high": "#e3e9ed",
+                    "on-primary-container": "#000000",
+                    "on-error-container": "#6e0a12",
+                    "surface-tint": "#0053dc",
+                    "on-error": "#fff7f6",
+                    "on-primary-fixed-variant": "#f9f7ff",
+                    "background": "#f7f9fb",
+                    "surface": "#f7f9fb",
+                    "outline": "#747c80",
+                    "inverse-primary": "#618bff",
+                    "secondary-fixed-dim": "#c5d6f0",
+                    "on-primary-fixed": "#ffffff",
+                    "surface-container-highest": "#dce4e8",
+                    "on-background": "#2c3437",
+                    "on-secondary-fixed-variant": "#4d5d73",
+                    "tertiary-fixed": "#34b5fa",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-secondary": "#f7f9ff",
+                    "on-secondary-container": "#435368",
+                    "secondary-dim": "#44546a",
+                    "primary-fixed": "#3e76fe",
+                    "error-container": "#fa746f",
+                    "secondary": "#506076",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-variant": "#dce4e8",
+                    "secondary-container": "#d3e4fe",
+                    "error": "#a83836",
+                    "tertiary-dim": "#005980",
+                    "surface-bright": "#f7f9fb",
+                    "on-secondary-fixed": "#314055",
+                    "error-dim": "#67040d",
+                    "on-tertiary": "#f5f9ff",
+                    "primary-fixed-dim": "#2d68f0",
+                    "tertiary-container": "#34b5fa",
+                    "tertiary-fixed-dim": "#17a8ec",
+                    "on-tertiary-fixed-variant": "#003954",
+                    "on-tertiary-container": "#003047",
+                    "inverse-on-surface": "#9a9d9f",
+                    "primary-dim": "#0049c2",
+                    "surface-container": "#eaeff2",
+                    "primary": "#0053dc",
+                    "outline-variant": "#acb3b7",
+                    "surface-container-low": "#f0f4f7",
+                    "on-tertiary-fixed": "#00121e",
+                    "surface-dim": "#d4dbdf",
+                    "inverse-surface": "#0b0f10",
+                    "primary-container": "#3e76fe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "display": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .headline-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .brush-stroke {
+            mask-image: radial-gradient(circle, black 50%, transparent 100%);
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .transition-standard {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+<!-- Subtle Decorative Element: Faint Brush Stroke -->
+<div class="absolute inset-0 z-0">
+<div class="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-primary rounded-full filter blur-[120px] opacity-[0.03]"></div>
+<div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-tertiary rounded-full filter blur-[100px] opacity-[0.02]"></div>
+<svg class="absolute top-1/4 left-1/4 opacity-[0.04] w-96 h-96 pointer-events-none" viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<path d="M44.7,-76.4C58.1,-69.2,69.2,-58.1,77.3,-44.7C85.4,-31.3,90.5,-15.7,90.2,-0.2C89.8,15.3,84.1,30.5,75.4,43.9C66.7,57.3,55.1,68.8,41.4,76.9C27.7,85,11.8,89.7,-3,94.9C-17.8,100.1,-31.5,105.8,-44.2,100.7C-56.9,95.6,-68.5,79.7,-77.2,63.1C-85.9,46.5,-91.7,29.1,-93.8,11.2C-95.9,-6.7,-94.3,-25.1,-86.3,-40.7C-78.3,-56.3,-63.9,-69,-48.1,-75.4C-32.3,-81.8,-15.1,-81.9,0.7,-83.1C16.5,-84.3,31.3,-83.6,44.7,-76.4Z" fill="#0053dc" transform="translate(100 100)"></path>
+</svg>
+</div>
+<main class="relative z-10 w-full max-w-[400px] flex flex-col items-center">
+<!-- Brand Mark -->
+<div class="flex flex-col items-center mb-8">
+<div class="w-16 h-16 bg-white border border-outline-variant/30 rounded-2xl shadow-sm flex items-center justify-center mb-4 transition-standard hover:shadow-md">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="format_paint">format_paint</span>
+</div>
+<h1 class="headline-font text-2xl font-extrabold text-on-surface tracking-tight">Orçamento de Pintura</h1>
+<p class="text-on-surface-variant text-sm mt-1">Entre com sua conta para continuar</p>
+</div>
+<!-- Sign-in Card -->
+<div class="w-full bg-white border border-[#e2e8f0] rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8">
+<form action="#" class="space-y-6" method="POST">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface" for="email">E-mail</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-[20px]" data-icon="mail">mail</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2.5 bg-white border border-[#e2e8f0] rounded-lg text-on-surface placeholder-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-standard text-sm" id="email" name="email" placeholder="seu@email.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<label class="block text-sm font-medium text-on-surface" for="password">Senha</label>
+<a class="text-xs font-semibold text-primary hover:text-primary-dim transition-standard" href="#">Esqueceu a senha?</a>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-[20px]" data-icon="lock">lock</span>
+</div>
+<input class="block w-full pl-10 pr-10 py-2.5 bg-white border border-[#e2e8f0] rounded-lg text-on-surface placeholder-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-standard text-sm" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-on-surface transition-standard" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility" id="password-toggle-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Login Button -->
+<button class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-primary hover:bg-primary-dim focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-standard active:scale-[0.98]" type="submit">
+                    Entrar
+                </button>
+</form>
+<div class="mt-8 flex items-center justify-center space-x-2">
+<span class="h-px w-full bg-[#e2e8f0]"></span>
+<span class="text-xs uppercase tracking-widest text-outline-variant font-semibold">ou</span>
+<span class="h-px w-full bg-[#e2e8f0]"></span>
+</div>
+<!-- Social Login Mockup -->
+<button class="mt-6 w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-[#e2e8f0] rounded-lg text-sm font-medium text-on-surface hover:bg-surface-container-low transition-standard">
+<img alt="Google Logo" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT1TbDuCXEDPcowHqTxTb_l8gqfF7ttiLNyt29pU4ivaK7t9YnK3qTX9fIjbk9VcsOq4mXZWnvqKbTGxWWacxEdxBKdwFnKxchhcOeSInRrpNAnLqlmE1maVT5lxMfXEo4LIpK0MyxoQVrRw67EdMaYVVLhjMLZJ0PWHie6T-7hBGqJCvWc-foeh5ats6XiQASoSFG9JzyROMqZJFqKkYWRFji_N-GqKqlf8neZm2vPb0vprGXKeH5WbSwVAPhUpppw-qpqVOSxUA"/>
+                Entrar com o Google
+            </button>
+</div>
+<!-- Footer link -->
+<p class="mt-8 text-center text-sm text-on-surface-variant">
+            Não tem conta? 
+            <a class="font-bold text-primary hover:underline hover:text-primary-dim transition-standard" href="#">
+                Cadastre-se
+            </a>
+</p>
+</main>
+<footer class="absolute bottom-6 w-full text-center px-4">
+<p class="text-[10px] text-outline-variant uppercase tracking-widest headline-font font-medium">
+            © 2024 PaintQuote Pro • Segurança de Nível Corporativo
+        </p>
+</footer>
+<script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('password-toggle-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.innerText = 'visibility_off';
+                toggleIcon.setAttribute('data-icon', 'visibility_off');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.innerText = 'visibility';
+                toggleIcon.setAttribute('data-icon', 'visibility');
+            }
+        }
+
+        // Add a subtle parallax effect to the decorative blob
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            const blobs = document.querySelectorAll('.absolute.inset-0 div');
+            
+            blobs.forEach((blob, index) => {
+                const speed = (index + 1) * 20;
+                blob.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+    </script>
+</body></html>

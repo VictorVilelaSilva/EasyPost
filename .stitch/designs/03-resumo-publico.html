@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Resumo do Orçamento - PaintQuote Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#3e76fe",
+                        "on-surface": "#2c3437",
+                        "error-dim": "#67040d",
+                        "surface-container-highest": "#dce4e8",
+                        "on-primary-fixed": "#ffffff",
+                        "on-error": "#fff7f6",
+                        "on-tertiary": "#f5f9ff",
+                        "tertiary-fixed-dim": "#17a8ec",
+                        "on-primary": "#faf8ff",
+                        "on-background": "#2c3437",
+                        "inverse-primary": "#618bff",
+                        "surface-bright": "#f7f9fb",
+                        "on-secondary-container": "#435368",
+                        "surface-dim": "#d4dbdf",
+                        "error-container": "#fa746f",
+                        "on-secondary-fixed": "#314055",
+                        "surface-container": "#eaeff2",
+                        "on-error-container": "#6e0a12",
+                        "primary": "#0053dc",
+                        "tertiary-container": "#34b5fa",
+                        "surface-container-low": "#f0f4f7",
+                        "surface-variant": "#dce4e8",
+                        "tertiary-dim": "#005980",
+                        "on-tertiary-container": "#003047",
+                        "tertiary": "#006592",
+                        "primary-dim": "#0049c2",
+                        "surface-container-high": "#e3e9ed",
+                        "on-tertiary-fixed": "#00121e",
+                        "tertiary-fixed": "#34b5fa",
+                        "error": "#a83836",
+                        "on-secondary-fixed-variant": "#4d5d73",
+                        "on-tertiary-fixed-variant": "#003954",
+                        "on-surface-variant": "#596064",
+                        "secondary-fixed": "#d3e4fe",
+                        "primary-container": "#3e76fe",
+                        "secondary-dim": "#44546a",
+                        "on-secondary": "#f7f9ff",
+                        "inverse-on-surface": "#9a9d9f",
+                        "secondary": "#506076",
+                        "outline-variant": "#acb3b7",
+                        "primary-fixed-dim": "#2d68f0",
+                        "surface": "#f7f9fb",
+                        "background": "#f7f9fb",
+                        "on-primary-fixed-variant": "#f9f7ff",
+                        "secondary-fixed-dim": "#c5d6f0",
+                        "secondary-container": "#d3e4fe",
+                        "outline": "#747c80",
+                        "on-primary-container": "#000000",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#0053dc",
+                        "inverse-surface": "#0b0f10"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .document-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        @media print {
+            .no-print { display: none; }
+            body { background: white; }
+            .document-canvas { box-shadow: none; border: none; }
+        }
+    </style>
+</head>
+<body class="bg-surface-container-low min-h-screen text-on-surface py-12 px-4">
+<!-- Document Container -->
+<main class="max-w-[640px] mx-auto document-canvas bg-surface-container-lowest border border-outline-variant rounded-lg document-shadow overflow-hidden">
+<!-- 1. Header Section -->
+<header class="text-center pt-10 pb-8 px-8">
+<div class="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary-container/10 text-primary">
+<span class="material-symbols-outlined text-4xl" data-icon="format_paint">format_paint</span>
+</div>
+<h1 class="text-2xl font-extrabold text-on-surface tracking-tight mb-1">Orçamento de Pintura</h1>
+<p class="text-on-surface-variant text-sm font-medium">15 de Maio de 2024</p>
+</header>
+<!-- Document Body Padding -->
+<div class="px-8 pb-10 space-y-6">
+<!-- 2. Client Card -->
+<section class="border border-surface-variant rounded-lg p-5">
+<h2 class="text-xs font-bold uppercase tracking-widest text-outline mb-3">Cliente</h2>
+<div class="flex flex-col gap-1">
+<p class="text-lg font-bold text-on-surface">João Silva</p>
+<p class="text-on-surface-variant text-sm font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-base">call</span>
+                        (11) 98765-4321
+                    </p>
+<p class="text-on-surface-variant text-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-base">location_on</span>
+                        Rua das Flores, 123 — São Paulo
+                    </p>
+</div>
+</section>
+<!-- 3. Areas Card -->
+<section class="border border-surface-variant rounded-lg p-5">
+<h2 class="text-xs font-bold uppercase tracking-widest text-outline mb-4">Áreas de pintura</h2>
+<div class="divide-y divide-surface-variant">
+<div class="py-3 flex justify-between items-center first:pt-0">
+<span class="text-on-surface font-medium">Sala de estar <span class="text-on-surface-variant text-xs">(2 demãos)</span></span>
+<span class="text-on-surface-variant font-semibold">51,0 m²</span>
+</div>
+<div class="py-3 flex justify-between items-center">
+<span class="text-on-surface font-medium">Quarto Principal <span class="text-on-surface-variant text-xs">(2 demãos)</span></span>
+<span class="text-on-surface-variant font-semibold">32,5 m²</span>
+</div>
+<div class="py-3 flex justify-between items-center last:pb-0">
+<span class="text-on-surface font-medium">Cozinha <span class="text-on-surface-variant text-xs">(1 demão)</span></span>
+<span class="text-on-surface-variant font-semibold">15,0 m²</span>
+</div>
+</div>
+</section>
+<!-- 4. Materials Card -->
+<section class="border border-surface-variant rounded-lg p-5">
+<h2 class="text-xs font-bold uppercase tracking-widest text-outline mb-4">Materiais</h2>
+<div class="space-y-3">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Tinta Coral Padrão × 2 latas 18L</span>
+<span class="text-on-surface font-medium">R$ 179,80</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Massa corrida × 1</span>
+<span class="text-on-surface font-medium">R$ 45,00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Selador × 1</span>
+<span class="text-on-surface font-medium">R$ 38,00</span>
+</div>
+<div class="pt-4 mt-2 border-t border-surface-variant flex justify-between items-center">
+<span class="font-bold text-on-surface">Subtotal materiais</span>
+<span class="font-bold text-on-surface">R$ 262,80</span>
+</div>
+</div>
+</section>
+<!-- 5. Labor Card -->
+<section class="border border-surface-variant rounded-lg p-5">
+<div class="flex justify-between items-center mb-3">
+<span class="font-bold text-on-surface text-lg">Mão de obra</span>
+<span class="font-bold text-on-surface text-lg">R$ 600,00</span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 text-on-surface-variant text-xs">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                        Prazo: 5 dias úteis
+                    </div>
+<div class="flex items-center gap-2 text-on-surface-variant text-xs">
+<span class="material-symbols-outlined text-sm">payments</span>
+                        Pagamento: 50% entrada, 50% na entrega
+                    </div>
+</div>
+</section>
+<!-- 6. Total Block -->
+<div class="bg-primary-container text-on-primary-container p-6 rounded-lg flex justify-between items-center transition-all duration-200">
+<span class="font-black tracking-widest text-sm">TOTAL</span>
+<span class="text-3xl font-extrabold">R$ 862,80</span>
+</div>
+<!-- 7. Disclaimer -->
+<p class="text-center text-[11px] text-outline italic leading-relaxed px-4">
+                * Este orçamento é uma estimativa. Valores podem variar conforme condições da obra e eventuais serviços adicionais solicitados durante a execução.
+            </p>
+<!-- 8. Action -->
+<div class="pt-4 no-print">
+<button class="w-full flex items-center justify-center gap-2 border-2 border-primary text-primary font-bold py-3.5 rounded-lg hover:bg-primary/5 active:scale-[0.98] transition-all" onclick="window.print()">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+                    Exportar PDF
+                </button>
+</div>
+</div>
+</main>
+<!-- Brand Footer Overlay (Subtle) -->
+<div class="max-w-[640px] mx-auto mt-8 flex flex-col items-center justify-center gap-4 no-print">
+<div class="flex items-center gap-2 grayscale opacity-40">
+<span class="material-symbols-outlined text-xl" data-icon="brush">brush</span>
+<span class="font-headline font-bold text-sm tracking-tight">PaintQuote Pro</span>
+</div>
+<!-- Atmospheric Background Element -->
+<div class="fixed top-0 left-0 w-full h-full -z-10 opacity-30 pointer-events-none">
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary-fixed/10 blur-[100px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-tertiary-fixed/10 blur-[100px]"></div>
+</div>
+</div>
+<script>
+        // Micro-interaction for the total block
+        const totalBlock = document.querySelector('.bg-primary-container');
+        if (totalBlock) {
+            totalBlock.addEventListener('mouseenter', () => {
+                totalBlock.classList.add('shadow-lg', '-translate-y-0.5');
+            });
+            totalBlock.addEventListener('mouseleave', () => {
+                totalBlock.classList.remove('shadow-lg', '-translate-y-0.5');
+            });
+        }
+
+        // Handle specific print considerations
+        window.onbeforeprint = function() {
+            document.title = "Orcamento_JoaoSilva_15-05-2024";
+        };
+    </script>
+</body></html>

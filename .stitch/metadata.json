@@ -1,0 +1,71 @@
+{
+  "project": {
+    "name": "projects/9227386621237153576",
+    "projectId": "9227386621237153576",
+    "title": "Orçamento Pintores — App Redesign"
+  },
+  "designSystem": {
+    "name": "assets/6139051236872560565",
+    "displayName": "Orçamento Pintores",
+    "theme": {
+      "colorMode": "LIGHT",
+      "customColor": "#2563eb",
+      "colorVariant": "TONAL_SPOT",
+      "headlineFont": "PLUS_JAKARTA_SANS",
+      "bodyFont": "INTER",
+      "labelFont": "INTER",
+      "roundness": "ROUND_TWELVE"
+    }
+  },
+  "screens": [
+    {
+      "id": "6a70d1be6e374321b84ccd3fcd4fc3ff",
+      "title": "Meus Orçamentos - Dashboard",
+      "deviceType": "DESKTOP",
+      "files": [".stitch/designs/01-dashboard.html", ".stitch/designs/01-dashboard.png"],
+      "appRoute": "/(painter)/dashboard"
+    },
+    {
+      "id": "7c8248aaf1d5410f97cf315675c399b9",
+      "title": "Cálculo de Área - Wizard Step 2",
+      "deviceType": "DESKTOP",
+      "files": [".stitch/designs/02-wizard-area.html", ".stitch/designs/02-wizard-area.png"],
+      "appRoute": "/(painter)/orcamento/novo (Step2Area)"
+    },
+    {
+      "id": "7a419594c15345d5a9c24f913c854da0",
+      "title": "Resumo do Orçamento - João Silva",
+      "deviceType": "DESKTOP",
+      "files": [".stitch/designs/03-resumo-publico.html", ".stitch/designs/03-resumo-publico.png"],
+      "appRoute": "/resumo/[id] (público)"
+    },
+    {
+      "id": "68653551aaf249bb8d4808193908c462",
+      "title": "Login - Orçamento de Pintura",
+      "deviceType": "DESKTOP",
+      "files": [".stitch/designs/04-login.html", ".stitch/designs/04-login.png"],
+      "appRoute": "/(auth)/login"
+    },
+    {
+      "id": "b55f9eccef9d42c592a857f8fc9e309a",
+      "title": "Cadastro - Orçamento de Pintura",
+      "deviceType": "DESKTOP",
+      "files": [".stitch/designs/05-cadastro.html", ".stitch/designs/05-cadastro.png"],
+      "appRoute": "/(auth)/register"
+    },
+    {
+      "id": "c07e6d9ecdbf4e42ab36e5936069b6c9",
+      "title": "Detalhes do Orçamento - João Silva (Interno)",
+      "deviceType": "DESKTOP",
+      "files": [".stitch/designs/06-detalhe-orcamento.html", ".stitch/designs/06-detalhe-orcamento.png"],
+      "appRoute": "/(painter)/orcamento/[id]"
+    },
+    {
+      "id": "06b7f7b2dd974b55ae77b89988a8981c",
+      "title": "Produtos - Administração",
+      "deviceType": "DESKTOP",
+      "files": [".stitch/designs/07-admin-produtos.html", ".stitch/designs/07-admin-produtos.png"],
+      "appRoute": "/admin/produtos"
+    }
+  ]
+}

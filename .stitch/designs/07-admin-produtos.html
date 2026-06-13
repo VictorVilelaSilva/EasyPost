@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestão de Produtos | PinturaPro Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-dim": "#0049c2",
+                    "inverse-primary": "#618bff",
+                    "primary-fixed-dim": "#2d68f0",
+                    "on-tertiary-fixed-variant": "#003954",
+                    "secondary-dim": "#44546a",
+                    "error-container": "#fa746f",
+                    "inverse-surface": "#0b0f10",
+                    "on-error-container": "#6e0a12",
+                    "on-primary-container": "#000000",
+                    "outline-variant": "#acb3b7",
+                    "on-surface-variant": "#596064",
+                    "on-tertiary-fixed": "#00121e",
+                    "on-primary-fixed": "#ffffff",
+                    "on-secondary-container": "#435368",
+                    "background": "#f7f9fb",
+                    "secondary-container": "#d3e4fe",
+                    "on-secondary": "#f7f9ff",
+                    "surface-container-highest": "#dce4e8",
+                    "on-background": "#2c3437",
+                    "on-tertiary-container": "#003047",
+                    "surface-tint": "#0053dc",
+                    "error-dim": "#67040d",
+                    "primary-container": "#3e76fe",
+                    "secondary-fixed-dim": "#c5d6f0",
+                    "on-surface": "#2c3437",
+                    "on-error": "#fff7f6",
+                    "secondary": "#506076",
+                    "secondary-fixed": "#d3e4fe",
+                    "tertiary-fixed-dim": "#17a8ec",
+                    "surface": "#f7f9fb",
+                    "surface-bright": "#f7f9fb",
+                    "primary-fixed": "#3e76fe",
+                    "tertiary-container": "#34b5fa",
+                    "surface-container-low": "#f0f4f7",
+                    "on-secondary-fixed-variant": "#4d5d73",
+                    "on-secondary-fixed": "#314055",
+                    "surface-container-high": "#e3e9ed",
+                    "on-tertiary": "#f5f9ff",
+                    "on-primary-fixed-variant": "#f9f7ff",
+                    "tertiary-dim": "#005980",
+                    "surface-container": "#eaeff2",
+                    "outline": "#747c80",
+                    "tertiary": "#006592",
+                    "error": "#a83836",
+                    "tertiary-fixed": "#34b5fa",
+                    "surface-variant": "#dce4e8",
+                    "primary": "#0053dc",
+                    "on-primary": "#faf8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-dim": "#d4dbdf",
+                    "inverse-on-surface": "#9a9d9f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "display": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav {
+            position: relative;
+        }
+        .active-nav::after {
+            content: '';
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #0053dc;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen">
+<!-- TopNavBar (Admin) -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-surface-container-lowest border-b border-outline-variant shadow-sm">
+<div class="flex items-center gap-8">
+<span class="text-xl font-headline font-bold text-primary">PinturaPro Admin</span>
+<div class="hidden md:flex items-center gap-6 font-body text-label-md">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-primary font-bold active-nav" href="#">Produtos</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Pintores</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<a class="flex items-center gap-1 text-on-surface-variant text-label-md hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                ← Painel
+            </a>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant">
+<img alt="Avatar do Administrador" data-alt="A professional headshot of a corporate administrator in a clean office setting. The lighting is soft and natural, emphasizing a trustworthy and expert personality. The image is framed as a circular profile picture with a high-key, modern aesthetic consistent with professional SaaS applications." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcua4wCegOYS2SAoc66EDN0mt9SW7rJ_WvJzwd6W8HCiMaFFwzQLvF02EOwWto43n8VkVwkC9z-YaWGwU9BOLyA0_NKVKCEoSMw-tfQ3SKdShibw9G7E3eChIJGb1eLHASY2u0Z71E6FwaPy8xDbB7iu5Qfwp3jhg_fUnBng6p7aVNyLNyPrhMCM8x03W59m-jaN7pm8t0nvC9H_2wZEP7suXmeGQZUJLM9keSe0bJPbznZQ7mIfT2OA3fGuNRIZjpSKVzPmYWvjo"/>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-12 px-6 max-w-[1040px] mx-auto">
+<!-- Cabeçalho -->
+<header class="flex justify-between items-center mb-8">
+<h1 class="text-3xl font-headline font-extrabold tracking-tight text-on-surface">Produtos</h1>
+<button class="bg-primary text-white px-5 py-2.5 rounded-lg font-medium shadow-sm hover:bg-primary-dim transition-all active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined">add</span>
+                Novo produto
+            </button>
+</header>
+<!-- Card de Novo Produto (Aberto) -->
+<section class="mb-10 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden animate-in fade-in duration-500">
+<div class="px-6 py-4 border-b border-outline-variant flex items-center justify-between">
+<h2 class="font-headline font-bold text-lg">Novo produto</h2>
+<span class="text-on-surface-variant text-xs uppercase tracking-widest font-bold">Modo de Edição</span>
+</div>
+<div class="p-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+<!-- Column 1 -->
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1">Nome</label>
+<input class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Ex: Tinta Acrílica Premium" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1">Linha</label>
+<input class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Ex: Rende Muito" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1">Tamanho embalagem (L ou kg)</label>
+<input class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Ex: 18" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1">Rendimento (m²/embalagem)</label>
+<input class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Ex: 50" type="number"/>
+</div>
+</div>
+<!-- Column 2 -->
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1">Marca</label>
+<select class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all appearance-none">
+<option>Selecione uma marca</option>
+<option>Suvinil</option>
+<option>Coral</option>
+<option>Sherwin-Williams</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1">Acabamento</label>
+<input class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Ex: Fosco, Acetinado" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1">Label embalagem (ex: lata 18L)</label>
+<input class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Ex: Balde 18L" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1">Preço R$</label>
+<input class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="0,00" type="text"/>
+</div>
+</div>
+<div class="md:col-span-2">
+<label class="block text-sm font-medium text-on-surface-variant mb-1">Observações</label>
+<textarea class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Informações adicionais sobre o uso ou aplicação" rows="3"></textarea>
+</div>
+</div>
+</div>
+<div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant flex justify-end gap-3">
+<button class="bg-transparent border border-outline-variant text-on-surface-variant px-5 py-2 rounded-lg font-medium hover:bg-surface-container-high transition-all">Cancelar</button>
+<button class="bg-primary text-white px-8 py-2 rounded-lg font-medium shadow hover:bg-primary-dim transition-all">Salvar produto</button>
+</div>
+</section>
+<!-- Lista de Produtos -->
+<div class="space-y-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="text-sm font-bold uppercase tracking-wider text-on-surface-variant opacity-60">Produtos cadastrados</h3>
+<span class="text-xs text-on-surface-variant">3 itens encontrados</span>
+</div>
+<!-- Product Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-xl flex items-center justify-between hover:shadow-md transition-shadow group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-secondary-container flex items-center justify-center text-primary-dim">
+<span class="material-symbols-outlined">format_paint</span>
+</div>
+<div>
+<div class="flex items-baseline gap-2">
+<h4 class="font-medium text-on-surface">Suvinil Fosco Completo</h4>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter bg-surface-container-high px-1.5 py-0.5 rounded">Premium</span>
+</div>
+<p class="text-xs text-on-surface-variant mb-1">Suvinil · Interior/Exterior</p>
+<p class="text-xs text-on-surface-variant font-medium">lata 18L · 150 m²/embalagem · <span class="text-primary">R$ 489,90</span></p>
+</div>
+</div>
+<button class="border border-outline-variant text-on-surface-variant px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-error-container hover:text-on-error-container hover:border-error-container transition-all">Desativar</button>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-xl flex items-center justify-between hover:shadow-md transition-shadow group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-secondary-container flex items-center justify-center text-primary-dim">
+<span class="material-symbols-outlined">brush</span>
+</div>
+<div>
+<div class="flex items-baseline gap-2">
+<h4 class="font-medium text-on-surface">Coral Rende Muito</h4>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter bg-surface-container-high px-1.5 py-0.5 rounded">Econômica</span>
+</div>
+<p class="text-xs text-on-surface-variant mb-1">Coral · Interior</p>
+<p class="text-xs text-on-surface-variant font-medium">lata 18L · 100 m²/embalagem · <span class="text-primary">R$ 324,50</span></p>
+</div>
+</div>
+<button class="border border-outline-variant text-on-surface-variant px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-error-container hover:text-on-error-container hover:border-error-container transition-all">Desativar</button>
+</div>
+<!-- Product Card 3 (Inactive) -->
+<div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-xl flex items-center justify-between opacity-50 grayscale transition-all hover:opacity-80 hover:grayscale-0">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">block</span>
+</div>
+<div>
+<div class="flex items-baseline gap-2">
+<h4 class="font-medium text-on-surface">Sherwin Williams Metalatex</h4>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter bg-surface-container-high px-1.5 py-0.5 rounded">Premium</span>
+</div>
+<p class="text-xs text-on-surface-variant mb-1">Sherwin-Williams · Antibactéria</p>
+<p class="text-xs text-on-surface-variant font-medium">lata 18L · 80 m²/embalagem · R$ 512,00</p>
+</div>
+</div>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-1.5 rounded-lg text-sm font-bold hover:bg-primary hover:text-white transition-all">Ativar</button>
+</div>
+</div>
+<!-- Footer Stats/Meta -->
+<footer class="mt-12 pt-8 border-t border-outline-variant flex flex-col md:flex-row justify-between items-center text-on-surface-variant text-sm gap-4">
+<p>© 2024 PinturaPro • Ferramenta Administrativa v2.4.0</p>
+<div class="flex gap-6">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span>Sistema Operacional</span>
+</div>
+<a class="hover:text-primary transition-colors underline decoration-outline-variant underline-offset-4" href="#">Relatório de Inventário</a>
+</div>
+</footer>
+</main>
+<script>
+        // Micro-interaction for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Mock interaction for 'Ativar/Desativar'
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(btn => {
+            if(btn.innerText.includes('Ativar') || btn.innerText.includes('Desativar')){
+                btn.addEventListener('click', function() {
+                   const card = this.closest('.rounded-xl');
+                   if(this.innerText === 'Ativar') {
+                       card.classList.remove('opacity-50', 'grayscale');
+                       this.innerText = 'Desativar';
+                       this.className = 'border border-outline-variant text-on-surface-variant px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-error-container hover:text-on-error-container hover:border-error-container transition-all';
+                   } else {
+                       card.classList.add('opacity-50', 'grayscale');
+                       this.innerText = 'Ativar';
+                       this.className = 'bg-secondary-container text-on-secondary-container px-6 py-1.5 rounded-lg text-sm font-bold hover:bg-primary hover:text-white transition-all';
+                   }
+                });
+            }
+        });
+    </script>
+</body></html>
