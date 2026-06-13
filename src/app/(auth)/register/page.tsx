@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import Link from "next/link"
+import { PaintBucket } from "lucide-react"
 import RegisterForm from "./components/RegisterForm"
 
 export default async function RegisterPage() {
@@ -9,21 +10,55 @@ export default async function RegisterPage() {
   if (session) redirect("/dashboard")
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: "var(--color-surface-secondary)" }}>
-      <div className="w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-center mb-2">Criar conta</h1>
-        <p className="text-center text-sm mb-8" style={{ color: "var(--color-text-muted)" }}>
-          Preencha os dados para se cadastrar
-        </p>
-        <RegisterForm />
-        <p className="text-center text-sm mt-4" style={{ color: "var(--color-text-muted)" }}>
+    <div
+      className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden"
+      style={{ background: "var(--color-surface-secondary)" }}
+    >
+      {/* Decorative background */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden>
+        <div
+          className="absolute -top-32 -right-24 w-[500px] h-[500px] rounded-full blur-[120px]"
+          style={{ background: "var(--color-primary)", opacity: 0.06 }}
+        />
+        <div
+          className="absolute -bottom-32 -left-24 w-[420px] h-[420px] rounded-full blur-[110px]"
+          style={{ background: "#0ea5e9", opacity: 0.05 }}
+        />
+      </div>
+
+      <main className="relative z-10 w-full max-w-[420px] flex flex-col items-center">
+        {/* Brand mark */}
+        <div className="flex flex-col items-center mb-8">
+          <div
+            className="w-16 h-16 rounded-2xl shadow-sm flex items-center justify-center mb-4 border"
+            style={{ background: "var(--color-surface)", borderColor: "var(--color-border)" }}
+          >
+            <PaintBucket size={32} style={{ color: "var(--color-primary)" }} />
+          </div>
+          <h1 className="text-2xl font-headline font-extrabold tracking-tight text-center">
+            Orçamento de Pintura
+          </h1>
+          <p className="text-sm mt-1" style={{ color: "var(--color-text-muted)" }}>
+            Crie sua conta para começar
+          </p>
+        </div>
+
+        {/* Sign-up card */}
+        <div
+          className="w-full rounded-xl border p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+          style={{ background: "var(--color-surface)", borderColor: "var(--color-border)" }}
+        >
+          <RegisterForm />
+        </div>
+
+        {/* Footer link */}
+        <p className="mt-8 text-center text-sm" style={{ color: "var(--color-text-muted)" }}>
           Já tem conta?{" "}
-          <Link href="/login" style={{ color: "var(--color-primary)" }}>
+          <Link href="/login" className="font-bold hover:underline" style={{ color: "var(--color-primary)" }}>
             Entrar
           </Link>
         </p>
-      </div>
+      </main>
     </div>
   )
 }
