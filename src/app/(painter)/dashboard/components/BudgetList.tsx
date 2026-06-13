@@ -47,22 +47,22 @@ export default function BudgetList({ budgets }: { budgets: Budget[] }) {
           className="flex items-center justify-between p-5 rounded-xl border transition-all hover:-translate-y-0.5 hover:shadow-md"
           style={{ background: "var(--color-surface)", borderColor: "var(--color-border)" }}
         >
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
               style={{ background: "var(--color-surface-secondary)", color: "var(--color-text-muted)" }}
             >
               <User size={20} />
             </div>
-            <div>
-              <h4 className="text-lg font-headline font-semibold">{b.clientName}</h4>
+            <div className="min-w-0">
+              <h4 className="text-base sm:text-lg font-headline font-semibold truncate">{b.clientName}</h4>
               <p className="text-sm" style={{ color: "var(--color-text-muted)" }}>
                 {new Date(b.createdAt).toLocaleDateString("pt-BR")}
               </p>
             </div>
           </div>
-          <div className="text-right">
-            <p className="text-xl font-bold">{formatCurrency(b.totalValue)}</p>
+          <div className="text-right shrink-0 pl-2">
+            <p className="text-lg sm:text-xl font-bold whitespace-nowrap">{formatCurrency(b.totalValue)}</p>
             <div className="mt-1">
               <StatusBadge status={b.status} />
             </div>

@@ -24,16 +24,16 @@ export default async function PintoresPage() {
       <h1 className="text-xl font-bold mb-6">Pintores cadastrados</h1>
       <div className="flex flex-col gap-3">
         {painters.map((p) => (
-          <div key={p.id} className="flex items-center justify-between p-4 rounded-xl border"
+          <div key={p.id} className="flex items-center justify-between gap-3 p-4 rounded-xl border"
             style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}>
-            <div>
-              <p className="font-medium text-sm">{p.name}</p>
-              <p className="text-xs mt-0.5" style={{ color: "var(--color-text-muted)" }}>
+            <div className="min-w-0">
+              <p className="font-medium text-sm truncate">{p.name}</p>
+              <p className="text-xs mt-0.5 truncate" style={{ color: "var(--color-text-muted)" }}>
                 {p.email} {p.phone ? `· ${p.phone}` : ""}
               </p>
             </div>
-            <p className="text-sm" style={{ color: "var(--color-text-muted)" }}>
-              {p._count.budgets} orçamentos
+            <p className="text-sm text-right shrink-0 whitespace-nowrap" style={{ color: "var(--color-text-muted)" }}>
+              {p._count.budgets} orç.
             </p>
           </div>
         ))}

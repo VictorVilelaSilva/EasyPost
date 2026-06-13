@@ -28,9 +28,9 @@ export default async function ResumoPage({ params }: { params: Promise<{ id: str
         <div className="p-4 rounded-xl border mb-4" style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}>
           <p className="text-sm font-semibold mb-2">Áreas de pintura</p>
           {budget.areas.map((a) => (
-            <div key={a.id} className="flex justify-between text-sm py-1">
-              <span>{a.name} ({a.coats} demãos)</span>
-              <span>{a.areaForPaint.toFixed(1)} m²</span>
+            <div key={a.id} className="flex justify-between gap-3 text-sm py-1">
+              <span className="min-w-0">{a.name} ({a.coats} demãos)</span>
+              <span className="shrink-0 whitespace-nowrap">{a.areaForPaint.toFixed(1)} m²</span>
             </div>
           ))}
         </div>
@@ -38,19 +38,19 @@ export default async function ResumoPage({ params }: { params: Promise<{ id: str
         <div className="p-4 rounded-xl border mb-4" style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}>
           <p className="text-sm font-semibold mb-2">Materiais</p>
           {budget.products.map((p) => (
-            <div key={p.id} className="flex justify-between text-sm py-1">
-              <span>{p.product.name} × {p.quantity} {p.product.packageLabel}</span>
-              <span>{formatCurrency(p.subtotal)}</span>
+            <div key={p.id} className="flex justify-between gap-3 text-sm py-1">
+              <span className="min-w-0">{p.product.name} × {p.quantity} {p.product.packageLabel}</span>
+              <span className="shrink-0 whitespace-nowrap">{formatCurrency(p.subtotal)}</span>
             </div>
           ))}
           {budget.extraItems.map((e) => (
-            <div key={e.id} className="flex justify-between text-sm py-1">
-              <span>{e.name} × {e.quantity}</span>
-              <span>{formatCurrency(e.subtotal)}</span>
+            <div key={e.id} className="flex justify-between gap-3 text-sm py-1">
+              <span className="min-w-0">{e.name} × {e.quantity}</span>
+              <span className="shrink-0 whitespace-nowrap">{formatCurrency(e.subtotal)}</span>
             </div>
           ))}
-          <div className="flex justify-between text-sm font-semibold border-t pt-2 mt-1" style={{ borderColor: "var(--color-border)" }}>
-            <span>Subtotal materiais</span><span>{formatCurrency(budget.totalMaterials)}</span>
+          <div className="flex justify-between gap-3 text-sm font-semibold border-t pt-2 mt-1" style={{ borderColor: "var(--color-border)" }}>
+            <span>Subtotal materiais</span><span className="shrink-0 whitespace-nowrap">{formatCurrency(budget.totalMaterials)}</span>
           </div>
         </div>
 

@@ -3,11 +3,11 @@ import ProductForm from "./components/ProductForm"
 import { formatCurrency } from "@/lib/calculations"
 import { toggleProduct } from "@/lib/products"
 import { getServerSession } from "next-auth"
-
-export const dynamic = "force-dynamic"
 import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { PaintBucket, Ban } from "lucide-react"
+
+export const dynamic = "force-dynamic"
 
 export default async function ProdutosPage() {
   const session = await getServerSession(authOptions)
@@ -41,14 +41,14 @@ export default async function ProdutosPage() {
         {products.map((p) => (
           <div
             key={p.id}
-            className="p-4 rounded-xl border flex items-center justify-between transition-shadow hover:shadow-md"
+            className="p-4 rounded-xl border flex items-center justify-between gap-3 transition-shadow hover:shadow-md"
             style={{
               borderColor: "var(--color-border)",
               background: "var(--color-surface)",
               opacity: p.isActive ? 1 : 0.55,
             }}
           >
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
               <div
                 className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0"
                 style={{
@@ -58,9 +58,9 @@ export default async function ProdutosPage() {
               >
                 {p.isActive ? <PaintBucket size={22} /> : <Ban size={22} />}
               </div>
-              <div>
-                <h4 className="font-medium">{p.name}</h4>
-                <p className="text-xs mt-0.5" style={{ color: "var(--color-text-muted)" }}>
+              <div className="min-w-0">
+                <h4 className="font-medium truncate">{p.name}</h4>
+                <p className="text-xs mt-0.5 truncate" style={{ color: "var(--color-text-muted)" }}>
                   {p.brand}{p.line ? ` · ${p.line}` : ""}
                 </p>
                 <p className="text-xs font-medium mt-0.5" style={{ color: "var(--color-text-muted)" }}>
@@ -70,6 +70,7 @@ export default async function ProdutosPage() {
               </div>
             </div>
             <form
+              className="shrink-0"
               action={async () => {
                 "use server"
                 await toggleProduct(p.id, !p.isActive)

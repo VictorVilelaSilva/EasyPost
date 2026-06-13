@@ -77,9 +77,9 @@ export default async function OrcamentoPage({ params }: { params: Promise<{ id: 
         </div>
         <div className="p-6 divide-y divide-[#e2e8f0]">
           {budget.areas.map((a) => (
-            <div key={a.id} className="py-3 flex justify-between items-center first:pt-0 last:pb-0">
-              <span className="font-medium">{a.name}</span>
-              <span style={{ color: "var(--color-text-muted)" }}>{a.areaForPaint.toFixed(1)} m²</span>
+            <div key={a.id} className="py-3 flex justify-between items-center gap-3 first:pt-0 last:pb-0">
+              <span className="font-medium min-w-0 truncate">{a.name}</span>
+              <span className="shrink-0 whitespace-nowrap" style={{ color: "var(--color-text-muted)" }}>{a.areaForPaint.toFixed(1)} m²</span>
             </div>
           ))}
         </div>
@@ -100,25 +100,25 @@ export default async function OrcamentoPage({ params }: { params: Promise<{ id: 
         </div>
         <div className="p-6 space-y-4">
           {budget.products.map((p) => (
-            <div key={p.id} className="flex justify-between items-start">
-              <div>
-                <p className="font-medium">{p.product.name}</p>
+            <div key={p.id} className="flex justify-between items-start gap-3">
+              <div className="min-w-0">
+                <p className="font-medium truncate">{p.product.name}</p>
                 <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
                   Quantidade: {p.quantity}
                 </p>
               </div>
-              <span className="font-semibold">{formatCurrency(p.subtotal)}</span>
+              <span className="font-semibold shrink-0 whitespace-nowrap">{formatCurrency(p.subtotal)}</span>
             </div>
           ))}
           {budget.extraItems.map((e) => (
-            <div key={e.id} className="flex justify-between items-start">
-              <div>
-                <p className="font-medium">{e.name}</p>
+            <div key={e.id} className="flex justify-between items-start gap-3">
+              <div className="min-w-0">
+                <p className="font-medium truncate">{e.name}</p>
                 <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
                   Quantidade: {e.quantity}
                 </p>
               </div>
-              <span className="font-semibold">{formatCurrency(e.subtotal)}</span>
+              <span className="font-semibold shrink-0 whitespace-nowrap">{formatCurrency(e.subtotal)}</span>
             </div>
           ))}
           {!hasMaterials && (

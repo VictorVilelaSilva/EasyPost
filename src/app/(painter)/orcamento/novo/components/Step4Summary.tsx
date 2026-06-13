@@ -57,15 +57,15 @@ export default function Step4Summary({ state, onBack, onSave, saving }: Props) {
         <p className={sectionTitle} style={{ color: "var(--color-text-muted)" }}>Materiais</p>
         <div className="space-y-2">
           {state.products.map((p) => (
-            <div key={p.productId} className="flex justify-between text-sm">
-              <span>{p.name} × {p.quantity}</span>
-              <span className="font-medium">{formatCurrency(p.subtotal)}</span>
+            <div key={p.productId} className="flex justify-between gap-3 text-sm">
+              <span className="min-w-0">{p.name} × {p.quantity}</span>
+              <span className="font-medium shrink-0 whitespace-nowrap">{formatCurrency(p.subtotal)}</span>
             </div>
           ))}
           {state.extraItems.map((e, i) => (
-            <div key={e.id ?? i} className="flex justify-between text-sm">
-              <span>{e.name} × {e.quantity}</span>
-              <span className="font-medium">{formatCurrency(e.subtotal)}</span>
+            <div key={e.id ?? i} className="flex justify-between gap-3 text-sm">
+              <span className="min-w-0">{e.name} × {e.quantity}</span>
+              <span className="font-medium shrink-0 whitespace-nowrap">{formatCurrency(e.subtotal)}</span>
             </div>
           ))}
         </div>
