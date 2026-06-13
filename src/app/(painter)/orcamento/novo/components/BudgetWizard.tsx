@@ -1,7 +1,8 @@
 "use client"
-import { useState, useCallback } from "react"
+import { Fragment, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { Check } from "lucide-react"
 import { saveBudget } from "@/lib/budget"
 import { calcTotals } from "@/lib/calculations"
 import type { WizardState } from "@/types"
@@ -67,28 +68,40 @@ export default function BudgetWizard({ products }: { products: Product[] }) {
   return (
     <div className="max-w-2xl mx-auto">
       {/* Progress bar */}
-      <div className="flex items-center gap-0 mb-8">
-        {STEPS.map((label, i) => (
-          <div key={i} className="flex items-center flex-1">
-            <div className="flex flex-col items-center" style={{ minWidth: 40 }}>
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-                style={{
-                  background: i <= step ? "var(--color-primary)" : "var(--color-border)",
-                  color: i <= step ? "white" : "var(--color-text-muted)",
-                }}
-              >
-                {i + 1}
+      <div className="flex items-center mb-10">
+        {STEPS.map((label, i) => {
+          const completed = i < step
+          const current = i === step
+          return (
+            <Fragment key={i}>
+              <div className="flex flex-col items-center gap-2">
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all"
+                  style={{
+                    background: completed || current ? "var(--color-primary)" : "var(--color-surface)",
+                    color: completed || current ? "white" : "var(--color-text-muted)",
+                    border: completed || current ? "none" : "2px solid var(--color-border)",
+                    boxShadow: current ? "0 0 0 4px rgba(37,99,235,0.15)" : undefined,
+                  }}
+                >
+                  {completed ? <Check size={18} /> : i + 1}
+                </div>
+                <span
+                  className="text-xs font-semibold"
+                  style={{ color: completed || current ? "var(--color-primary)" : "var(--color-text-muted)" }}
+                >
+                  {label}
+                </span>
               </div>
-              <span className="text-xs mt-1" style={{ color: i === step ? "var(--color-primary)" : "var(--color-text-muted)" }}>
-                {label}
-              </span>
-            </div>
-            {i < STEPS.length - 1 && (
-              <div className="flex-1 h-0.5 mb-4" style={{ background: i < step ? "var(--color-primary)" : "var(--color-border)" }} />
-            )}
-          </div>
-        ))}
+              {i < STEPS.length - 1 && (
+                <div
+                  className="flex-1 h-0.5 mx-2 mb-6 rounded"
+                  style={{ background: i < step ? "var(--color-primary)" : "var(--color-border)" }}
+                />
+              )}
+            </Fragment>
+          )
+        })}
       </div>
 
       {step === 0 && <Step1Client state={state} update={update} onNext={() => setStep(1)} />}

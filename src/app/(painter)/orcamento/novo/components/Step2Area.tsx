@@ -1,5 +1,5 @@
 "use client"
-import { Plus } from "lucide-react"
+import { PlusCircle, ArrowLeft, ArrowRight } from "lucide-react"
 import { calcPaintableArea, calcAreaForPaint } from "@/lib/calculations"
 import AreaCalculator from "./AreaCalculator"
 import type { WizardState, AreaInput } from "@/types"
@@ -37,50 +37,61 @@ export default function Step2Area({ state, update, onBack, onNext }: Props) {
   )
 
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-lg font-semibold">Cálculo de área</h2>
+    <div className="flex flex-col gap-6">
+      <div>
+        <h2 className="text-2xl sm:text-3xl font-headline font-extrabold tracking-tight">Cálculo de área</h2>
+        <p className="mt-2" style={{ color: "var(--color-text-muted)" }}>
+          Defina as dimensões dos ambientes para calcular a quantidade de tinta.
+        </p>
+      </div>
 
       {state.areas.map((area, i) => (
-        <div key={area.id ?? i} className="relative">
-          <AreaCalculator area={area} onChange={(u) => updateArea(i, u)} />
-          {state.areas.length > 1 && (
-            <button
-              type="button"
-              onClick={() => removeArea(i)}
-              className="absolute top-3 right-3 text-xs text-red-500"
-            >
-              Remover
-            </button>
-          )}
-        </div>
+        <AreaCalculator
+          key={area.id ?? i}
+          area={area}
+          onChange={(u) => updateArea(i, u)}
+          onRemove={state.areas.length > 1 ? () => removeArea(i) : undefined}
+        />
       ))}
 
       <button
         type="button"
         onClick={addArea}
-        className="w-full py-2 rounded-lg text-sm border-dashed border-2 flex items-center justify-center gap-1"
+        className="w-full py-4 rounded-xl border-2 border-dashed font-semibold flex items-center justify-center gap-2 transition-all hover:border-[#2563eb] hover:text-[#2563eb]"
         style={{ borderColor: "var(--color-border)", color: "var(--color-text-muted)" }}
       >
-        <Plus size={14} /> Adicionar outro ambiente
+        <PlusCircle size={18} /> Adicionar outro ambiente
       </button>
 
       {totalForPaint > 0 && (
-        <div className="p-3 rounded-lg text-sm font-semibold" style={{ background: "#eff6ff", color: "var(--color-primary)" }}>
-          Total para tinta: {totalForPaint.toFixed(1)} m²
+        <div
+          className="px-6 py-4 rounded-xl flex justify-between items-center"
+          style={{ background: "#eff6ff" }}
+        >
+          <span className="font-semibold" style={{ color: "var(--color-primary)" }}>
+            Total acumulado para pintura
+          </span>
+          <span className="text-xl font-headline font-extrabold" style={{ color: "var(--color-primary)" }}>
+            {totalForPaint.toFixed(1)} m²
+          </span>
         </div>
       )}
 
-      <div className="flex gap-3">
-        <button onClick={onBack} className="flex-1 py-2 rounded-lg text-sm border" style={{ borderColor: "var(--color-border)" }}>
-          ← Voltar
+      <div className="flex justify-between items-center">
+        <button
+          onClick={onBack}
+          className="px-6 py-3 rounded-lg border font-semibold text-sm flex items-center gap-2 transition-colors hover:bg-[var(--color-surface-secondary)]"
+          style={{ borderColor: "var(--color-border)", color: "var(--color-text-muted)" }}
+        >
+          <ArrowLeft size={18} /> Voltar
         </button>
         <button
           onClick={onNext}
           disabled={totalForPaint === 0}
-          className="flex-1 py-2 rounded-lg text-sm font-medium text-white"
-          style={{ background: totalForPaint === 0 ? "#93c5fd" : "var(--color-primary)" }}
+          className="px-8 py-3 rounded-lg text-sm font-semibold text-white flex items-center gap-2 shadow-sm transition-all hover:brightness-110 active:scale-95 disabled:opacity-50 disabled:hover:brightness-100"
+          style={{ background: "var(--color-primary)" }}
         >
-          Próximo →
+          Próximo <ArrowRight size={18} />
         </button>
       </div>
     </div>

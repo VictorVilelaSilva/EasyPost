@@ -1,7 +1,7 @@
 "use client"
 import { useEffect } from "react"
 import { calcPaintableArea, calcAreaForPaint, calcPackages, calcTotals, formatCurrency, parseDecimal } from "@/lib/calculations"
-import { Plus, Trash2 } from "lucide-react"
+import { Plus, Trash2, PaintBucket, ArrowLeft, ArrowRight } from "lucide-react"
 import type { WizardState, WizardExtraItem } from "@/types"
 
 interface Product { id: string; name: string; brand: string; packageLabel: string; yieldM2: number; price: number }
@@ -14,7 +14,10 @@ interface Props {
   onNext: () => void
 }
 
-export default function Step3Materials({ state, update, products, onBack, onNext }: Props) {
+const inputClass =
+  "px-3 py-2.5 rounded-lg border border-[#e2e8f0] text-sm outline-none transition-all focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20"
+
+export default function Step3Materials({ state, update, onBack, onNext }: Props) {
   const totalAreaForPaint = state.areas.reduce(
     (sum, a) => sum + calcAreaForPaint(calcPaintableArea(a), a.coats),
     0
@@ -54,100 +57,141 @@ export default function Step3Materials({ state, update, products, onBack, onNext
   const { totalMaterials } = calcTotals(state.products, state.extraItems, 0)
 
   return (
-    <div className="flex flex-col gap-6">
-      <h2 className="text-lg font-semibold">Materiais e mão de obra</h2>
-
+    <div className="flex flex-col gap-8">
       <div>
-        <h3 className="text-sm font-semibold mb-3">Tinta principal</h3>
+        <h2 className="text-2xl sm:text-3xl font-headline font-extrabold tracking-tight">Materiais e mão de obra</h2>
+        <p className="mt-2" style={{ color: "var(--color-text-muted)" }}>
+          Quantidade de tinta calculada automaticamente. Ajuste se precisar.
+        </p>
+      </div>
+
+      {/* Tinta principal */}
+      <div>
+        <h3 className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: "var(--color-text-muted)" }}>
+          Tinta principal
+        </h3>
         {state.products.map((p, i) => (
-          <div key={p.productId} className="p-4 rounded-xl border" style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}>
-            <p className="font-medium text-sm">{p.name}</p>
-            <p className="text-xs mt-0.5" style={{ color: "var(--color-text-muted)" }}>
-              Rendimento: {p.yieldM2} m²/embalagem · {formatCurrency(p.unitPrice)}/embalagem
-            </p>
-            <div className="flex items-center gap-3 mt-3">
-              <label className="text-sm">Quantidade:</label>
-              <input
-                type="number"
-                min={0}
-                value={p.quantity}
-                onChange={(e) => updateProductQty(i, parseInt(e.target.value) || 0)}
-                className="w-20 px-2 py-1 rounded border text-sm text-center"
-                style={{ borderColor: "var(--color-border)" }}
-              />
-              <span className="text-sm font-semibold">{formatCurrency(p.subtotal)}</span>
+          <div
+            key={p.productId}
+            className="p-5 rounded-xl border shadow-sm"
+            style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}
+          >
+            <div className="flex items-start gap-3">
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                style={{ background: "#eff6ff", color: "var(--color-primary)" }}
+              >
+                <PaintBucket size={20} />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium">{p.name}</p>
+                <p className="text-xs mt-0.5" style={{ color: "var(--color-text-muted)" }}>
+                  Rendimento: {p.yieldM2} m²/embalagem · {formatCurrency(p.unitPrice)}/embalagem
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between mt-4 pt-4 border-t" style={{ borderColor: "var(--color-border)" }}>
+              <div className="flex items-center gap-3">
+                <label className="text-sm" htmlFor={`qty-${p.productId}`}>Quantidade</label>
+                <input
+                  id={`qty-${p.productId}`}
+                  type="number"
+                  min={0}
+                  value={p.quantity}
+                  onChange={(e) => updateProductQty(i, parseInt(e.target.value) || 0)}
+                  className={`w-20 text-center ${inputClass}`}
+                />
+              </div>
+              <span className="text-lg font-bold">{formatCurrency(p.subtotal)}</span>
             </div>
           </div>
         ))}
+        {state.products.length === 0 && (
+          <p className="text-sm p-4 rounded-xl border" style={{ color: "var(--color-text-muted)", borderColor: "var(--color-border)", background: "var(--color-surface)" }}>
+            Nenhuma tinta cadastrada. Cadastre um produto na área administrativa.
+          </p>
+        )}
       </div>
 
+      {/* Itens extras */}
       <div>
-        <h3 className="text-sm font-semibold mb-3">Itens extras</h3>
-        {state.extraItems.map((item, i) => (
-          <div key={item.id ?? i} className="flex gap-2 mb-2 items-start">
-            <input
-              placeholder="Nome do item"
-              value={item.name}
-              onChange={(e) => updateExtra(i, { name: e.target.value })}
-              className="flex-1 px-3 py-2 rounded-lg border text-sm"
-              style={{ borderColor: "var(--color-border)" }}
-            />
-            <input
-              type="text"
-              placeholder="Qtd"
-              value={item.quantity}
-              onChange={(e) => updateExtra(i, { quantity: parseDecimal(e.target.value) })}
-              className="w-16 px-2 py-2 rounded-lg border text-sm text-center"
-              style={{ borderColor: "var(--color-border)" }}
-            />
-            <input
-              type="text"
-              placeholder="R$ unit."
-              value={item.unitPrice || ""}
-              onChange={(e) => updateExtra(i, { unitPrice: parseDecimal(e.target.value) })}
-              className="w-24 px-2 py-2 rounded-lg border text-sm"
-              style={{ borderColor: "var(--color-border)" }}
-            />
-            <button onClick={() => removeExtra(i)} className="p-2 text-red-400" aria-label="Remover item"><Trash2 size={14} /></button>
-          </div>
-        ))}
+        <h3 className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: "var(--color-text-muted)" }}>
+          Itens extras
+        </h3>
+        <div className="flex flex-col gap-2">
+          {state.extraItems.map((item, i) => (
+            <div key={item.id ?? i} className="flex gap-2 items-start">
+              <input
+                placeholder="Nome do item"
+                value={item.name}
+                onChange={(e) => updateExtra(i, { name: e.target.value })}
+                className={`flex-1 ${inputClass}`}
+              />
+              <input
+                type="text"
+                placeholder="Qtd"
+                value={item.quantity}
+                onChange={(e) => updateExtra(i, { quantity: parseDecimal(e.target.value) })}
+                className={`w-16 text-center ${inputClass}`}
+              />
+              <input
+                type="text"
+                placeholder="R$ unit."
+                value={item.unitPrice || ""}
+                onChange={(e) => updateExtra(i, { unitPrice: parseDecimal(e.target.value) })}
+                className={`w-24 ${inputClass}`}
+              />
+              <button
+                onClick={() => removeExtra(i)}
+                className="p-2.5 rounded-lg text-red-500 transition-colors hover:bg-red-50"
+                aria-label="Remover item"
+              >
+                <Trash2 size={16} />
+              </button>
+            </div>
+          ))}
+        </div>
         <button
           type="button"
           onClick={addExtra}
-          className="w-full py-2 rounded-lg text-sm border-dashed border-2 flex items-center justify-center gap-1"
+          className="w-full mt-2 py-3 rounded-xl border-2 border-dashed font-medium flex items-center justify-center gap-2 transition-all hover:border-[#2563eb] hover:text-[#2563eb]"
           style={{ borderColor: "var(--color-border)", color: "var(--color-text-muted)" }}
         >
-          <Plus size={14} /> Adicionar item extra
+          <Plus size={16} /> Adicionar item extra
         </button>
       </div>
 
+      {/* Mão de obra */}
       <div>
-        <h3 className="text-sm font-semibold mb-3">Mão de obra</h3>
-        <div className="flex flex-col gap-3">
-          <div key="laborValue">
-            <label className="text-sm font-medium block mb-1">Valor do serviço (R$)</label>
+        <h3 className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: "var(--color-text-muted)" }}>
+          Mão de obra
+        </h3>
+        <div
+          className="rounded-xl border shadow-sm p-6 flex flex-col gap-4"
+          style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}
+        >
+          <div>
+            <label className="text-sm font-medium block mb-1.5">Valor do serviço (R$)</label>
             <input
               value={String(state.laborValue || "")}
               onChange={(e) => update({ laborValue: parseDecimal(e.target.value) })}
-              className="w-full px-3 py-2 rounded-lg border text-sm"
-              style={{ borderColor: "var(--color-border)" }}
+              placeholder="0,00"
+              className={`w-full ${inputClass}`}
             />
           </div>
           {(["laborDeadline", "paymentMethod", "laborNotes"] as const).map((key) => {
-            type StringLaborKey = "laborDeadline" | "paymentMethod" | "laborNotes"
-            const labels: Record<StringLaborKey, string> = {
+            const labels = {
               laborDeadline: "Prazo estimado",
               paymentMethod: "Forma de pagamento",
               laborNotes: "Observações do serviço",
-            }
+            } as const
             return (
               <div key={key}>
-                <label className="text-sm font-medium block mb-1">{labels[key]}</label>
+                <label className="text-sm font-medium block mb-1.5">{labels[key]}</label>
                 <input
                   value={state[key]}
                   onChange={(e) => update({ [key]: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border text-sm"
-                  style={{ borderColor: "var(--color-border)" }}
+                  className={`w-full ${inputClass}`}
                 />
               </div>
             )
@@ -155,20 +199,27 @@ export default function Step3Materials({ state, update, products, onBack, onNext
         </div>
       </div>
 
-      <div className="p-3 rounded-lg text-sm" style={{ background: "#eff6ff" }}>
-        Subtotal materiais: <strong>{formatCurrency(totalMaterials)}</strong>
+      <div className="px-6 py-4 rounded-xl flex justify-between items-center" style={{ background: "#eff6ff" }}>
+        <span className="font-semibold" style={{ color: "var(--color-primary)" }}>Subtotal materiais</span>
+        <span className="text-xl font-headline font-extrabold" style={{ color: "var(--color-primary)" }}>
+          {formatCurrency(totalMaterials)}
+        </span>
       </div>
 
-      <div className="flex gap-3">
-        <button onClick={onBack} className="flex-1 py-2 rounded-lg text-sm border" style={{ borderColor: "var(--color-border)" }}>
-          ← Voltar
+      <div className="flex justify-between items-center">
+        <button
+          onClick={onBack}
+          className="px-6 py-3 rounded-lg border font-semibold text-sm flex items-center gap-2 transition-colors hover:bg-[var(--color-surface-secondary)]"
+          style={{ borderColor: "var(--color-border)", color: "var(--color-text-muted)" }}
+        >
+          <ArrowLeft size={18} /> Voltar
         </button>
         <button
           onClick={onNext}
-          className="flex-1 py-2 rounded-lg text-sm font-medium text-white"
+          className="px-8 py-3 rounded-lg text-sm font-semibold text-white flex items-center gap-2 shadow-sm transition-all hover:brightness-110 active:scale-95"
           style={{ background: "var(--color-primary)" }}
         >
-          Ver resumo →
+          Ver resumo <ArrowRight size={18} />
         </button>
       </div>
     </div>
