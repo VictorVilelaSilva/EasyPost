@@ -4,6 +4,8 @@ import Link from "next/link"
 import { Plus } from "lucide-react"
 import { formatCurrency } from "@/lib/calculations"
 
+export const dynamic = "force-dynamic"
+
 export default async function DashboardPage() {
   const rawBudgets = await getMyBudgets()
   const budgets = rawBudgets.map((b) => ({ ...b, createdAt: b.createdAt.toISOString() }))

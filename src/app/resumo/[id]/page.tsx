@@ -2,6 +2,8 @@ import { getPublicBudgetById } from "@/lib/budget"
 import { notFound } from "next/navigation"
 import { formatCurrency } from "@/lib/calculations"
 
+export const dynamic = "force-dynamic"
+
 export default async function ResumoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const budget = await getPublicBudgetById(id)

@@ -1,7 +1,8 @@
 "use client"
 import { Ruler, DoorOpen, AppWindow, Layers, Trash2 } from "lucide-react"
-import { calcPaintableArea, calcAreaForPaint, parseDecimal } from "@/lib/calculations"
+import { calcPaintableArea, calcAreaForPaint } from "@/lib/calculations"
 import type { AreaInput } from "@/types"
+import DecimalInput from "@/components/DecimalInput"
 
 interface Props {
   area: AreaInput
@@ -73,11 +74,10 @@ export default function AreaCalculator({ area, onChange, onRemove }: Props) {
       {area.mode === "known" && (
         <div>
           <label className="block text-sm font-medium mb-1.5">Área total (m²)</label>
-          <input
-            type="text"
-            placeholder="Ex: 25,5 ou 25.5"
-            value={area.knownArea ?? ""}
-            onChange={(e) => set({ knownArea: parseDecimal(e.target.value) })}
+          <DecimalInput
+            placeholder="Ex: 25,5"
+            value={area.knownArea}
+            onChange={(v) => set({ knownArea: v })}
             className={inputClass}
           />
         </div>
@@ -94,11 +94,11 @@ export default function AreaCalculator({ area, onChange, onRemove }: Props) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className={fieldLabel} style={{ color: "var(--color-text-muted)" }}>Altura parede (m)</label>
-                <input type="text" placeholder="2,70" value={area.wallHeight ?? ""} onChange={(e) => set({ wallHeight: parseDecimal(e.target.value) })} className={inputClass} />
+                <DecimalInput placeholder="2,70" value={area.wallHeight} onChange={(v) => set({ wallHeight: v })} className={inputClass} />
               </div>
               <div>
                 <label className={fieldLabel} style={{ color: "var(--color-text-muted)" }}>Largura total (m)</label>
-                <input type="text" placeholder="10,00" value={area.wallWidth ?? ""} onChange={(e) => set({ wallWidth: parseDecimal(e.target.value) })} className={inputClass} />
+                <DecimalInput placeholder="10,00" value={area.wallWidth} onChange={(v) => set({ wallWidth: v })} className={inputClass} />
               </div>
             </div>
           </div>
@@ -113,16 +113,16 @@ export default function AreaCalculator({ area, onChange, onRemove }: Props) {
               <div className="space-y-3">
                 <div>
                   <label className={fieldLabel} style={{ color: "var(--color-text-muted)" }}>Qtd. portas</label>
-                  <input type="text" placeholder="0" value={area.doorsCount ?? ""} onChange={(e) => set({ doorsCount: parseDecimal(e.target.value) })} className={inputClass} />
+                  <DecimalInput integer placeholder="0" value={area.doorsCount} onChange={(v) => set({ doorsCount: v })} className={inputClass} />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className={fieldLabel} style={{ color: "var(--color-text-muted)" }}>Alt. (m)</label>
-                    <input type="text" placeholder="2,10" value={area.doorHeight ?? ""} onChange={(e) => set({ doorHeight: parseDecimal(e.target.value) })} className={inputClass} />
+                    <DecimalInput placeholder="2,10" value={area.doorHeight} onChange={(v) => set({ doorHeight: v })} className={inputClass} />
                   </div>
                   <div>
                     <label className={fieldLabel} style={{ color: "var(--color-text-muted)" }}>Larg. (m)</label>
-                    <input type="text" placeholder="0,80" value={area.doorWidth ?? ""} onChange={(e) => set({ doorWidth: parseDecimal(e.target.value) })} className={inputClass} />
+                    <DecimalInput placeholder="0,80" value={area.doorWidth} onChange={(v) => set({ doorWidth: v })} className={inputClass} />
                   </div>
                 </div>
               </div>
@@ -136,16 +136,16 @@ export default function AreaCalculator({ area, onChange, onRemove }: Props) {
               <div className="space-y-3">
                 <div>
                   <label className={fieldLabel} style={{ color: "var(--color-text-muted)" }}>Qtd. janelas</label>
-                  <input type="text" placeholder="0" value={area.windowsCount ?? ""} onChange={(e) => set({ windowsCount: parseDecimal(e.target.value) })} className={inputClass} />
+                  <DecimalInput integer placeholder="0" value={area.windowsCount} onChange={(v) => set({ windowsCount: v })} className={inputClass} />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className={fieldLabel} style={{ color: "var(--color-text-muted)" }}>Alt. (m)</label>
-                    <input type="text" placeholder="1,20" value={area.windowHeight ?? ""} onChange={(e) => set({ windowHeight: parseDecimal(e.target.value) })} className={inputClass} />
+                    <DecimalInput placeholder="1,20" value={area.windowHeight} onChange={(v) => set({ windowHeight: v })} className={inputClass} />
                   </div>
                   <div>
                     <label className={fieldLabel} style={{ color: "var(--color-text-muted)" }}>Larg. (m)</label>
-                    <input type="text" placeholder="1,50" value={area.windowWidth ?? ""} onChange={(e) => set({ windowWidth: parseDecimal(e.target.value) })} className={inputClass} />
+                    <DecimalInput placeholder="1,50" value={area.windowWidth} onChange={(v) => set({ windowWidth: v })} className={inputClass} />
                   </div>
                 </div>
               </div>

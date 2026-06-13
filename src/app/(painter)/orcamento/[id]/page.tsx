@@ -4,6 +4,8 @@ import { formatCurrency } from "@/lib/calculations"
 import StatusBadge from "@/components/StatusBadge"
 import BudgetActions from "./components/BudgetActions"
 import Link from "next/link"
+
+export const dynamic = "force-dynamic"
 import { ArrowLeft, ExternalLink, MapPin, Ruler, Paintbrush } from "lucide-react"
 
 export default async function OrcamentoPage({ params }: { params: Promise<{ id: string }> }) {

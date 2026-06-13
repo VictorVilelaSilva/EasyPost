@@ -1,8 +1,12 @@
 "use client"
 import { useEffect } from "react"
-import { calcPaintableArea, calcAreaForPaint, calcPackages, calcTotals, formatCurrency, parseDecimal } from "@/lib/calculations"
+import { calcPaintableArea, calcAreaForPaint, calcPackages, calcTotals, formatCurrency } from "@/lib/calculations"
 import { Plus, Trash2, PaintBucket, ArrowLeft, ArrowRight } from "lucide-react"
 import type { WizardState, WizardExtraItem } from "@/types"
+import CurrencyInput from "@/components/CurrencyInput"
+import DecimalInput from "@/components/DecimalInput"
+import DeadlineInput from "@/components/DeadlineInput"
+import PaymentMethodSelect from "@/components/PaymentMethodSelect"
 
 interface Product { id: string; name: string; brand: string; packageLabel: string; yieldM2: number; price: number }
 
@@ -127,20 +131,19 @@ export default function Step3Materials({ state, update, onBack, onNext }: Props)
                 onChange={(e) => updateExtra(i, { name: e.target.value })}
                 className={`flex-1 ${inputClass}`}
               />
-              <input
-                type="text"
-                placeholder="Qtd"
+              <DecimalInput
                 value={item.quantity}
-                onChange={(e) => updateExtra(i, { quantity: parseDecimal(e.target.value) })}
+                onChange={(v) => updateExtra(i, { quantity: v })}
+                placeholder="Qtd"
                 className={`w-16 text-center ${inputClass}`}
               />
-              <input
-                type="text"
-                placeholder="R$ unit."
-                value={item.unitPrice || ""}
-                onChange={(e) => updateExtra(i, { unitPrice: parseDecimal(e.target.value) })}
-                className={`w-24 ${inputClass}`}
-              />
+              <div className="w-28">
+                <CurrencyInput
+                  value={item.unitPrice}
+                  onChange={(v) => updateExtra(i, { unitPrice: v })}
+                  className={`w-full ${inputClass}`}
+                />
+              </div>
               <button
                 onClick={() => removeExtra(i)}
                 className="p-2.5 rounded-lg text-red-500 transition-colors hover:bg-red-50"
@@ -171,31 +174,36 @@ export default function Step3Materials({ state, update, onBack, onNext }: Props)
           style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}
         >
           <div>
-            <label className="text-sm font-medium block mb-1.5">Valor do serviço (R$)</label>
-            <input
-              value={String(state.laborValue || "")}
-              onChange={(e) => update({ laborValue: parseDecimal(e.target.value) })}
-              placeholder="0,00"
+            <label className="text-sm font-medium block mb-1.5">Valor do serviço</label>
+            <CurrencyInput
+              value={state.laborValue}
+              onChange={(v) => update({ laborValue: v })}
               className={`w-full ${inputClass}`}
             />
           </div>
-          {(["laborDeadline", "paymentMethod", "laborNotes"] as const).map((key) => {
-            const labels = {
-              laborDeadline: "Prazo estimado",
-              paymentMethod: "Forma de pagamento",
-              laborNotes: "Observações do serviço",
-            } as const
-            return (
-              <div key={key}>
-                <label className="text-sm font-medium block mb-1.5">{labels[key]}</label>
-                <input
-                  value={state[key]}
-                  onChange={(e) => update({ [key]: e.target.value })}
-                  className={`w-full ${inputClass}`}
-                />
-              </div>
-            )
-          })}
+          <div>
+            <label className="text-sm font-medium block mb-1.5">Prazo estimado</label>
+            <DeadlineInput
+              value={state.laborDeadline}
+              onChange={(v) => update({ laborDeadline: v })}
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium block mb-2">Forma de pagamento</label>
+            <PaymentMethodSelect
+              value={state.paymentMethod}
+              onChange={(v) => update({ paymentMethod: v })}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium block mb-1.5">Observações do serviço</label>
+            <input
+              value={state.laborNotes}
+              onChange={(e) => update({ laborNotes: e.target.value })}
+              className={`w-full ${inputClass}`}
+            />
+          </div>
         </div>
       </div>
 

@@ -11,6 +11,14 @@ interface Props {
 const inputClass =
   "w-full px-3 py-2.5 rounded-lg border border-[#e2e8f0] text-sm outline-none transition-all focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20"
 
+function maskPhone(value: string): string {
+  const d = value.replace(/\D/g, "").slice(0, 11)
+  if (d.length <= 2) return d.replace(/(\d{0,2})/, "($1")
+  if (d.length <= 6) return d.replace(/(\d{2})(\d{0,4})/, "($1) $2")
+  if (d.length <= 10) return d.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3")
+  return d.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3")
+}
+
 export default function Step1Client({ state, update, onNext }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -50,8 +58,10 @@ export default function Step1Client({ state, update, onNext }: Props) {
           </label>
           <input
             id="clientPhone"
+            type="tel"
+            inputMode="tel"
             value={state.clientPhone}
-            onChange={(e) => update({ clientPhone: e.target.value })}
+            onChange={(e) => update({ clientPhone: maskPhone(e.target.value) })}
             placeholder="(00) 00000-0000"
             className={inputClass}
           />

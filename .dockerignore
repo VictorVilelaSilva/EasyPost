@@ -1,0 +1,29 @@
+# Dependências e builds (reinstalados dentro da imagem)
+node_modules
+.next
+out
+build
+front
+
+# Banco local e segredos — NUNCA vão para a imagem
+*.db
+*.db-journal
+.env
+.env.*
+!.env.example
+
+# Git e metadados
+.git
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Editor / SO
+.vscode
+.idea
+.DS_Store
+npm-debug.log*
+
+# Memória do Claude / docs locais
+.claude

@@ -3,6 +3,8 @@ import ProductForm from "./components/ProductForm"
 import { formatCurrency } from "@/lib/calculations"
 import { toggleProduct } from "@/lib/products"
 import { getServerSession } from "next-auth"
+
+export const dynamic = "force-dynamic"
 import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { PaintBucket, Ban } from "lucide-react"

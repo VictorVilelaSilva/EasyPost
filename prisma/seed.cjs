@@ -1,5 +1,7 @@
-import { PrismaClient } from "@prisma/client"
-import bcrypt from "bcryptjs"
+// Seed de produção em CommonJS — roda no container sem precisar de tsx/typescript.
+// Mantém os mesmos dados do prisma/seed.ts (admin + tinta padrão R$300).
+const { PrismaClient } = require("@prisma/client")
+const bcrypt = require("bcryptjs")
 
 const prisma = new PrismaClient()
 
@@ -37,5 +39,8 @@ async function main() {
 }
 
 main()
-  .catch(console.error)
+  .catch((e) => {
+    console.error(e)
+    process.exit(1)
+  })
   .finally(() => prisma.$disconnect())
